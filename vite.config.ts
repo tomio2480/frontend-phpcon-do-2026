@@ -4,6 +4,7 @@ import preact from '@preact/preset-vite'
 import tailwindcss from '@tailwindcss/vite'
 import { createRequire } from 'module'
 import { dirname, join } from 'path'
+import { existsSync } from 'fs'
 import type { Plugin } from 'vite'
 
 const require = createRequire(import.meta.url)
@@ -14,12 +15,20 @@ const require = createRequire(import.meta.url)
  * Vite の変換フェーズでこのインポートを実際の icu.dat ファイルパスへリダイレクトする．
  *
  * `@php-wasm/web` の exports に `shared/icu.dat` は含まれないため require.resolve で直接は解決できない．
- * メインエントリ（index.cjs）を resolve してその dirname でパッケージルートを特定する．
- * `./package.json` サブパスは exports に含まれない場合 ERR_PACKAGE_PATH_NOT_EXPORTED を
- * 投げる Node.js 環境があるため，パッケージ本体のエントリポイント経由で解決する．
+ * メインエントリを resolve し，package.json が見つかるまで親を辿ってパッケージルートを特定する．
+ * dirname だけではメインエントリがサブディレクトリにある場合に誤ったパスを返すため遡り探索を使う．
  */
+function findPackageRoot(resolvedEntry: string): string {
+  let dir = dirname(resolvedEntry)
+  while (dir !== dirname(dir)) {
+    if (existsSync(join(dir, 'package.json'))) return dir
+    dir = dirname(dir)
+  }
+  throw new Error(`package.json not found from: ${resolvedEntry}`)
+}
+
 function resolveIcuDat(): Plugin {
-  const webPkgRoot = dirname(require.resolve('@php-wasm/web'))
+  const webPkgRoot = findPackageRoot(require.resolve('@php-wasm/web'))
   const icuDatPath = join(webPkgRoot, 'shared', 'icu.dat').replace(/\\/g, '/')
   return {
     name: 'resolve-icu-dat',
