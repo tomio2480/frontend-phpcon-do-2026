@@ -73,12 +73,12 @@ def _to_5digit(code6: str | None) -> str | None:
     return code6[:5]
 
 
-def simplify_with_shapely(input_path: str, tolerance: float = 0.01,
-                          encoding: str | None = None) -> None:
-    """geopandas + shapely で簡略化して GeoJSON に変換する。
+def _preprocess_gdf(input_path: str, encoding: str | None = None):
+    """Shapefile を読み込み、北海道市区町村 GeoDataFrame として前処理する。
 
     encoding: Shapefile の文字コード。None の場合は .cpg ファイルで自動判別。
     国土数値情報の旧形式（.cpg なし）では "cp932" を明示的に指定すること。
+    戻り値は code / name / display_name / geometry 列のみを持つ dissolve 済み GDF。
     """
     try:
         import geopandas as gpd
@@ -118,6 +118,17 @@ def simplify_with_shapely(input_path: str, tolerance: float = 0.01,
         ["code", "name", "display_name", "geometry"]
     ]
     print(f"  Features (after dissolve) : {len(dissolved)}")
+    return dissolved
+
+
+def simplify_with_shapely(input_path: str, tolerance: float = 0.01,
+                          encoding: str | None = None) -> None:
+    """geopandas + shapely で簡略化して GeoJSON に変換する。
+
+    encoding: Shapefile の文字コード。None の場合は .cpg ファイルで自動判別。
+    国土数値情報の旧形式（.cpg なし）では "cp932" を明示的に指定すること。
+    """
+    dissolved = _preprocess_gdf(input_path, encoding)
 
     # 北海道に適した投影座標系（UTM Zone 54N）に変換してから簡略化
     # 注意: Shapely の simplify は個別ジオメトリにのみ作用するため、
@@ -144,39 +155,10 @@ def simplify_with_mapshaper(input_path: str, percentage: float = 10.0,
     encoding: Shapefile の文字コード。None の場合は .cpg ファイルで自動判別。
     国土数値情報の旧形式（.cpg なし）では "cp932" を明示的に指定すること。
     """
+    dissolved = _preprocess_gdf(input_path, encoding)
+
     with tempfile.TemporaryDirectory() as tmpdir:
         tmp_geojson = pathlib.Path(tmpdir) / "hokkaido_raw.geojson"
-
-        # Step 1: geopandas で前処理
-        try:
-            import geopandas as gpd
-        except ImportError:
-            print("ERROR: geopandas が見つかりません。pip install geopandas を実行してください。")
-            sys.exit(1)
-
-        read_kwargs: dict = {"filename": input_path}
-        if encoding:
-            read_kwargs["encoding"] = encoding
-        gdf = gpd.read_file(**read_kwargs)
-        gdf = gdf[gdf[ATTR_PREF] == "北海道"].copy()
-        gdf["code"] = gdf[ATTR_CODE].apply(_to_5digit)
-        gdf = gdf.dropna(subset=["code"])
-
-        # NaN を空文字に置換してから name / display_name を生成
-        gdf[ATTR_OFFICE] = gdf[ATTR_OFFICE].fillna("")
-        gdf[ATTR_CITY]   = gdf[ATTR_CITY].fillna("")
-        gdf["name"] = gdf[ATTR_CITY]
-        gdf["display_name"] = gdf.apply(
-            lambda r: f"{r[ATTR_OFFICE]} {r[ATTR_CITY]}"
-            if r[ATTR_OFFICE].endswith("市") and r[ATTR_CITY].endswith("区")
-            else r[ATTR_CITY],
-            axis=1,
-        )
-
-        # aggfunc="first" を明示してバージョン間の挙動変化を防止
-        dissolved = gdf.dissolve(by="code", aggfunc="first", as_index=False)[
-            ["code", "name", "display_name", "geometry"]
-        ]
         dissolved.to_crs("EPSG:4326").to_file(tmp_geojson, driver="GeoJSON")
 
         # Step 2: mapshaper で簡略化

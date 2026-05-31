@@ -302,9 +302,11 @@ def distribute_sapporo_furusato(municipalities: list[tuple]) -> list[tuple]:
 
     各区の按分後に合計が目標値と一致するよう、最後の区で端数を調整する。
     """
-    sapporo_codes = {f"0110{i}" for i in range(1, 9)} | {"01109", "01110"}
+    sapporo_codes = {f"011{i:02d}" for i in range(1, 11)}
     sapporo_pops = {
-        m[0]: m[5] for m in municipalities if m[0] in sapporo_codes
+        code: pop
+        for code, _, _, _, _, pop, *_ in municipalities
+        if code in sapporo_codes
     }
     total_pop = sum(sapporo_pops.values())
     if total_pop == 0:
@@ -315,8 +317,8 @@ def distribute_sapporo_furusato(municipalities: list[tuple]) -> list[tuple]:
     accumulated_count = 0
     sapporo_entries = [m for m in municipalities if m[0] in sapporo_codes]
 
-    for i, m in enumerate(sapporo_entries):
-        ratio = m[5] / total_pop
+    for i, (code, name, display_name, region, area, pop, *_) in enumerate(sapporo_entries):
+        ratio = pop / total_pop
         if i < len(sapporo_entries) - 1:
             amount = round(SAPPORO_FURUSATO_AMOUNT * ratio)
             count = round(SAPPORO_FURUSATO_COUNT * ratio)
@@ -326,7 +328,7 @@ def distribute_sapporo_furusato(municipalities: list[tuple]) -> list[tuple]:
             count = SAPPORO_FURUSATO_COUNT - accumulated_count
         accumulated_amount += amount
         accumulated_count += count
-        distributed.append((*m[:6], amount, count))
+        distributed.append((code, name, display_name, region, area, pop, amount, count))
 
     sapporo_map = {m[0]: m for m in distributed}
     return [sapporo_map.get(m[0], m) for m in municipalities]
@@ -337,7 +339,13 @@ def build() -> tuple[dict, dict]:
     data = distribute_sapporo_furusato(MUNICIPALITIES)
 
     codes = [m[0] for m in data]
-    duplicates = {c for c in codes if codes.count(c) > 1}
+    seen: set[str] = set()
+    duplicates: set[str] = set()
+    for c in codes:
+        if c in seen:
+            duplicates.add(c)
+        else:
+            seen.add(c)
     if duplicates:
         raise ValueError(f"重複する市区町村コードが検出されました: {sorted(duplicates)}")
 
