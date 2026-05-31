@@ -36,6 +36,9 @@ tmp_*.txt
 # Claude Code ワークツリー
 .claude/worktrees/
 
+# データ整形スクリプトのキャッシュ（生データ・展開済みファイル）
+scripts/cache/
+
 # ログ
 .pnpm-debug.log
 npm-debug.log
