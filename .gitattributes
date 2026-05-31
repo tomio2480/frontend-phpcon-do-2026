@@ -1,0 +1,10 @@
+# すべてのテキストファイルの行末を LF で統一する（GitHub Actions は Linux 環境のため）
+* text=auto eol=lf
+
+# バイナリファイルは変換しない
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.wasm binary
