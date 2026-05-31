@@ -9,7 +9,6 @@
 基準日: 2023 年 1 月 1 日（令和 5 年）
 """
 
-import zipfile
 from pathlib import Path
 
 import geopandas as gpd
@@ -61,15 +60,6 @@ def download_zip(url: str, cache_path: Path) -> None:
             tmp_path.unlink()
 
 
-def find_shp_entry(zf: zipfile.ZipFile) -> str:
-    for name in zf.namelist():
-        if (name.endswith(".shp")
-                and not Path(name).name.startswith("._")
-                and "__MACOSX" not in name):
-            return name
-    raise FileNotFoundError("ZIP 内に .shp ファイルが見つかりません")
-
-
 def build_name(city, ward) -> str:
     c = city.strip() if isinstance(city, str) else ""
     w = ward.strip() if isinstance(ward, str) else ""
@@ -88,12 +78,8 @@ def main() -> None:
     cache_zip = CACHE_DIR / ZIP_FILENAME
     download_zip(DOWNLOAD_URL, cache_zip)
 
-    with zipfile.ZipFile(cache_zip) as zf:
-        shp_entry = find_shp_entry(zf)
-
-    zip_url = f"zip://{cache_zip.resolve().as_posix()}!{shp_entry}"
-    print(f"Shapefile を読み込み中: {shp_entry}")
-    gdf = gpd.read_file(zip_url, encoding="cp932")
+    print(f"Shapefile を読み込み中: {cache_zip.name}")
+    gdf = gpd.read_file(cache_zip, encoding="cp932")
     print(f"  {len(gdf)} フィーチャー, CRS={gdf.crs}")
 
     if gdf.crs is None:
