@@ -37,7 +37,8 @@ def download_zip(url: str, cache_path: Path) -> None:
     try:
         with requests.get(url, stream=True, timeout=120) as resp:
             resp.raise_for_status()
-            total = int(resp.headers.get("content-length", 0))
+            total_header = resp.headers.get("content-length")
+            total = int(total_header) if total_header and total_header.isdigit() else 0
             downloaded = 0
             with tmp_path.open("wb") as f:
                 for chunk in resp.iter_content(chunk_size=65536):
@@ -59,7 +60,9 @@ def download_zip(url: str, cache_path: Path) -> None:
 
 def find_shp_entry(zf: zipfile.ZipFile) -> str:
     for name in zf.namelist():
-        if name.endswith(".shp"):
+        if (name.endswith(".shp")
+                and not Path(name).name.startswith("._")
+                and "__MACOSX" not in name):
             return name
     raise FileNotFoundError("ZIP 内に .shp ファイルが見つかりません")
 
@@ -82,17 +85,12 @@ def main() -> None:
     cache_zip = CACHE_DIR / ZIP_FILENAME
     download_zip(DOWNLOAD_URL, cache_zip)
 
-    extract_dir = CACHE_DIR / "extracted"
-    extract_dir.mkdir(parents=True, exist_ok=True)
-
     with zipfile.ZipFile(cache_zip) as zf:
         shp_entry = find_shp_entry(zf)
-        shp_path = extract_dir / shp_entry
-        if not shp_path.exists():
-            print("Shapefile を展開中...")
-            zf.extractall(extract_dir)
-    print(f"Shapefile を読み込み中: {shp_path.name}")
-    gdf = gpd.read_file(shp_path, encoding="cp932")
+
+    zip_url = f"zip://{cache_zip.resolve().as_posix()}!{shp_entry}"
+    print(f"Shapefile を読み込み中: {shp_entry}")
+    gdf = gpd.read_file(zip_url, encoding="cp932")
     print(f"  {len(gdf)} フィーチャー, CRS={gdf.crs}")
 
     if gdf.crs is None:
