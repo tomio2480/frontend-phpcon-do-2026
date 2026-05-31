@@ -1,4 +1,4 @@
-# 北海道行政区域 GeoJSON 生成の知見
+# 北海道の行政区域 GeoJSON 生成の知見
 
 国土数値情報 N03（行政区域データ）から北海道の市区町村 GeoJSON を生成した際の判断・詰まり箇所・レビューで得た学びをまとめる．
 
@@ -13,8 +13,8 @@
 ## 背景
 
 PHP カンファレンス北海道 2026 の会場マップ用に，北海道全 194 市区町村の GeoJSON が必要だった．
-国土数値情報の Shapefile を取得・変換するスクリプト (`scripts/simplify_geojson.py`) を実装し，
-`public/data/hokkaido.geojson` として成果物をコミットした．
+国土数値情報の Shapefile を取得・変換するスクリプト `scripts/simplify_geojson.py` を実装した．
+成果物は `public/data/hokkaido.geojson` としてコミットした．
 
 ## 採用した設計判断
 
@@ -28,13 +28,13 @@ Shapefile を自動検出する．`zipfile` モジュールと `find_shp_entry` 
 
 ### `try...finally` + `success` フラグでダウンロードの堅牢化
 
-`except Exception` では `KeyboardInterrupt`（`BaseException` のサブクラス）を
-キャッチできないため，Ctrl+C 時に `.tmp` ファイルが残留する．
+`except Exception` は `BaseException` 系の `KeyboardInterrupt` をキャッチできない．
+そのため，Ctrl+C 時に `.tmp` ファイルが残留する．
 `try...finally` + `success = False` フラグに変更することで，
 例外・Ctrl+C いずれの場合でも確実にクリーンアップされる．
 
-また `Content-Length` が既知のとき `downloaded != total` を検出して `IOError` を送出し，
-不完全な ZIP がキャッシュとして保存されることを防いでいる．
+また，`Content-Length` が既知のとき `downloaded != total` を検出して `IOError` を送出する．
+これにより，不完全な ZIP がキャッシュとして保存されることを防いでいる．
 
 ### `coordinate_precision=6` で座標精度を 6 桁に制限
 
@@ -42,8 +42,8 @@ Shapefile を自動検出する．`zipfile` モジュールと `find_shp_entry` 
 6 桁（約 11 cm）以上の精度は不要．
 
 `gdf_out.to_file(OUTPUT_PATH, driver="GeoJSON", coordinate_precision=6)` で指定する．
-pyogrio 0.12.1 が `coordinate_precision` を GDAL の `COORDINATE_PRECISION`
-オプションへ自動マッピングするため，`layer_options={"COORDINATE_PRECISION": "6"}` は不要．
+pyogrio 0.12.1 は `coordinate_precision` を GDAL の `COORDINATE_PRECISION` へ自動マッピングする．
+`layer_options={"COORDINATE_PRECISION": "6"}` の指定は不要．
 
 効果: 3.27 MB → 2.00 MB（約 39% 削減）．
 
@@ -62,26 +62,26 @@ pyogrio 0.12.1 が `coordinate_precision` を GDAL の `COORDINATE_PRECISION`
 
 ### N03_004 の格納値
 
-レビュアーが "政令市の区は N03_004 に「中央区」のみ格納される" と主張したが，
+レビュアーは「政令市の区は N03_004 に `中央区` のみ格納される」と主張した．
 実データを確認すると N03_004 = `"札幌市中央区"`（市名を含む完全名称）だった．
 
 提案された `if c.endswith("市"): return c + w` を実装すると
-「札幌市」+「札幌市中央区」=「**札幌市札幌市中央区**」になる．
+`"札幌市札幌市中央区"` のように市名が二重になる．
 現在の実装（N03_004 をそのまま返す）が正しい．
 
 ## レビューで得た学び
 
 - **pyogrio の kwargs 自動マッピング**: `write_dataframe` の `**kwargs` は
-  ドライバごとの既知オプションへ自動マッピングされる．
+  ドライバ固有オプションへ自動マッピングされる．
   GDAL オプション名（`COORDINATE_PRECISION`）を lowercase で渡しても動作する．
 - **`try...finally` vs `except/raise`**: `KeyboardInterrupt` を考慮するなら
   `try...finally` が汎用的で意図が明確．
 - **レビュアーの提案は実データで検証してから採否を判断する**:
-  特に既存データの構造に関する主張は，コードを信用する前に
-  `json.dumps(ensure_ascii=False)` 等で実際に確かめる．
+  `json.dumps(ensure_ascii=False)` 等で確かめてから採否を決める．
+  特に既存データの構造に関する主張ではこの確認を優先する．
 
 ## 参照
 
-- PR #17: feat: 北海道行政区域 GeoJSON を追加（国土数値情報 N03）
+- PR #17: feat: 北海道の行政区域 GeoJSON を追加（国土数値情報 N03）
 - 国土数値情報 N03 ダウンロードページ: https://nlftp.mlit.go.jp/ksj/gml/datalist/KsjTmplt-N03-v3_1.html
 - 利用データ: N03-20230101_01_GML.zip（2023 年 1 月 1 日基準）
