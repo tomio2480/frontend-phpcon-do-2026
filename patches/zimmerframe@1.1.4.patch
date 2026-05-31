@@ -23,11 +23,13 @@ new file mode 100644
 index 0000000000000000000000000000000000000000..dea14ce27e6b835ec55c4d755a71f92e78720122
 --- /dev/null
 +++ b/src/walk.cjs
-@@ -0,0 +1,100 @@
+@@ -0,0 +1,102 @@
 +'use strict';
 +
 +// CJS wrapper for zimmerframe — required by @preact/preset-vite in Node.js (CJS) context.
-+// See: https://github.com/sveltejs/zimmerframe/issues (no CJS build upstream)
++// Upstream sveltejs/zimmerframe is ESM-only as of v1.1.4; no CJS build is provided.
++// TODO: Remove this patch when zimmerframe publishes an official CJS build.
++//       Track: https://github.com/sveltejs/zimmerframe/issues
 +
 +Object.defineProperty(exports, '__esModule', { value: true });
 +
