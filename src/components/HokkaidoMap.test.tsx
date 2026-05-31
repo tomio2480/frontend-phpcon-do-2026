@@ -19,6 +19,7 @@ describe('HokkaidoMap', () => {
 
   beforeEach(() => {
     global.fetch = vi.fn().mockResolvedValue({
+      ok: true,
       json: vi.fn().mockResolvedValue({ type: 'FeatureCollection', features: [] }),
     } as unknown as Response)
   })

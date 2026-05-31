@@ -26,7 +26,10 @@ export default function HokkaidoMap({ onHover, onClick }: Props) {
     let isMounted = true
 
     fetch('/data/hokkaido.geojson')
-      .then(r => r.json())
+      .then(r => {
+        if (!r.ok) throw new Error(`${r.status}`)
+        return r.json()
+      })
       .then(geojson => {
         if (!isMounted) return
         L.geoJSON(geojson, {
@@ -40,6 +43,7 @@ export default function HokkaidoMap({ onHover, onClick }: Props) {
           },
         }).addTo(map)
       })
+      .catch(() => {})
 
     return () => {
       isMounted = false
