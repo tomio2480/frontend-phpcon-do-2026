@@ -9,8 +9,6 @@
 基準日: 2023 年 1 月 1 日（令和 5 年）
 """
 
-import io
-import sys
 import zipfile
 from pathlib import Path
 
@@ -28,34 +26,31 @@ OUTPUT_PATH = PUBLIC_DATA_DIR / "hokkaido.geojson"
 SIMPLIFY_TOLERANCE = 0.001  # degrees (WGS84), 約 80〜110 m
 
 
-def download_zip(url: str, cache_path: Path) -> bytes:
+def download_zip(url: str, cache_path: Path) -> None:
     if cache_path.exists():
         print(f"キャッシュから読み込み: {cache_path}")
-        return cache_path.read_bytes()
+        return
 
     print(f"ダウンロード中: {url}")
+    cache_path.parent.mkdir(parents=True, exist_ok=True)
+    tmp_path = cache_path.with_suffix(".tmp")
     with requests.get(url, stream=True, timeout=120) as resp:
         resp.raise_for_status()
         total = int(resp.headers.get("content-length", 0))
-        chunks: list[bytes] = []
         downloaded = 0
-        for chunk in resp.iter_content(chunk_size=65536):
-            chunks.append(chunk)
-            downloaded += len(chunk)
-            if total:
-                pct = downloaded / total * 100
-                mb_done = downloaded / 1024 / 1024
-                mb_total = total / 1024 / 1024
-                print(f"\r  {pct:.1f}%  ({mb_done:.1f} / {mb_total:.1f} MB)", end="", flush=True)
+        with tmp_path.open("wb") as f:
+            for chunk in resp.iter_content(chunk_size=65536):
+                f.write(chunk)
+                downloaded += len(chunk)
+                if total:
+                    pct = downloaded / total * 100
+                    mb_done = downloaded / 1024 / 1024
+                    mb_total = total / 1024 / 1024
+                    print(f"\r  {pct:.1f}%  ({mb_done:.1f} / {mb_total:.1f} MB)", end="", flush=True)
 
     print()
-    data = b"".join(chunks)
-    cache_path.parent.mkdir(parents=True, exist_ok=True)
-    tmp_path = cache_path.with_suffix(".tmp")
-    tmp_path.write_bytes(data)
     tmp_path.replace(cache_path)
     print(f"キャッシュ保存: {cache_path}")
-    return data
 
 
 def find_shp_entry(zf: zipfile.ZipFile) -> str:
@@ -81,13 +76,13 @@ def main() -> None:
     PUBLIC_DATA_DIR.mkdir(parents=True, exist_ok=True)
 
     cache_zip = CACHE_DIR / ZIP_FILENAME
-    zip_bytes = download_zip(DOWNLOAD_URL, cache_zip)
+    download_zip(DOWNLOAD_URL, cache_zip)
 
     extract_dir = CACHE_DIR / "extracted"
     extract_dir.mkdir(parents=True, exist_ok=True)
 
     print("Shapefile を展開中...")
-    with zipfile.ZipFile(io.BytesIO(zip_bytes)) as zf:
+    with zipfile.ZipFile(cache_zip) as zf:
         shp_entry = find_shp_entry(zf)
         zf.extractall(extract_dir)
 
@@ -125,8 +120,8 @@ def main() -> None:
     gdf_out["geometry"] = gdf_out["geometry"].simplify(
         SIMPLIFY_TOLERANCE, preserve_topology=True
     )
-    # buffer(0) で自己交差等の無効ジオメトリを修正
-    gdf_out["geometry"] = gdf_out["geometry"].buffer(0)
+    # make_valid() で自己交差等の無効ジオメトリを修正
+    gdf_out["geometry"] = gdf_out["geometry"].make_valid()
 
     print(f"GeoJSON を書き出し中: {OUTPUT_PATH}")
     gdf_out.to_file(OUTPUT_PATH, driver="GeoJSON")
