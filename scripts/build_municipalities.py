@@ -385,6 +385,13 @@ def build() -> tuple[dict, dict]:
         },
     }
 
+    # 北海道市区町村数の整合性チェック（10区 + 34市 + 144町村 = 188）
+    expected = 188
+    if len(municipalities_json) != expected:
+        raise ValueError(
+            f"市区町村数が正しくありません（期待値: {expected}, 実際: {len(municipalities_json)}）"
+        )
+
     return municipalities_json, total_json
 
 
@@ -397,11 +404,11 @@ def main() -> None:
     total_path = OUTPUT_DIR / "total.json"
 
     municipalities_path.write_text(
-        json.dumps(municipalities_json, ensure_ascii=False, indent=2),
+        json.dumps(municipalities_json, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
     )
     total_path.write_text(
-        json.dumps(total_json, ensure_ascii=False, indent=2),
+        json.dumps(total_json, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
     )
 

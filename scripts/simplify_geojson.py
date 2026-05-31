@@ -92,8 +92,19 @@ def _preprocess_gdf(input_path: str, encoding: str | None = None):
         read_kwargs["encoding"] = encoding
     gdf = gpd.read_file(**read_kwargs)
 
+    # 必要なカラムの存在チェック（誤ったフォーマットのファイルを早期検出する）
+    required_cols = [ATTR_PREF, ATTR_CODE, ATTR_OFFICE, ATTR_CITY]
+    missing = [c for c in required_cols if c not in gdf.columns]
+    if missing:
+        print(f"ERROR: 必要なカラムが見つかりません: {missing}")
+        print(f"  利用可能なカラム: {list(gdf.columns)}")
+        sys.exit(1)
+
     # 北海道のみを抽出
     gdf = gdf[gdf[ATTR_PREF] == "北海道"].copy()
+    if gdf.empty:
+        print(f"ERROR: 北海道のデータが見つかりません（{ATTR_PREF} == '北海道' の行がありません）。")
+        sys.exit(1)
     print(f"  Features (before dissolve): {len(gdf)}")
 
     # コードを5桁に変換
@@ -173,8 +184,10 @@ def simplify_with_mapshaper(input_path: str, percentage: float = 10.0,
             "-o", str(OUTPUT_PATH), "format=geojson",
         ]
         print(f"Running: {' '.join(cmd)}")
+        # Windows では .cmd ファイルの実行にシェル経由が必要
+        use_shell = sys.platform == "win32"
         try:
-            result = subprocess.run(cmd, capture_output=True, text=True)
+            result = subprocess.run(cmd, capture_output=True, text=True, shell=use_shell)
         except FileNotFoundError:
             print("ERROR: mapshaper が見つかりません。npm install -g mapshaper を実行してください。")
             sys.exit(1)
