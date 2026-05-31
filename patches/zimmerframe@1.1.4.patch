@@ -1,0 +1,128 @@
+diff --git a/package.json b/package.json
+index 52c6e1e6644c7c4115455025ceb1afaccdb5b67f..a638866a26441a7fbf5eb71434a69933395880eb 100644
+--- a/package.json
++++ b/package.json
+@@ -6,13 +6,14 @@
+     "type": "git",
+     "url": "https://github.com/sveltejs/zimmerframe"
+   },
+-  "type": "module",
+   "exports": {
+     ".": {
+       "types": "./types/index.d.ts",
++      "require": "./src/walk.cjs",
+       "import": "./src/walk.js"
+     }
+   },
++  "main": "./src/walk.cjs",
+   "types": "./types/index.d.ts",
+   "files": [
+     "src",
+diff --git a/src/walk.cjs b/src/walk.cjs
+new file mode 100644
+index 0000000000000000000000000000000000000000..dea14ce27e6b835ec55c4d755a71f92e78720122
+--- /dev/null
++++ b/src/walk.cjs
+@@ -0,0 +1,102 @@
++'use strict';
++
++// CJS wrapper for zimmerframe — required by @preact/preset-vite in Node.js (CJS) context.
++// Upstream sveltejs/zimmerframe is ESM-only as of v1.1.4; no CJS build is provided.
++// TODO: Remove this patch when zimmerframe publishes an official CJS build.
++//       Track: https://github.com/sveltejs/zimmerframe/issues
++
++Object.defineProperty(exports, '__esModule', { value: true });
++
++function apply_mutations(node, mutations) {
++  const obj = {};
++  const descriptors = Object.getOwnPropertyDescriptors(node);
++  for (const key in descriptors) {
++    Object.defineProperty(obj, key, descriptors[key]);
++  }
++  for (const key in mutations) {
++    obj[key] = mutations[key];
++  }
++  return obj;
++}
++
++function walk(node, state, visitors) {
++  const universal = visitors._;
++  let stopped = false;
++
++  function default_visitor(_, { next, state }) {
++    next(state);
++  }
++
++  function visit(node, path, state) {
++    if (stopped) return;
++    if (!node.type) return;
++
++    let result;
++    const mutations = {};
++
++    const context = {
++      path,
++      state,
++      next: (next_state = state) => {
++        path.push(node);
++        for (const key in node) {
++          if (key === 'type') continue;
++          const child_node = node[key];
++          if (child_node && typeof child_node === 'object') {
++            if (Array.isArray(child_node)) {
++              const array_mutations = {};
++              const len = child_node.length;
++              let mutated = false;
++              for (let i = 0; i < len; i++) {
++                const n = child_node[i];
++                if (n && typeof n === 'object') {
++                  const r = visit(n, path, next_state);
++                  if (r) { array_mutations[i] = r; mutated = true; }
++                }
++              }
++              if (mutated) {
++                mutations[key] = child_node.map((n, i) => array_mutations[i] ?? n);
++              }
++            } else {
++              const r = visit(child_node, path, next_state);
++              if (r) mutations[key] = r;
++            }
++          }
++        }
++        path.pop();
++        if (Object.keys(mutations).length > 0) return apply_mutations(node, mutations);
++      },
++      stop: () => { stopped = true; },
++      visit: (next_node, next_state = state) => {
++        path.push(node);
++        const r = visit(next_node, path, next_state) ?? next_node;
++        path.pop();
++        return r;
++      }
++    };
++
++    let visitor = visitors[node.type] ?? default_visitor;
++
++    if (universal) {
++      let inner_result;
++      result = universal(node, {
++        ...context,
++        next: (next_state = state) => {
++          state = next_state;
++          inner_result = visitor(node, { ...context, state: next_state });
++          return inner_result;
++        }
++      });
++      if (!result && inner_result) result = inner_result;
++    } else {
++      result = visitor(node, context);
++    }
++
++    if (!result && Object.keys(mutations).length > 0) result = apply_mutations(node, mutations);
++    return result || undefined;
++  }
++
++  return visit(node, [], state) ?? node;
++}
++
++exports.walk = walk;
