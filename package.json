@@ -12,6 +12,9 @@
     "test:e2e": "playwright test --pass-with-no-tests"
   },
   "dependencies": {
+    "@php-wasm/universal": "^3.1.35",
+    "@php-wasm/web": "^3.1.35",
+    "@php-wasm/web-8-5": "^3.1.35",
     "preact": "^10.29.2"
   },
   "devDependencies": {
