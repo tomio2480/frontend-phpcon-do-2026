@@ -32,6 +32,10 @@ desktop.ini
 
 # 一時スクラッチ
 .scratch/
+tmp_*.txt
+
+# Claude Code ワークツリー
+.claude/worktrees/
 
 # ログ
 .pnpm-debug.log
