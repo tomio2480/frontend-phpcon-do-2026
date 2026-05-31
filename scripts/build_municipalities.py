@@ -28,6 +28,7 @@
 
 from __future__ import annotations
 import json
+import math
 import pathlib
 
 OUTPUT_DIR = pathlib.Path(__file__).parent.parent / "public" / "data"
@@ -350,11 +351,6 @@ def build() -> tuple[dict, dict]:
         raise ValueError(f"重複する市区町村コードが検出されました: {sorted(duplicates)}")
 
     municipalities_json: dict[str, dict] = {}
-    total_area = 0.0
-    total_population = 0
-    total_furusato_amount = 0
-    total_furusato_count = 0
-
     for (code, name, display_name, region,
          area, population, furusato_amount, furusato_count) in data:
         municipalities_json[code] = {
@@ -367,16 +363,14 @@ def build() -> tuple[dict, dict]:
             "furusato_amount": furusato_amount,
             "furusato_count": furusato_count,
         }
-        total_area += area
-        total_population += population
-        total_furusato_amount += furusato_amount
-        total_furusato_count += furusato_count
 
+    vals = municipalities_json.values()
+    # area は浮動小数点数のため math.fsum で丸め誤差を抑制する
     total_json = {
-        "area": round(total_area, 2),
-        "population": total_population,
-        "furusato_amount": total_furusato_amount,
-        "furusato_count": total_furusato_count,
+        "area": round(math.fsum(m["area"] for m in vals), 2),
+        "population": sum(m["population"] for m in vals),
+        "furusato_amount": sum(m["furusato_amount"] for m in vals),
+        "furusato_count": sum(m["furusato_count"] for m in vals),
         "data_notes": {
             "area_source": "国土地理院「全国都道府県市区町村別面積調」令和5年(2023)10月1日現在",
             "population_source": "住民基本台帳に基づく人口 2024年1月1日現在",

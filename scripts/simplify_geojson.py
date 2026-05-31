@@ -174,9 +174,13 @@ def simplify_with_mapshaper(input_path: str, percentage: float = 10.0,
 
         # Step 2: mapshaper で簡略化
         # Windows では npm グローバルインストールの mapshaper が .cmd として配置されるため
-        # shutil.which でフルパスを解決してから実行する
+        # shutil.which でフルパスを解決する。shell=True 時は FileNotFoundError が発生しないため
+        # 事前に which の結果を確認して未インストールを検出する。
         OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
-        mapshaper_bin = shutil.which("mapshaper") or "mapshaper"
+        mapshaper_bin = shutil.which("mapshaper")
+        if mapshaper_bin is None:
+            print("ERROR: mapshaper が見つかりません。npm install -g mapshaper を実行してください。")
+            sys.exit(1)
         cmd = [
             mapshaper_bin,
             str(tmp_geojson),
@@ -186,11 +190,7 @@ def simplify_with_mapshaper(input_path: str, percentage: float = 10.0,
         print(f"Running: {' '.join(cmd)}")
         # Windows では .cmd ファイルの実行にシェル経由が必要
         use_shell = sys.platform == "win32"
-        try:
-            result = subprocess.run(cmd, capture_output=True, text=True, shell=use_shell)
-        except FileNotFoundError:
-            print("ERROR: mapshaper が見つかりません。npm install -g mapshaper を実行してください。")
-            sys.exit(1)
+        result = subprocess.run(cmd, capture_output=True, text=True, shell=use_shell)
         if result.returncode != 0:
             print(f"mapshaper error:\n{result.stderr}")
             sys.exit(1)
