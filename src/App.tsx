@@ -10,6 +10,7 @@ export default function App() {
   async function handleRun() {
     setRunning(true)
     setRunError(null)
+    setOutput(null)
     try {
       const result = await run('<?php echo 1+1; ?>')
       setOutput(result)

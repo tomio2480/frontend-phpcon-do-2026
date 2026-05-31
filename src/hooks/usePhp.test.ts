@@ -52,6 +52,13 @@ describe('usePhp', () => {
     await expect(result.current.run('<?php echo 1; ?>')).rejects.toThrow('PHP runtime not ready')
   })
 
+  it('error 状態のとき run() を呼ぶと初期化失敗メッセージを投げる', async () => {
+    mockedGetPhp.mockRejectedValue(new Error('load failed'))
+    const { result } = renderHook(() => usePhp())
+    await waitFor(() => expect(result.current.status).toBe('error'))
+    await expect(result.current.run('<?php echo 1; ?>')).rejects.toThrow('PHP ランタイムの初期化に失敗しました')
+  })
+
   it('run() は再レンダリングをまたいで同一参照を維持する', async () => {
     mockedGetPhp.mockResolvedValue(mockPhp as never)
     const { result, rerender } = renderHook(() => usePhp())

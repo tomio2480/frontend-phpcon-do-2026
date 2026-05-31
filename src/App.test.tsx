@@ -34,6 +34,20 @@ describe('App', () => {
     expect(await screen.findByText('2')).toBeDefined()
   })
 
+  it('2 回目の実行開始時に前回の出力をクリアする', async () => {
+    mockRun.mockResolvedValueOnce({ text: '2' })
+    render(<App />)
+    await waitFor(() => screen.getByRole('button'))
+    fireEvent.click(screen.getByRole('button'))
+    await screen.findByText('2')
+
+    // 2 回目: 完了しない Promise を使い，実行中の状態を作る
+    mockRun.mockReturnValueOnce(new Promise(() => {}))
+    fireEvent.click(screen.getByRole('button'))
+    // 実行開始直後に前回の出力が消えている
+    await waitFor(() => expect(screen.queryByText('2')).toBeNull())
+  })
+
   it('run() が例外を投げたときエラーメッセージを表示する', async () => {
     mockRun.mockRejectedValue(new Error('PHP parse error'))
     render(<App />)

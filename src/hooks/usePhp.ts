@@ -37,10 +37,11 @@ export function usePhp(): UsePhpResult {
   }, [])
 
   const run = useCallback(async (code: string): Promise<string> => {
+    if (state.status === 'error') throw new Error('PHP ランタイムの初期化に失敗しました')
     if (!state.php) throw new Error('PHP runtime not ready')
     const result = await state.php.run({ code })
     return result.text
-  }, [state.php])
+  }, [state.php, state.status])
 
   return { ...state, run }
 }
