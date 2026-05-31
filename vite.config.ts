@@ -18,7 +18,7 @@ const require = createRequire(import.meta.url)
  */
 function resolveIcuDat(): Plugin {
   const webPkgRoot = dirname(require.resolve('@php-wasm/web/package.json'))
-  const icuDatPath = join(webPkgRoot, 'shared', 'icu.dat')
+  const icuDatPath = join(webPkgRoot, 'shared', 'icu.dat').replace(/\\/g, '/')
   return {
     name: 'resolve-icu-dat',
     resolveId(source) {

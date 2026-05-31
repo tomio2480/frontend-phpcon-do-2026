@@ -31,8 +31,7 @@ describe('App', () => {
     render(<App />)
     await waitFor(() => screen.getByRole('button'))
     fireEvent.click(screen.getByRole('button'))
-    await waitFor(() => document.querySelector('strong'))
-    expect(document.querySelector('strong')?.textContent).toBe('2')
+    expect(await screen.findByText('2')).toBeDefined()
   })
 
   it('run() が例外を投げたときエラーメッセージを表示する', async () => {
