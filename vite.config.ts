@@ -14,10 +14,12 @@ const require = createRequire(import.meta.url)
  * Vite の変換フェーズでこのインポートを実際の icu.dat ファイルパスへリダイレクトする．
  *
  * `@php-wasm/web` の exports に `shared/icu.dat` は含まれないため require.resolve で直接は解決できない．
- * package.json でパッケージルートを特定し，そこからの相対パスで icu.dat を組み立てる．
+ * メインエントリ（index.cjs）を resolve してその dirname でパッケージルートを特定する．
+ * `./package.json` サブパスは exports に含まれない場合 ERR_PACKAGE_PATH_NOT_EXPORTED を
+ * 投げる Node.js 環境があるため，パッケージ本体のエントリポイント経由で解決する．
  */
 function resolveIcuDat(): Plugin {
-  const webPkgRoot = dirname(require.resolve('@php-wasm/web/package.json'))
+  const webPkgRoot = dirname(require.resolve('@php-wasm/web'))
   const icuDatPath = join(webPkgRoot, 'shared', 'icu.dat').replace(/\\/g, '/')
   return {
     name: 'resolve-icu-dat',
