@@ -129,7 +129,7 @@ def main() -> None:
     gdf_out["geometry"] = gdf_out["geometry"].make_valid()
 
     print(f"GeoJSON を書き出し中: {OUTPUT_PATH}")
-    gdf_out.to_file(OUTPUT_PATH, driver="GeoJSON")
+    gdf_out.to_file(OUTPUT_PATH, driver="GeoJSON", coordinate_precision=6)
 
     size_kb = OUTPUT_PATH.stat().st_size / 1024
     print(
