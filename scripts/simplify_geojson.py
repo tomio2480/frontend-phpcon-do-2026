@@ -1,0 +1,190 @@
+"""
+北海道行政区域 GeoJSON 簡略化スクリプト
+
+■ 概要
+国土数値情報「行政区域データ」から取得した Shapefile を
+GeoJSON に変換し、mapshaper で座標精度を 5〜10% に簡略化して
+public/data/hokkaido.geojson を生成する。
+
+■ 前提ツール
+- Python 3.10 以上
+- geopandas (pip install geopandas)
+- mapshaper (npm install -g mapshaper)
+  ※ mapshaper が使用できない場合は shapely の simplify を使用する
+
+■ 入力データの取得手順
+1. 国土数値情報ダウンロードサービスにアクセスする
+   https://nlftp.mlit.go.jp/ksj/gml/datalist/KsjTmplt-N03-2024.html
+2. 北海道（01）の最新年度データ（Shapefile）をダウンロードする
+3. ダウンロードした ZIP を解凍し、ディレクトリパスを INPUT_SHAPEFILE に設定する
+
+■ 実行方法
+  python scripts/simplify_geojson.py --input /path/to/N03-24_01_240101.shp
+  python scripts/simplify_geojson.py --input /path/to/N03-24_01_240101.shp --method mapshaper
+
+■ 出力
+  public/data/hokkaido.geojson
+  （座標精度 10%、市区町村コード付き）
+
+■ GeoJSON スキーマ
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": { "type": "MultiPolygon", ... },
+      "properties": {
+        "code": "01101",        // 全国地方公共団体コード5桁
+        "name": "中央区",
+        "display_name": "札幌市 中央区"
+      }
+    }
+  ]
+}
+"""
+
+from __future__ import annotations
+import argparse
+import json
+import pathlib
+import subprocess
+import sys
+import tempfile
+
+OUTPUT_PATH = pathlib.Path(__file__).parent.parent / "public" / "data" / "hokkaido.geojson"
+
+# 国土数値情報 行政区域データの属性名
+# N03_007: 市区町村コード（6桁、チェックディジット付き）
+# N03_003: 都道府県名
+# N03_004: 市区町村名（政令市は区名）
+ATTR_CODE       = "N03_007"
+ATTR_PREF       = "N03_003"
+ATTR_CITY       = "N03_004"
+
+
+def _to_5digit(code6: str | None) -> str | None:
+    """6桁コードを5桁コードに変換する（末尾チェックディジットを除去）。"""
+    if not code6 or len(code6) != 6:
+        return None
+    return code6[:5]
+
+
+def simplify_with_shapely(input_path: str, tolerance: float = 0.01) -> None:
+    """geopandas + shapely で簡略化して GeoJSON に変換する。"""
+    try:
+        import geopandas as gpd
+    except ImportError:
+        print("ERROR: geopandas が見つかりません。pip install geopandas を実行してください。")
+        sys.exit(1)
+
+    print(f"Reading shapefile: {input_path}")
+    gdf = gpd.read_file(input_path, encoding="cp932")
+
+    # 北海道のみを抽出
+    gdf = gdf[gdf[ATTR_PREF] == "北海道"].copy()
+    print(f"  Features (before dissolve): {len(gdf)}")
+
+    # コードを5桁に変換
+    gdf["code"] = gdf[ATTR_CODE].apply(_to_5digit)
+    gdf = gdf.dropna(subset=["code"])
+
+    # 市区町村コードでディゾルブ（小ポリゴンを統合）
+    dissolved = gdf.dissolve(by="code", as_index=False)[[
+        "code", ATTR_CITY, "geometry"
+    ]]
+    print(f"  Features (after dissolve) : {len(dissolved)}")
+
+    # 投影座標系に変換してから簡略化（単位をメートルにする）
+    dissolved = dissolved.to_crs("EPSG:6678")
+    dissolved["geometry"] = dissolved["geometry"].simplify(
+        tolerance * 1000,   # tolerance km → m
+        preserve_topology=True,
+    )
+    dissolved = dissolved.to_crs("EPSG:4326")
+
+    # 出力用プロパティを整形
+    dissolved["display_name"] = dissolved[ATTR_CITY]
+
+    OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
+    dissolved[["code", "display_name", "geometry"]].to_file(
+        OUTPUT_PATH, driver="GeoJSON"
+    )
+    print(f"Generated: {OUTPUT_PATH}")
+
+
+def simplify_with_mapshaper(input_path: str, percentage: float = 10.0) -> None:
+    """mapshaper CLI で簡略化する（高速・高品質）。"""
+    with tempfile.TemporaryDirectory() as tmpdir:
+        tmp_geojson = pathlib.Path(tmpdir) / "hokkaido_raw.geojson"
+
+        # Step 1: geopandas で前処理
+        try:
+            import geopandas as gpd
+        except ImportError:
+            print("ERROR: geopandas が見つかりません。pip install geopandas を実行してください。")
+            sys.exit(1)
+
+        gdf = gpd.read_file(input_path, encoding="cp932")
+        gdf = gdf[gdf[ATTR_PREF] == "北海道"].copy()
+        gdf["code"] = gdf[ATTR_CODE].apply(_to_5digit)
+        gdf = gdf.dropna(subset=["code"])
+
+        dissolved = gdf.dissolve(by="code", as_index=False)[[
+            "code", ATTR_CITY, "geometry"
+        ]]
+        dissolved = dissolved.rename(columns={ATTR_CITY: "name"})
+        dissolved.to_crs("EPSG:4326").to_file(tmp_geojson, driver="GeoJSON")
+
+        # Step 2: mapshaper で簡略化
+        OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
+        cmd = [
+            "mapshaper",
+            str(tmp_geojson),
+            "-simplify", f"{percentage}%", "keep-shapes",
+            "-o", str(OUTPUT_PATH), "format=geojson",
+        ]
+        print(f"Running: {' '.join(cmd)}")
+        result = subprocess.run(cmd, capture_output=True, text=True)
+        if result.returncode != 0:
+            print(f"mapshaper error:\n{result.stderr}")
+            sys.exit(1)
+
+    print(f"Generated: {OUTPUT_PATH}")
+    size_kb = OUTPUT_PATH.stat().st_size / 1024
+    print(f"  File size: {size_kb:.1f} KB")
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(
+        description="国土数値情報 Shapefile を簡略化 GeoJSON に変換する"
+    )
+    parser.add_argument(
+        "--input", "-i", required=True,
+        help="入力 Shapefile のパス (.shp)",
+    )
+    parser.add_argument(
+        "--method", choices=["shapely", "mapshaper"], default="mapshaper",
+        help="簡略化手法（デフォルト: mapshaper）",
+    )
+    parser.add_argument(
+        "--percentage", type=float, default=10.0,
+        help="mapshaper の簡略化率 %（デフォルト: 10.0）",
+    )
+    parser.add_argument(
+        "--tolerance", type=float, default=0.5,
+        help="shapely の簡略化許容誤差 km（デフォルト: 0.5）",
+    )
+    args = parser.parse_args()
+
+    if not pathlib.Path(args.input).exists():
+        print(f"ERROR: ファイルが見つかりません: {args.input}")
+        sys.exit(1)
+
+    if args.method == "mapshaper":
+        simplify_with_mapshaper(args.input, percentage=args.percentage)
+    else:
+        simplify_with_shapely(args.input, tolerance=args.tolerance)
+
+
+if __name__ == "__main__":
+    main()
