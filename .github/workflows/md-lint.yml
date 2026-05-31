@@ -1,0 +1,24 @@
+name: Markdown Lint
+
+on:
+  pull_request:
+    paths:
+      - "**/*.md"
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  lint:
+    name: Markdown Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        # actions/checkout v4.3.1
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+
+      - name: Markdown Lint via composite action
+        uses: tomio2480/github-workflows/.github/actions/markdown-lint@ace7290b2d473b7db5e869e217e999a946584603 # v2.5.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
