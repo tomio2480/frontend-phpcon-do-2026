@@ -34,23 +34,27 @@ def download_zip(url: str, cache_path: Path) -> None:
     print(f"ダウンロード中: {url}")
     cache_path.parent.mkdir(parents=True, exist_ok=True)
     tmp_path = cache_path.with_suffix(".tmp")
-    with requests.get(url, stream=True, timeout=120) as resp:
-        resp.raise_for_status()
-        total = int(resp.headers.get("content-length", 0))
-        downloaded = 0
-        with tmp_path.open("wb") as f:
-            for chunk in resp.iter_content(chunk_size=65536):
-                f.write(chunk)
-                downloaded += len(chunk)
-                if total:
-                    pct = downloaded / total * 100
-                    mb_done = downloaded / 1024 / 1024
-                    mb_total = total / 1024 / 1024
-                    print(f"\r  {pct:.1f}%  ({mb_done:.1f} / {mb_total:.1f} MB)", end="", flush=True)
-
-    print()
-    tmp_path.replace(cache_path)
-    print(f"キャッシュ保存: {cache_path}")
+    try:
+        with requests.get(url, stream=True, timeout=120) as resp:
+            resp.raise_for_status()
+            total = int(resp.headers.get("content-length", 0))
+            downloaded = 0
+            with tmp_path.open("wb") as f:
+                for chunk in resp.iter_content(chunk_size=65536):
+                    f.write(chunk)
+                    downloaded += len(chunk)
+                    if total:
+                        pct = downloaded / total * 100
+                        mb_done = downloaded / 1024 / 1024
+                        mb_total = total / 1024 / 1024
+                        print(f"\r  {pct:.1f}%  ({mb_done:.1f} / {mb_total:.1f} MB)", end="", flush=True)
+        print()
+        tmp_path.replace(cache_path)
+        print(f"キャッシュ保存: {cache_path}")
+    except Exception:
+        if tmp_path.exists():
+            tmp_path.unlink()
+        raise
 
 
 def find_shp_entry(zf: zipfile.ZipFile) -> str:
@@ -81,12 +85,12 @@ def main() -> None:
     extract_dir = CACHE_DIR / "extracted"
     extract_dir.mkdir(parents=True, exist_ok=True)
 
-    print("Shapefile を展開中...")
     with zipfile.ZipFile(cache_zip) as zf:
         shp_entry = find_shp_entry(zf)
-        zf.extractall(extract_dir)
-
-    shp_path = extract_dir / shp_entry
+        shp_path = extract_dir / shp_entry
+        if not shp_path.exists():
+            print("Shapefile を展開中...")
+            zf.extractall(extract_dir)
     print(f"Shapefile を読み込み中: {shp_path.name}")
     gdf = gpd.read_file(shp_path, encoding="cp932")
     print(f"  {len(gdf)} フィーチャー, CRS={gdf.crs}")
