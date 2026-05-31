@@ -53,12 +53,15 @@ import tempfile
 
 OUTPUT_PATH = pathlib.Path(__file__).parent.parent / "public" / "data" / "hokkaido.geojson"
 
-# 国土数値情報 行政区域データの属性名
+# 国土数値情報 行政区域データの属性名（N03 フォーマット）
+# N03_001: 都道府県名
+# N03_002: 支庁・振興局名
+# N03_003: 郡・政令指定都市名（札幌市の区では "札幌市"）
+# N03_004: 市区町村名（政令市の場合は区名）
 # N03_007: 市区町村コード（6桁、チェックディジット付き）
-# N03_003: 都道府県名
-# N03_004: 市区町村名（政令市は区名）
 ATTR_CODE       = "N03_007"
-ATTR_PREF       = "N03_003"
+ATTR_PREF       = "N03_001"
+ATTR_OFFICE     = "N03_003"
 ATTR_CITY       = "N03_004"
 
 
@@ -88,25 +91,33 @@ def simplify_with_shapely(input_path: str, tolerance: float = 0.01) -> None:
     gdf["code"] = gdf[ATTR_CODE].apply(_to_5digit)
     gdf = gdf.dropna(subset=["code"])
 
+    # name / display_name を生成（ディゾルブ前に確定させる）
+    # 政令指定都市の区（N03_003 が市名）は「{市名} {区名}」に結合
+    gdf["name"] = gdf[ATTR_CITY]
+    gdf["display_name"] = gdf.apply(
+        lambda r: f"{r[ATTR_OFFICE]} {r[ATTR_CITY]}"
+        if r[ATTR_OFFICE] and r[ATTR_OFFICE].endswith("市")
+        and r[ATTR_CITY] and r[ATTR_CITY].endswith("区")
+        else r[ATTR_CITY],
+        axis=1,
+    )
+
     # 市区町村コードでディゾルブ（小ポリゴンを統合）
-    dissolved = gdf.dissolve(by="code", as_index=False)[[
-        "code", ATTR_CITY, "geometry"
-    ]]
+    dissolved = gdf.dissolve(by="code", as_index=False)[
+        ["code", "name", "display_name", "geometry"]
+    ]
     print(f"  Features (after dissolve) : {len(dissolved)}")
 
-    # 投影座標系に変換してから簡略化（単位をメートルにする）
-    dissolved = dissolved.to_crs("EPSG:6678")
+    # 北海道に適した投影座標系（UTM Zone 54N）に変換してから簡略化
+    dissolved = dissolved.to_crs("EPSG:32654")
     dissolved["geometry"] = dissolved["geometry"].simplify(
         tolerance * 1000,   # tolerance km → m
         preserve_topology=True,
     )
     dissolved = dissolved.to_crs("EPSG:4326")
 
-    # 出力用プロパティを整形
-    dissolved["display_name"] = dissolved[ATTR_CITY]
-
     OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
-    dissolved[["code", "display_name", "geometry"]].to_file(
+    dissolved[["code", "name", "display_name", "geometry"]].to_file(
         OUTPUT_PATH, driver="GeoJSON"
     )
     print(f"Generated: {OUTPUT_PATH}")
@@ -129,10 +140,19 @@ def simplify_with_mapshaper(input_path: str, percentage: float = 10.0) -> None:
         gdf["code"] = gdf[ATTR_CODE].apply(_to_5digit)
         gdf = gdf.dropna(subset=["code"])
 
-        dissolved = gdf.dissolve(by="code", as_index=False)[[
-            "code", ATTR_CITY, "geometry"
-        ]]
-        dissolved = dissolved.rename(columns={ATTR_CITY: "name"})
+        # name / display_name を生成
+        gdf["name"] = gdf[ATTR_CITY]
+        gdf["display_name"] = gdf.apply(
+            lambda r: f"{r[ATTR_OFFICE]} {r[ATTR_CITY]}"
+            if r[ATTR_OFFICE] and r[ATTR_OFFICE].endswith("市")
+            and r[ATTR_CITY] and r[ATTR_CITY].endswith("区")
+            else r[ATTR_CITY],
+            axis=1,
+        )
+
+        dissolved = gdf.dissolve(by="code", as_index=False)[
+            ["code", "name", "display_name", "geometry"]
+        ]
         dissolved.to_crs("EPSG:4326").to_file(tmp_geojson, driver="GeoJSON")
 
         # Step 2: mapshaper で簡略化

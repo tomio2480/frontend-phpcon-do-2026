@@ -298,23 +298,36 @@ MUNICIPALITIES: list[tuple] = [
 
 
 def distribute_sapporo_furusato(municipalities: list[tuple]) -> list[tuple]:
-    """札幌市のふるさと納税を10区に人口比で按分する。"""
+    """札幌市のふるさと納税を10区に人口比で按分する。
+
+    各区の按分後に合計が目標値と一致するよう、最後の区で端数を調整する。
+    """
     sapporo_codes = {f"0110{i}" for i in range(1, 9)} | {"01109", "01110"}
     sapporo_pops = {
         m[0]: m[5] for m in municipalities if m[0] in sapporo_codes
     }
     total_pop = sum(sapporo_pops.values())
 
-    result = []
-    for m in municipalities:
-        if m[0] not in sapporo_codes:
-            result.append(m)
-            continue
+    distributed: list[tuple] = []
+    accumulated_amount = 0
+    accumulated_count = 0
+    sapporo_entries = [m for m in municipalities if m[0] in sapporo_codes]
+
+    for i, m in enumerate(sapporo_entries):
         ratio = m[5] / total_pop
-        amount = round(SAPPORO_FURUSATO_AMOUNT * ratio)
-        count = round(SAPPORO_FURUSATO_COUNT * ratio)
-        result.append((*m[:6], amount, count))
-    return result
+        if i < len(sapporo_entries) - 1:
+            amount = round(SAPPORO_FURUSATO_AMOUNT * ratio)
+            count = round(SAPPORO_FURUSATO_COUNT * ratio)
+        else:
+            # 最後の区で端数を調整して合計を目標値に一致させる
+            amount = SAPPORO_FURUSATO_AMOUNT - accumulated_amount
+            count = SAPPORO_FURUSATO_COUNT - accumulated_count
+        accumulated_amount += amount
+        accumulated_count += count
+        distributed.append((*m[:6], amount, count))
+
+    sapporo_map = {m[0]: m for m in distributed}
+    return [sapporo_map.get(m[0], m) for m in municipalities]
 
 
 def build() -> tuple[dict, dict]:
