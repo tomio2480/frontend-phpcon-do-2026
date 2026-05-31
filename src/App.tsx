@@ -5,12 +5,16 @@ export default function App() {
   const { status, error, run } = usePhp()
   const [output, setOutput] = useState<string | null>(null)
   const [running, setRunning] = useState(false)
+  const [runError, setRunError] = useState<string | null>(null)
 
   async function handleRun() {
     setRunning(true)
+    setRunError(null)
     try {
       const result = await run('<?php echo 1+1; ?>')
       setOutput(result)
+    } catch (e) {
+      setRunError(e instanceof Error ? e.message : String(e))
     } finally {
       setRunning(false)
     }
@@ -27,7 +31,8 @@ export default function App() {
             {running ? '実行中…' : 'PHP を実行（1+1）'}
           </button>
         )}
-        {output !== null && (
+        {runError !== null && <p>実行エラー: {runError}</p>}
+        {output !== null && runError === null && (
           <p>
             <code>{'<?php echo 1+1; ?>'}</code> の出力: <strong>{output}</strong>
           </p>
