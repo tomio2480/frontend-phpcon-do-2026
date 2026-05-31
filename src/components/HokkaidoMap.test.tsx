@@ -30,7 +30,7 @@ describe('HokkaidoMap', () => {
     expect(container).toBeTruthy()
   })
 
-  it('onHover と onClick の props を受け取る', () => {
+  it('onHover と onClick を渡してもクラッシュしない', () => {
     const onHover = vi.fn()
     const onClick = vi.fn()
     render(<HokkaidoMap onHover={onHover} onClick={onClick} />)
