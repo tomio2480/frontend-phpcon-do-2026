@@ -12,7 +12,7 @@
 
 | パス | ブランチ | 用途 |
 |---|---|---|
-| `frontend-phpcon-do-2026/` | `phase/2-project-init`（以降は各 phase ブランチ） | Phase 2〜 |
+| `frontend-phpcon-do-2026/` | `main`（次フェーズは `phase/N-*` ブランチを切る） | メイン作業 |
 | `frontend-phpcon-do-2026/.claude/worktrees/geojson-data/` | `worktree-geojson-data` | Phase 1 セッション A |
 | `frontend-phpcon-do-2026--phase1/` | `phase/1-data-collection` | Phase 1 セッション B |
 
