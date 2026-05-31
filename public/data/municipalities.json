@@ -1,0 +1,1882 @@
+{
+  "01101": {
+    "code": "01101",
+    "name": "中央区",
+    "display_name": "札幌市 中央区",
+    "region": "石狩振興局",
+    "area": 46.42,
+    "population": 255288,
+    "furusato_amount": 506610766,
+    "furusato_count": 26995
+  },
+  "01102": {
+    "code": "01102",
+    "name": "北区",
+    "display_name": "札幌市 北区",
+    "region": "石狩振興局",
+    "area": 63.57,
+    "population": 287436,
+    "furusato_amount": 570407431,
+    "furusato_count": 30394
+  },
+  "01103": {
+    "code": "01103",
+    "name": "東区",
+    "display_name": "札幌市 東区",
+    "region": "石狩振興局",
+    "area": 56.97,
+    "population": 263897,
+    "furusato_amount": 523695048,
+    "furusato_count": 27905
+  },
+  "01104": {
+    "code": "01104",
+    "name": "白石区",
+    "display_name": "札幌市 白石区",
+    "region": "石狩振興局",
+    "area": 34.47,
+    "population": 212182,
+    "furusato_amount": 421068306,
+    "furusato_count": 22436
+  },
+  "01105": {
+    "code": "01105",
+    "name": "豊平区",
+    "display_name": "札幌市 豊平区",
+    "region": "石狩振興局",
+    "area": 46.23,
+    "population": 228957,
+    "furusato_amount": 454357750,
+    "furusato_count": 24210
+  },
+  "01106": {
+    "code": "01106",
+    "name": "南区",
+    "display_name": "札幌市 南区",
+    "region": "石狩振興局",
+    "area": 657.48,
+    "population": 132365,
+    "furusato_amount": 262674055,
+    "furusato_count": 13996
+  },
+  "01107": {
+    "code": "01107",
+    "name": "西区",
+    "display_name": "札幌市 西区",
+    "region": "石狩振興局",
+    "area": 75.1,
+    "population": 218004,
+    "furusato_amount": 432621876,
+    "furusato_count": 23052
+  },
+  "01108": {
+    "code": "01108",
+    "name": "厚別区",
+    "display_name": "札幌市 厚別区",
+    "region": "石狩振興局",
+    "area": 24.38,
+    "population": 121378,
+    "furusato_amount": 240870709,
+    "furusato_count": 12835
+  },
+  "01109": {
+    "code": "01109",
+    "name": "手稲区",
+    "display_name": "札幌市 手稲区",
+    "region": "石狩振興局",
+    "area": 56.77,
+    "population": 139885,
+    "furusato_amount": 277597251,
+    "furusato_count": 14792
+  },
+  "01110": {
+    "code": "01110",
+    "name": "清田区",
+    "display_name": "札幌市 清田区",
+    "region": "石狩振興局",
+    "area": 59.87,
+    "population": 107931,
+    "furusato_amount": 214185572,
+    "furusato_count": 11413
+  },
+  "01217": {
+    "code": "01217",
+    "name": "江別市",
+    "display_name": "江別市",
+    "region": "石狩振興局",
+    "area": 187.38,
+    "population": 119049,
+    "furusato_amount": 269995325,
+    "furusato_count": 17316
+  },
+  "01224": {
+    "code": "01224",
+    "name": "千歳市",
+    "display_name": "千歳市",
+    "region": "石狩振興局",
+    "area": 594.5,
+    "population": 96888,
+    "furusato_amount": 7476380138,
+    "furusato_count": 387226
+  },
+  "01231": {
+    "code": "01231",
+    "name": "恵庭市",
+    "display_name": "恵庭市",
+    "region": "石狩振興局",
+    "area": 294.65,
+    "population": 70483,
+    "furusato_amount": 2632766900,
+    "furusato_count": 129859
+  },
+  "01233": {
+    "code": "01233",
+    "name": "北広島市",
+    "display_name": "北広島市",
+    "region": "石狩振興局",
+    "area": 119.05,
+    "population": 56206,
+    "furusato_amount": 538910590,
+    "furusato_count": 20899
+  },
+  "01234": {
+    "code": "01234",
+    "name": "石狩市",
+    "display_name": "石狩市",
+    "region": "石狩振興局",
+    "area": 722.33,
+    "population": 55493,
+    "furusato_amount": 904128088,
+    "furusato_count": 44662
+  },
+  "01303": {
+    "code": "01303",
+    "name": "当別町",
+    "display_name": "当別町",
+    "region": "石狩振興局",
+    "area": 422.86,
+    "population": 15236,
+    "furusato_amount": 2202849500,
+    "furusato_count": 122889
+  },
+  "01304": {
+    "code": "01304",
+    "name": "新篠津村",
+    "display_name": "新篠津村",
+    "region": "石狩振興局",
+    "area": 78.04,
+    "population": 2748,
+    "furusato_amount": 228729500,
+    "furusato_count": 5473
+  },
+  "01202": {
+    "code": "01202",
+    "name": "函館市",
+    "display_name": "函館市",
+    "region": "渡島総合振興局",
+    "area": 677.87,
+    "population": 232050,
+    "furusato_amount": 2222260040,
+    "furusato_count": 104180
+  },
+  "01235": {
+    "code": "01235",
+    "name": "北斗市",
+    "display_name": "北斗市",
+    "region": "渡島総合振興局",
+    "area": 397.44,
+    "population": 40945,
+    "furusato_amount": 257980800,
+    "furusato_count": 13020
+  },
+  "01331": {
+    "code": "01331",
+    "name": "松前町",
+    "display_name": "松前町",
+    "region": "渡島総合振興局",
+    "area": 293.25,
+    "population": 5105,
+    "furusato_amount": 23730000,
+    "furusato_count": 1080
+  },
+  "01332": {
+    "code": "01332",
+    "name": "福島町",
+    "display_name": "福島町",
+    "region": "渡島総合振興局",
+    "area": 187.25,
+    "population": 3227,
+    "furusato_amount": 44528000,
+    "furusato_count": 3168
+  },
+  "01333": {
+    "code": "01333",
+    "name": "知内町",
+    "display_name": "知内町",
+    "region": "渡島総合振興局",
+    "area": 196.76,
+    "population": 3704,
+    "furusato_amount": 394380666,
+    "furusato_count": 20556
+  },
+  "01334": {
+    "code": "01334",
+    "name": "木古内町",
+    "display_name": "木古内町",
+    "region": "渡島総合振興局",
+    "area": 221.86,
+    "population": 3277,
+    "furusato_amount": 168310890,
+    "furusato_count": 7841
+  },
+  "01337": {
+    "code": "01337",
+    "name": "七飯町",
+    "display_name": "七飯町",
+    "region": "渡島総合振興局",
+    "area": 216.75,
+    "population": 26624,
+    "furusato_amount": 94942000,
+    "furusato_count": 4157
+  },
+  "01343": {
+    "code": "01343",
+    "name": "鹿部町",
+    "display_name": "鹿部町",
+    "region": "渡島総合振興局",
+    "area": 110.63,
+    "population": 3410,
+    "furusato_amount": 1189632666,
+    "furusato_count": 100180
+  },
+  "01345": {
+    "code": "01345",
+    "name": "森町",
+    "display_name": "森町",
+    "region": "渡島総合振興局",
+    "area": 368.79,
+    "population": 12735,
+    "furusato_amount": 2272313900,
+    "furusato_count": 136638
+  },
+  "01346": {
+    "code": "01346",
+    "name": "八雲町",
+    "display_name": "八雲町",
+    "region": "渡島総合振興局",
+    "area": 956.08,
+    "population": 14417,
+    "furusato_amount": 1777482633,
+    "furusato_count": 106317
+  },
+  "01347": {
+    "code": "01347",
+    "name": "長万部町",
+    "display_name": "長万部町",
+    "region": "渡島総合振興局",
+    "area": 310.76,
+    "population": 4604,
+    "furusato_amount": 343218800,
+    "furusato_count": 24380
+  },
+  "01361": {
+    "code": "01361",
+    "name": "江差町",
+    "display_name": "江差町",
+    "region": "檜山振興局",
+    "area": 109.48,
+    "population": 6489,
+    "furusato_amount": 250451700,
+    "furusato_count": 13583
+  },
+  "01362": {
+    "code": "01362",
+    "name": "上ノ国町",
+    "display_name": "上ノ国町",
+    "region": "檜山振興局",
+    "area": 547.72,
+    "population": 3693,
+    "furusato_amount": 40160000,
+    "furusato_count": 1932
+  },
+  "01363": {
+    "code": "01363",
+    "name": "厚沢部町",
+    "display_name": "厚沢部町",
+    "region": "檜山振興局",
+    "area": 460.58,
+    "population": 3113,
+    "furusato_amount": 42922000,
+    "furusato_count": 2336
+  },
+  "01364": {
+    "code": "01364",
+    "name": "乙部町",
+    "display_name": "乙部町",
+    "region": "檜山振興局",
+    "area": 162.59,
+    "population": 2915,
+    "furusato_amount": 88087300,
+    "furusato_count": 5205
+  },
+  "01367": {
+    "code": "01367",
+    "name": "奥尻町",
+    "display_name": "奥尻町",
+    "region": "檜山振興局",
+    "area": 142.99,
+    "population": 1993,
+    "furusato_amount": 64533000,
+    "furusato_count": 2929
+  },
+  "01370": {
+    "code": "01370",
+    "name": "今金町",
+    "display_name": "今金町",
+    "region": "檜山振興局",
+    "area": 568.25,
+    "population": 4338,
+    "furusato_amount": 60278600,
+    "furusato_count": 5927
+  },
+  "01371": {
+    "code": "01371",
+    "name": "せたな町",
+    "display_name": "せたな町",
+    "region": "檜山振興局",
+    "area": 638.68,
+    "population": 6287,
+    "furusato_amount": 215565000,
+    "furusato_count": 9798
+  },
+  "01203": {
+    "code": "01203",
+    "name": "小樽市",
+    "display_name": "小樽市",
+    "region": "後志総合振興局",
+    "area": 243.87,
+    "population": 101185,
+    "furusato_amount": 852067410,
+    "furusato_count": 39339
+  },
+  "01391": {
+    "code": "01391",
+    "name": "島牧村",
+    "display_name": "島牧村",
+    "region": "後志総合振興局",
+    "area": 437.18,
+    "population": 1178,
+    "furusato_amount": 23161000,
+    "furusato_count": 1138
+  },
+  "01392": {
+    "code": "01392",
+    "name": "寿都町",
+    "display_name": "寿都町",
+    "region": "後志総合振興局",
+    "area": 95.25,
+    "population": 2488,
+    "furusato_amount": 1366905000,
+    "furusato_count": 97339
+  },
+  "01393": {
+    "code": "01393",
+    "name": "黒松内町",
+    "display_name": "黒松内町",
+    "region": "後志総合振興局",
+    "area": 345.65,
+    "population": 2421,
+    "furusato_amount": 235055600,
+    "furusato_count": 15357
+  },
+  "01394": {
+    "code": "01394",
+    "name": "蘭越町",
+    "display_name": "蘭越町",
+    "region": "後志総合振興局",
+    "area": 449.78,
+    "population": 4297,
+    "furusato_amount": 134181000,
+    "furusato_count": 4749
+  },
+  "01395": {
+    "code": "01395",
+    "name": "ニセコ町",
+    "display_name": "ニセコ町",
+    "region": "後志総合振興局",
+    "area": 197.13,
+    "population": 5147,
+    "furusato_amount": 141302000,
+    "furusato_count": 2922
+  },
+  "01396": {
+    "code": "01396",
+    "name": "真狩村",
+    "display_name": "真狩村",
+    "region": "後志総合振興局",
+    "area": 114.25,
+    "population": 1965,
+    "furusato_amount": 26080000,
+    "furusato_count": 750
+  },
+  "01397": {
+    "code": "01397",
+    "name": "留寿都村",
+    "display_name": "留寿都村",
+    "region": "後志総合振興局",
+    "area": 119.84,
+    "population": 1911,
+    "furusato_amount": 255644000,
+    "furusato_count": 2244
+  },
+  "01398": {
+    "code": "01398",
+    "name": "喜茂別町",
+    "display_name": "喜茂別町",
+    "region": "後志総合振興局",
+    "area": 189.41,
+    "population": 1956,
+    "furusato_amount": 94504500,
+    "furusato_count": 5718
+  },
+  "01399": {
+    "code": "01399",
+    "name": "京極町",
+    "display_name": "京極町",
+    "region": "後志総合振興局",
+    "area": 231.49,
+    "population": 2780,
+    "furusato_amount": 54154000,
+    "furusato_count": 3136
+  },
+  "01400": {
+    "code": "01400",
+    "name": "倶知安町",
+    "display_name": "倶知安町",
+    "region": "後志総合振興局",
+    "area": 261.34,
+    "population": 14276,
+    "furusato_amount": 1178009260,
+    "furusato_count": 29980
+  },
+  "01401": {
+    "code": "01401",
+    "name": "共和町",
+    "display_name": "共和町",
+    "region": "後志総合振興局",
+    "area": 304.92,
+    "population": 5370,
+    "furusato_amount": 43996500,
+    "furusato_count": 2315
+  },
+  "01402": {
+    "code": "01402",
+    "name": "岩内町",
+    "display_name": "岩内町",
+    "region": "後志総合振興局",
+    "area": 70.6,
+    "population": 10268,
+    "furusato_amount": 289902595,
+    "furusato_count": 16627
+  },
+  "01403": {
+    "code": "01403",
+    "name": "泊村",
+    "display_name": "泊村",
+    "region": "後志総合振興局",
+    "area": 82.27,
+    "population": 1385,
+    "furusato_amount": 5185000,
+    "furusato_count": 280
+  },
+  "01404": {
+    "code": "01404",
+    "name": "神恵内村",
+    "display_name": "神恵内村",
+    "region": "後志総合振興局",
+    "area": 147.79,
+    "population": 772,
+    "furusato_amount": 6672000,
+    "furusato_count": 479
+  },
+  "01405": {
+    "code": "01405",
+    "name": "積丹町",
+    "display_name": "積丹町",
+    "region": "後志総合振興局",
+    "area": 238.13,
+    "population": 1521,
+    "furusato_amount": 68957500,
+    "furusato_count": 4012
+  },
+  "01406": {
+    "code": "01406",
+    "name": "古平町",
+    "display_name": "古平町",
+    "region": "後志総合振興局",
+    "area": 188.36,
+    "population": 2357,
+    "furusato_amount": 384350500,
+    "furusato_count": 32549
+  },
+  "01407": {
+    "code": "01407",
+    "name": "仁木町",
+    "display_name": "仁木町",
+    "region": "後志総合振興局",
+    "area": 167.96,
+    "population": 3127,
+    "furusato_amount": 553513100,
+    "furusato_count": 20410
+  },
+  "01408": {
+    "code": "01408",
+    "name": "余市町",
+    "display_name": "余市町",
+    "region": "後志総合振興局",
+    "area": 140.62,
+    "population": 16430,
+    "furusato_amount": 1523801578,
+    "furusato_count": 104227
+  },
+  "01409": {
+    "code": "01409",
+    "name": "赤井川村",
+    "display_name": "赤井川村",
+    "region": "後志総合振興局",
+    "area": 280.09,
+    "population": 1212,
+    "furusato_amount": 279730000,
+    "furusato_count": 11455
+  },
+  "01209": {
+    "code": "01209",
+    "name": "夕張市",
+    "display_name": "夕張市",
+    "region": "空知総合振興局",
+    "area": 763.07,
+    "population": 5648,
+    "furusato_amount": 298973049,
+    "furusato_count": 11583
+  },
+  "01210": {
+    "code": "01210",
+    "name": "岩見沢市",
+    "display_name": "岩見沢市",
+    "region": "空知総合振興局",
+    "area": 481.02,
+    "population": 72799,
+    "furusato_amount": 187283500,
+    "furusato_count": 7411
+  },
+  "01215": {
+    "code": "01215",
+    "name": "美唄市",
+    "display_name": "美唄市",
+    "region": "空知総合振興局",
+    "area": 277.69,
+    "population": 17832,
+    "furusato_amount": 970319700,
+    "furusato_count": 46429
+  },
+  "01216": {
+    "code": "01216",
+    "name": "芦別市",
+    "display_name": "芦別市",
+    "region": "空知総合振興局",
+    "area": 865.04,
+    "population": 10640,
+    "furusato_amount": 278873000,
+    "furusato_count": 11899
+  },
+  "01218": {
+    "code": "01218",
+    "name": "赤平市",
+    "display_name": "赤平市",
+    "region": "空知総合振興局",
+    "area": 129.88,
+    "population": 8207,
+    "furusato_amount": 1635633259,
+    "furusato_count": 50706
+  },
+  "01222": {
+    "code": "01222",
+    "name": "三笠市",
+    "display_name": "三笠市",
+    "region": "空知総合振興局",
+    "area": 302.52,
+    "population": 6921,
+    "furusato_amount": 1703262500,
+    "furusato_count": 97722
+  },
+  "01225": {
+    "code": "01225",
+    "name": "滝川市",
+    "display_name": "滝川市",
+    "region": "空知総合振興局",
+    "area": 115.9,
+    "population": 36107,
+    "furusato_amount": 1501224200,
+    "furusato_count": 47832
+  },
+  "01226": {
+    "code": "01226",
+    "name": "砂川市",
+    "display_name": "砂川市",
+    "region": "空知総合振興局",
+    "area": 78.68,
+    "population": 14981,
+    "furusato_amount": 1517467598,
+    "furusato_count": 50685
+  },
+  "01227": {
+    "code": "01227",
+    "name": "歌志内市",
+    "display_name": "歌志内市",
+    "region": "空知総合振興局",
+    "area": 55.95,
+    "population": 2431,
+    "furusato_amount": 11813400,
+    "furusato_count": 931
+  },
+  "01228": {
+    "code": "01228",
+    "name": "深川市",
+    "display_name": "深川市",
+    "region": "空知総合振興局",
+    "area": 529.42,
+    "population": 17817,
+    "furusato_amount": 1607660700,
+    "furusato_count": 88018
+  },
+  "01423": {
+    "code": "01423",
+    "name": "南幌町",
+    "display_name": "南幌町",
+    "region": "空知総合振興局",
+    "area": 81.36,
+    "population": 8002,
+    "furusato_amount": 173876000,
+    "furusato_count": 15827
+  },
+  "01424": {
+    "code": "01424",
+    "name": "奈井江町",
+    "display_name": "奈井江町",
+    "region": "空知総合振興局",
+    "area": 88.19,
+    "population": 4526,
+    "furusato_amount": 122491000,
+    "furusato_count": 2172
+  },
+  "01425": {
+    "code": "01425",
+    "name": "上砂川町",
+    "display_name": "上砂川町",
+    "region": "空知総合振興局",
+    "area": 39.98,
+    "population": 2305,
+    "furusato_amount": 8893000,
+    "furusato_count": 358
+  },
+  "01427": {
+    "code": "01427",
+    "name": "由仁町",
+    "display_name": "由仁町",
+    "region": "空知総合振興局",
+    "area": 133.74,
+    "population": 4334,
+    "furusato_amount": 177586200,
+    "furusato_count": 7808
+  },
+  "01428": {
+    "code": "01428",
+    "name": "長沼町",
+    "display_name": "長沼町",
+    "region": "空知総合振興局",
+    "area": 168.52,
+    "population": 9568,
+    "furusato_amount": 307125500,
+    "furusato_count": 18031
+  },
+  "01429": {
+    "code": "01429",
+    "name": "栗山町",
+    "display_name": "栗山町",
+    "region": "空知総合振興局",
+    "area": 203.93,
+    "population": 10308,
+    "furusato_amount": 335523000,
+    "furusato_count": 9511
+  },
+  "01430": {
+    "code": "01430",
+    "name": "月形町",
+    "display_name": "月形町",
+    "region": "空知総合振興局",
+    "area": 150.4,
+    "population": 3228,
+    "furusato_amount": 951539000,
+    "furusato_count": 26916
+  },
+  "01431": {
+    "code": "01431",
+    "name": "浦臼町",
+    "display_name": "浦臼町",
+    "region": "空知総合振興局",
+    "area": 101.83,
+    "population": 1513,
+    "furusato_amount": 292326000,
+    "furusato_count": 11130
+  },
+  "01432": {
+    "code": "01432",
+    "name": "新十津川町",
+    "display_name": "新十津川町",
+    "region": "空知総合振興局",
+    "area": 495.47,
+    "population": 6093,
+    "furusato_amount": 213382000,
+    "furusato_count": 9498
+  },
+  "01433": {
+    "code": "01433",
+    "name": "妹背牛町",
+    "display_name": "妹背牛町",
+    "region": "空知総合振興局",
+    "area": 48.64,
+    "population": 2383,
+    "furusato_amount": 647787482,
+    "furusato_count": 31581
+  },
+  "01434": {
+    "code": "01434",
+    "name": "秩父別町",
+    "display_name": "秩父別町",
+    "region": "空知総合振興局",
+    "area": 47.18,
+    "population": 2099,
+    "furusato_amount": 1459208000,
+    "furusato_count": 28948
+  },
+  "01436": {
+    "code": "01436",
+    "name": "雨竜町",
+    "display_name": "雨竜町",
+    "region": "空知総合振興局",
+    "area": 191.15,
+    "population": 2114,
+    "furusato_amount": 594300800,
+    "furusato_count": 16023
+  },
+  "01437": {
+    "code": "01437",
+    "name": "北竜町",
+    "display_name": "北竜町",
+    "region": "空知総合振興局",
+    "area": 158.7,
+    "population": 1533,
+    "furusato_amount": 406397000,
+    "furusato_count": 24518
+  },
+  "01438": {
+    "code": "01438",
+    "name": "沼田町",
+    "display_name": "沼田町",
+    "region": "空知総合振興局",
+    "area": 283.35,
+    "population": 2638,
+    "furusato_amount": 1881426540,
+    "furusato_count": 70185
+  },
+  "01204": {
+    "code": "01204",
+    "name": "旭川市",
+    "display_name": "旭川市",
+    "region": "上川総合振興局",
+    "area": 747.66,
+    "population": 310371,
+    "furusato_amount": 3699166529,
+    "furusato_count": 174779
+  },
+  "01220": {
+    "code": "01220",
+    "name": "士別市",
+    "display_name": "士別市",
+    "region": "上川総合振興局",
+    "area": 1119.22,
+    "population": 15779,
+    "furusato_amount": 120339900,
+    "furusato_count": 4795
+  },
+  "01221": {
+    "code": "01221",
+    "name": "名寄市",
+    "display_name": "名寄市",
+    "region": "上川総合振興局",
+    "area": 534.86,
+    "population": 24458,
+    "furusato_amount": 259327500,
+    "furusato_count": 24136
+  },
+  "01229": {
+    "code": "01229",
+    "name": "富良野市",
+    "display_name": "富良野市",
+    "region": "上川総合振興局",
+    "area": 600.71,
+    "population": 19271,
+    "furusato_amount": 2296084000,
+    "furusato_count": 151326
+  },
+  "01452": {
+    "code": "01452",
+    "name": "鷹栖町",
+    "display_name": "鷹栖町",
+    "region": "上川総合振興局",
+    "area": 139.42,
+    "population": 6199,
+    "furusato_amount": 221436500,
+    "furusato_count": 9354
+  },
+  "01453": {
+    "code": "01453",
+    "name": "東神楽町",
+    "display_name": "東神楽町",
+    "region": "上川総合振興局",
+    "area": 68.5,
+    "population": 9618,
+    "furusato_amount": 827733921,
+    "furusato_count": 22947
+  },
+  "01454": {
+    "code": "01454",
+    "name": "当麻町",
+    "display_name": "当麻町",
+    "region": "上川総合振興局",
+    "area": 204.9,
+    "population": 5890,
+    "furusato_amount": 670831471,
+    "furusato_count": 25931
+  },
+  "01455": {
+    "code": "01455",
+    "name": "比布町",
+    "display_name": "比布町",
+    "region": "上川総合振興局",
+    "area": 86.9,
+    "population": 3242,
+    "furusato_amount": 136472000,
+    "furusato_count": 7197
+  },
+  "01456": {
+    "code": "01456",
+    "name": "愛別町",
+    "display_name": "愛別町",
+    "region": "上川総合振興局",
+    "area": 250.28,
+    "population": 2744,
+    "furusato_amount": 27266000,
+    "furusato_count": 961
+  },
+  "01457": {
+    "code": "01457",
+    "name": "上川町",
+    "display_name": "上川町",
+    "region": "上川総合振興局",
+    "area": 1049.47,
+    "population": 3117,
+    "furusato_amount": 83044500,
+    "furusato_count": 4036
+  },
+  "01458": {
+    "code": "01458",
+    "name": "東川町",
+    "display_name": "東川町",
+    "region": "上川総合振興局",
+    "area": 247.3,
+    "population": 8662,
+    "furusato_amount": 2596925600,
+    "furusato_count": 73126
+  },
+  "01459": {
+    "code": "01459",
+    "name": "美瑛町",
+    "display_name": "美瑛町",
+    "region": "上川総合振興局",
+    "area": 676.78,
+    "population": 9067,
+    "furusato_amount": 428646056,
+    "furusato_count": 19141
+  },
+  "01460": {
+    "code": "01460",
+    "name": "上富良野町",
+    "display_name": "上富良野町",
+    "region": "上川総合振興局",
+    "area": 237.1,
+    "population": 9331,
+    "furusato_amount": 449037917,
+    "furusato_count": 19273
+  },
+  "01461": {
+    "code": "01461",
+    "name": "中富良野町",
+    "display_name": "中富良野町",
+    "region": "上川総合振興局",
+    "area": 108.65,
+    "population": 4268,
+    "furusato_amount": 446902000,
+    "furusato_count": 26860
+  },
+  "01462": {
+    "code": "01462",
+    "name": "南富良野町",
+    "display_name": "南富良野町",
+    "region": "上川総合振興局",
+    "area": 665.54,
+    "population": 2179,
+    "furusato_amount": 91986400,
+    "furusato_count": 5405
+  },
+  "01463": {
+    "code": "01463",
+    "name": "占冠村",
+    "display_name": "占冠村",
+    "region": "上川総合振興局",
+    "area": 571.41,
+    "population": 1398,
+    "furusato_amount": 106368000,
+    "furusato_count": 775
+  },
+  "01464": {
+    "code": "01464",
+    "name": "和寒町",
+    "display_name": "和寒町",
+    "region": "上川総合振興局",
+    "area": 225.11,
+    "population": 2705,
+    "furusato_amount": 40151000,
+    "furusato_count": 1836
+  },
+  "01465": {
+    "code": "01465",
+    "name": "剣淵町",
+    "display_name": "剣淵町",
+    "region": "上川総合振興局",
+    "area": 130.99,
+    "population": 2617,
+    "furusato_amount": 24233200,
+    "furusato_count": 1453
+  },
+  "01468": {
+    "code": "01468",
+    "name": "下川町",
+    "display_name": "下川町",
+    "region": "上川総合振興局",
+    "area": 644.54,
+    "population": 2713,
+    "furusato_amount": 45331537,
+    "furusato_count": 1818
+  },
+  "01469": {
+    "code": "01469",
+    "name": "美深町",
+    "display_name": "美深町",
+    "region": "上川総合振興局",
+    "area": 672.09,
+    "population": 3657,
+    "furusato_amount": 59139100,
+    "furusato_count": 2231
+  },
+  "01470": {
+    "code": "01470",
+    "name": "音威子府村",
+    "display_name": "音威子府村",
+    "region": "上川総合振興局",
+    "area": 275.63,
+    "population": 603,
+    "furusato_amount": 23184000,
+    "furusato_count": 1478
+  },
+  "01471": {
+    "code": "01471",
+    "name": "中川町",
+    "display_name": "中川町",
+    "region": "上川総合振興局",
+    "area": 594.74,
+    "population": 1328,
+    "furusato_amount": 9067000,
+    "furusato_count": 265
+  },
+  "01472": {
+    "code": "01472",
+    "name": "幌加内町",
+    "display_name": "幌加内町",
+    "region": "上川総合振興局",
+    "area": 767.04,
+    "population": 1173,
+    "furusato_amount": 70431999,
+    "furusato_count": 3351
+  },
+  "01212": {
+    "code": "01212",
+    "name": "留萌市",
+    "display_name": "留萌市",
+    "region": "留萌振興局",
+    "area": 297.81,
+    "population": 17494,
+    "furusato_amount": 1939497375,
+    "furusato_count": 132211
+  },
+  "01481": {
+    "code": "01481",
+    "name": "増毛町",
+    "display_name": "増毛町",
+    "region": "留萌振興局",
+    "area": 369.72,
+    "population": 3328,
+    "furusato_amount": 498209000,
+    "furusato_count": 30716
+  },
+  "01482": {
+    "code": "01482",
+    "name": "小平町",
+    "display_name": "小平町",
+    "region": "留萌振興局",
+    "area": 627.22,
+    "population": 2577,
+    "furusato_amount": 17830000,
+    "furusato_count": 1498
+  },
+  "01483": {
+    "code": "01483",
+    "name": "苫前町",
+    "display_name": "苫前町",
+    "region": "留萌振興局",
+    "area": 454.6,
+    "population": 2572,
+    "furusato_amount": 40959000,
+    "furusato_count": 1797
+  },
+  "01484": {
+    "code": "01484",
+    "name": "羽幌町",
+    "display_name": "羽幌町",
+    "region": "留萌振興局",
+    "area": 472.65,
+    "population": 5652,
+    "furusato_amount": 262415600,
+    "furusato_count": 12129
+  },
+  "01485": {
+    "code": "01485",
+    "name": "初山別村",
+    "display_name": "初山別村",
+    "region": "留萌振興局",
+    "area": 279.52,
+    "population": 925,
+    "furusato_amount": 2428000,
+    "furusato_count": 95
+  },
+  "01486": {
+    "code": "01486",
+    "name": "遠別町",
+    "display_name": "遠別町",
+    "region": "留萌振興局",
+    "area": 590.8,
+    "population": 2162,
+    "furusato_amount": 50025240,
+    "furusato_count": 3590
+  },
+  "01487": {
+    "code": "01487",
+    "name": "天塩町",
+    "display_name": "天塩町",
+    "region": "留萌振興局",
+    "area": 353.56,
+    "population": 2521,
+    "furusato_amount": 80645900,
+    "furusato_count": 4275
+  },
+  "01214": {
+    "code": "01214",
+    "name": "稚内市",
+    "display_name": "稚内市",
+    "region": "宗谷総合振興局",
+    "area": 761.42,
+    "population": 30099,
+    "furusato_amount": 1865528000,
+    "furusato_count": 92603
+  },
+  "01511": {
+    "code": "01511",
+    "name": "猿払村",
+    "display_name": "猿払村",
+    "region": "宗谷総合振興局",
+    "area": 589.99,
+    "population": 2469,
+    "furusato_amount": 510202208,
+    "furusato_count": 10561
+  },
+  "01512": {
+    "code": "01512",
+    "name": "浜頓別町",
+    "display_name": "浜頓別町",
+    "region": "宗谷総合振興局",
+    "area": 401.59,
+    "population": 3150,
+    "furusato_amount": 305947830,
+    "furusato_count": 15910
+  },
+  "01513": {
+    "code": "01513",
+    "name": "中頓別町",
+    "display_name": "中頓別町",
+    "region": "宗谷総合振興局",
+    "area": 398.51,
+    "population": 1413,
+    "furusato_amount": 19260200,
+    "furusato_count": 2173
+  },
+  "01514": {
+    "code": "01514",
+    "name": "枝幸町",
+    "display_name": "枝幸町",
+    "region": "宗谷総合振興局",
+    "area": 1115.62,
+    "population": 6829,
+    "furusato_amount": 1007774300,
+    "furusato_count": 55185
+  },
+  "01516": {
+    "code": "01516",
+    "name": "豊富町",
+    "display_name": "豊富町",
+    "region": "宗谷総合振興局",
+    "area": 520.69,
+    "population": 3598,
+    "furusato_amount": 172167000,
+    "furusato_count": 9750
+  },
+  "01517": {
+    "code": "01517",
+    "name": "礼文町",
+    "display_name": "礼文町",
+    "region": "宗谷総合振興局",
+    "area": 81.64,
+    "population": 2251,
+    "furusato_amount": 506711715,
+    "furusato_count": 18320
+  },
+  "01518": {
+    "code": "01518",
+    "name": "利尻町",
+    "display_name": "利尻町",
+    "region": "宗谷総合振興局",
+    "area": 76.5,
+    "population": 1848,
+    "furusato_amount": 330587000,
+    "furusato_count": 12274
+  },
+  "01519": {
+    "code": "01519",
+    "name": "利尻富士町",
+    "display_name": "利尻富士町",
+    "region": "宗谷総合振興局",
+    "area": 105.62,
+    "population": 2152,
+    "furusato_amount": 770271200,
+    "furusato_count": 36572
+  },
+  "01520": {
+    "code": "01520",
+    "name": "幌延町",
+    "display_name": "幌延町",
+    "region": "宗谷総合振興局",
+    "area": 574.1,
+    "population": 2108,
+    "furusato_amount": 11672000,
+    "furusato_count": 792
+  },
+  "01208": {
+    "code": "01208",
+    "name": "北見市",
+    "display_name": "北見市",
+    "region": "オホーツク総合振興局",
+    "area": 1427.41,
+    "population": 108468,
+    "furusato_amount": 3088832700,
+    "furusato_count": 260234
+  },
+  "01211": {
+    "code": "01211",
+    "name": "網走市",
+    "display_name": "網走市",
+    "region": "オホーツク総合振興局",
+    "area": 470.84,
+    "population": 32735,
+    "furusato_amount": 2106549700,
+    "furusato_count": 92202
+  },
+  "01219": {
+    "code": "01219",
+    "name": "紋別市",
+    "display_name": "紋別市",
+    "region": "オホーツク総合振興局",
+    "area": 830.67,
+    "population": 19539,
+    "furusato_amount": 13083317250,
+    "furusato_count": 760997
+  },
+  "01543": {
+    "code": "01543",
+    "name": "美幌町",
+    "display_name": "美幌町",
+    "region": "オホーツク総合振興局",
+    "area": 438.41,
+    "population": 16678,
+    "furusato_amount": 486269000,
+    "furusato_count": 39392
+  },
+  "01544": {
+    "code": "01544",
+    "name": "津別町",
+    "display_name": "津別町",
+    "region": "オホーツク総合振興局",
+    "area": 716.8,
+    "population": 3788,
+    "furusato_amount": 57612100,
+    "furusato_count": 3729
+  },
+  "01545": {
+    "code": "01545",
+    "name": "斜里町",
+    "display_name": "斜里町",
+    "region": "オホーツク総合振興局",
+    "area": 737.13,
+    "population": 10507,
+    "furusato_amount": 691384500,
+    "furusato_count": 41538
+  },
+  "01546": {
+    "code": "01546",
+    "name": "清里町",
+    "display_name": "清里町",
+    "region": "オホーツク総合振興局",
+    "area": 402.76,
+    "population": 3522,
+    "furusato_amount": 14416000,
+    "furusato_count": 841
+  },
+  "01547": {
+    "code": "01547",
+    "name": "小清水町",
+    "display_name": "小清水町",
+    "region": "オホーツク総合振興局",
+    "area": 286.89,
+    "population": 4255,
+    "furusato_amount": 37350000,
+    "furusato_count": 1484
+  },
+  "01549": {
+    "code": "01549",
+    "name": "訓子府町",
+    "display_name": "訓子府町",
+    "region": "オホーツク総合振興局",
+    "area": 207.52,
+    "population": 5831,
+    "furusato_amount": 49158000,
+    "furusato_count": 3323
+  },
+  "01550": {
+    "code": "01550",
+    "name": "置戸町",
+    "display_name": "置戸町",
+    "region": "オホーツク総合振興局",
+    "area": 466.79,
+    "population": 3200,
+    "furusato_amount": 15635000,
+    "furusato_count": 477
+  },
+  "01552": {
+    "code": "01552",
+    "name": "佐呂間町",
+    "display_name": "佐呂間町",
+    "region": "オホーツク総合振興局",
+    "area": 408.34,
+    "population": 5474,
+    "furusato_amount": 332635700,
+    "furusato_count": 20876
+  },
+  "01555": {
+    "code": "01555",
+    "name": "遠軽町",
+    "display_name": "遠軽町",
+    "region": "オホーツク総合振興局",
+    "area": 1332.45,
+    "population": 17021,
+    "furusato_amount": 215844000,
+    "furusato_count": 15279
+  },
+  "01559": {
+    "code": "01559",
+    "name": "湧別町",
+    "display_name": "湧別町",
+    "region": "オホーツク総合振興局",
+    "area": 505.79,
+    "population": 7626,
+    "furusato_amount": 90413100,
+    "furusato_count": 4687
+  },
+  "01560": {
+    "code": "01560",
+    "name": "滝上町",
+    "display_name": "滝上町",
+    "region": "オホーツク総合振興局",
+    "area": 766.89,
+    "population": 2100,
+    "furusato_amount": 11102000,
+    "furusato_count": 657
+  },
+  "01561": {
+    "code": "01561",
+    "name": "興部町",
+    "display_name": "興部町",
+    "region": "オホーツク総合振興局",
+    "area": 362.55,
+    "population": 3340,
+    "furusato_amount": 916881700,
+    "furusato_count": 72012
+  },
+  "01562": {
+    "code": "01562",
+    "name": "西興部村",
+    "display_name": "西興部村",
+    "region": "オホーツク総合振興局",
+    "area": 308.08,
+    "population": 921,
+    "furusato_amount": 18730000,
+    "furusato_count": 357
+  },
+  "01563": {
+    "code": "01563",
+    "name": "雄武町",
+    "display_name": "雄武町",
+    "region": "オホーツク総合振興局",
+    "area": 636.88,
+    "population": 3832,
+    "furusato_amount": 425227400,
+    "furusato_count": 25286
+  },
+  "01564": {
+    "code": "01564",
+    "name": "大空町",
+    "display_name": "大空町",
+    "region": "オホーツク総合振興局",
+    "area": 343.66,
+    "population": 6104,
+    "furusato_amount": 92558000,
+    "furusato_count": 4432
+  },
+  "01205": {
+    "code": "01205",
+    "name": "室蘭市",
+    "display_name": "室蘭市",
+    "region": "胆振総合振興局",
+    "area": 81.01,
+    "population": 74017,
+    "furusato_amount": 83187000,
+    "furusato_count": 3653
+  },
+  "01213": {
+    "code": "01213",
+    "name": "苫小牧市",
+    "display_name": "苫小牧市",
+    "region": "胆振総合振興局",
+    "area": 561.66,
+    "population": 164217,
+    "furusato_amount": 828269000,
+    "furusato_count": 41586
+  },
+  "01230": {
+    "code": "01230",
+    "name": "登別市",
+    "display_name": "登別市",
+    "region": "胆振総合振興局",
+    "area": 212.21,
+    "population": 42372,
+    "furusato_amount": 1413379920,
+    "furusato_count": 57016
+  },
+  "01232": {
+    "code": "01232",
+    "name": "伊達市",
+    "display_name": "伊達市",
+    "region": "胆振総合振興局",
+    "area": 444.21,
+    "population": 30017,
+    "furusato_amount": 398354500,
+    "furusato_count": 17720
+  },
+  "01571": {
+    "code": "01571",
+    "name": "豊浦町",
+    "display_name": "豊浦町",
+    "region": "胆振総合振興局",
+    "area": 233.57,
+    "population": 3427,
+    "furusato_amount": 183627500,
+    "furusato_count": 5526
+  },
+  "01575": {
+    "code": "01575",
+    "name": "壮瞥町",
+    "display_name": "壮瞥町",
+    "region": "胆振総合振興局",
+    "area": 96.91,
+    "population": 2374,
+    "furusato_amount": 142477500,
+    "furusato_count": 6803
+  },
+  "01578": {
+    "code": "01578",
+    "name": "白老町",
+    "display_name": "白老町",
+    "region": "胆振総合振興局",
+    "area": 425.63,
+    "population": 14589,
+    "furusato_amount": 1522452300,
+    "furusato_count": 81393
+  },
+  "01581": {
+    "code": "01581",
+    "name": "厚真町",
+    "display_name": "厚真町",
+    "region": "胆振総合振興局",
+    "area": 405.38,
+    "population": 4218,
+    "furusato_amount": 620758000,
+    "furusato_count": 11931
+  },
+  "01584": {
+    "code": "01584",
+    "name": "洞爺湖町",
+    "display_name": "洞爺湖町",
+    "region": "胆振総合振興局",
+    "area": 180.87,
+    "population": 7709,
+    "furusato_amount": 298698440,
+    "furusato_count": 9719
+  },
+  "01585": {
+    "code": "01585",
+    "name": "安平町",
+    "display_name": "安平町",
+    "region": "胆振総合振興局",
+    "area": 237.16,
+    "population": 7014,
+    "furusato_amount": 486714351,
+    "furusato_count": 33448
+  },
+  "01586": {
+    "code": "01586",
+    "name": "むかわ町",
+    "display_name": "むかわ町",
+    "region": "胆振総合振興局",
+    "area": 711.36,
+    "population": 7107,
+    "furusato_amount": 88799000,
+    "furusato_count": 5084
+  },
+  "01601": {
+    "code": "01601",
+    "name": "日高町",
+    "display_name": "日高町",
+    "region": "日高振興局",
+    "area": 992.07,
+    "population": 10414,
+    "furusato_amount": 157750500,
+    "furusato_count": 4234
+  },
+  "01602": {
+    "code": "01602",
+    "name": "平取町",
+    "display_name": "平取町",
+    "region": "日高振興局",
+    "area": 743.09,
+    "population": 4385,
+    "furusato_amount": 288460400,
+    "furusato_count": 12810
+  },
+  "01604": {
+    "code": "01604",
+    "name": "新冠町",
+    "display_name": "新冠町",
+    "region": "日高振興局",
+    "area": 585.71,
+    "population": 4881,
+    "furusato_amount": 388020000,
+    "furusato_count": 2056
+  },
+  "01607": {
+    "code": "01607",
+    "name": "浦河町",
+    "display_name": "浦河町",
+    "region": "日高振興局",
+    "area": 694.3,
+    "population": 11130,
+    "furusato_amount": 333042000,
+    "furusato_count": 13483
+  },
+  "01608": {
+    "code": "01608",
+    "name": "様似町",
+    "display_name": "様似町",
+    "region": "日高振興局",
+    "area": 364.3,
+    "population": 3612,
+    "furusato_amount": 462225000,
+    "furusato_count": 27777
+  },
+  "01609": {
+    "code": "01609",
+    "name": "えりも町",
+    "display_name": "えりも町",
+    "region": "日高振興局",
+    "area": 284.0,
+    "population": 3795,
+    "furusato_amount": 614086100,
+    "furusato_count": 38351
+  },
+  "01610": {
+    "code": "01610",
+    "name": "新ひだか町",
+    "display_name": "新ひだか町",
+    "region": "日高振興局",
+    "area": 1147.55,
+    "population": 22004,
+    "furusato_amount": 594298000,
+    "furusato_count": 26426
+  },
+  "01207": {
+    "code": "01207",
+    "name": "帯広市",
+    "display_name": "帯広市",
+    "region": "十勝総合振興局",
+    "area": 619.34,
+    "population": 160431,
+    "furusato_amount": 1138555984,
+    "furusato_count": 71452
+  },
+  "01631": {
+    "code": "01631",
+    "name": "音更町",
+    "display_name": "音更町",
+    "region": "十勝総合振興局",
+    "area": 466.02,
+    "population": 41830,
+    "furusato_amount": 796794700,
+    "furusato_count": 66560
+  },
+  "01632": {
+    "code": "01632",
+    "name": "士幌町",
+    "display_name": "士幌町",
+    "region": "十勝総合振興局",
+    "area": 259.19,
+    "population": 5447,
+    "furusato_amount": 514896500,
+    "furusato_count": 33137
+  },
+  "01633": {
+    "code": "01633",
+    "name": "上士幌町",
+    "display_name": "上士幌町",
+    "region": "十勝総合振興局",
+    "area": 694.23,
+    "population": 4491,
+    "furusato_amount": 1188689900,
+    "furusato_count": 64861
+  },
+  "01634": {
+    "code": "01634",
+    "name": "鹿追町",
+    "display_name": "鹿追町",
+    "region": "十勝総合振興局",
+    "area": 402.88,
+    "population": 4883,
+    "furusato_amount": 73785010,
+    "furusato_count": 3950
+  },
+  "01635": {
+    "code": "01635",
+    "name": "新得町",
+    "display_name": "新得町",
+    "region": "十勝総合振興局",
+    "area": 1063.83,
+    "population": 5243,
+    "furusato_amount": 49391000,
+    "furusato_count": 2488
+  },
+  "01636": {
+    "code": "01636",
+    "name": "清水町",
+    "display_name": "清水町",
+    "region": "十勝総合振興局",
+    "area": 402.25,
+    "population": 8409,
+    "furusato_amount": 459475000,
+    "furusato_count": 28366
+  },
+  "01637": {
+    "code": "01637",
+    "name": "芽室町",
+    "display_name": "芽室町",
+    "region": "十勝総合振興局",
+    "area": 513.76,
+    "population": 17307,
+    "furusato_amount": 617845400,
+    "furusato_count": 71924
+  },
+  "01638": {
+    "code": "01638",
+    "name": "中札内村",
+    "display_name": "中札内村",
+    "region": "十勝総合振興局",
+    "area": 292.58,
+    "population": 3785,
+    "furusato_amount": 507857600,
+    "furusato_count": 19757
+  },
+  "01639": {
+    "code": "01639",
+    "name": "更別村",
+    "display_name": "更別村",
+    "region": "十勝総合振興局",
+    "area": 176.9,
+    "population": 2969,
+    "furusato_amount": 551225400,
+    "furusato_count": 36468
+  },
+  "01641": {
+    "code": "01641",
+    "name": "大樹町",
+    "display_name": "大樹町",
+    "region": "十勝総合振興局",
+    "area": 815.67,
+    "population": 5204,
+    "furusato_amount": 251101600,
+    "furusato_count": 14487
+  },
+  "01642": {
+    "code": "01642",
+    "name": "広尾町",
+    "display_name": "広尾町",
+    "region": "十勝総合振興局",
+    "area": 596.48,
+    "population": 5565,
+    "furusato_amount": 52051000,
+    "furusato_count": 2793
+  },
+  "01643": {
+    "code": "01643",
+    "name": "幕別町",
+    "display_name": "幕別町",
+    "region": "十勝総合振興局",
+    "area": 477.64,
+    "population": 24396,
+    "furusato_amount": 204210926,
+    "furusato_count": 9181
+  },
+  "01644": {
+    "code": "01644",
+    "name": "池田町",
+    "display_name": "池田町",
+    "region": "十勝総合振興局",
+    "area": 371.79,
+    "population": 5613,
+    "furusato_amount": 1190203600,
+    "furusato_count": 83685
+  },
+  "01645": {
+    "code": "01645",
+    "name": "豊頃町",
+    "display_name": "豊頃町",
+    "region": "十勝総合振興局",
+    "area": 536.71,
+    "population": 2741,
+    "furusato_amount": 31762800,
+    "furusato_count": 2409
+  },
+  "01646": {
+    "code": "01646",
+    "name": "本別町",
+    "display_name": "本別町",
+    "region": "十勝総合振興局",
+    "area": 391.91,
+    "population": 5766,
+    "furusato_amount": 118817008,
+    "furusato_count": 9244
+  },
+  "01647": {
+    "code": "01647",
+    "name": "足寄町",
+    "display_name": "足寄町",
+    "region": "十勝総合振興局",
+    "area": 1408.04,
+    "population": 5668,
+    "furusato_amount": 80226000,
+    "furusato_count": 2995
+  },
+  "01648": {
+    "code": "01648",
+    "name": "陸別町",
+    "display_name": "陸別町",
+    "region": "十勝総合振興局",
+    "area": 608.9,
+    "population": 1996,
+    "furusato_amount": 10045800,
+    "furusato_count": 631
+  },
+  "01649": {
+    "code": "01649",
+    "name": "浦幌町",
+    "display_name": "浦幌町",
+    "region": "十勝総合振興局",
+    "area": 729.85,
+    "population": 3838,
+    "furusato_amount": 123200600,
+    "furusato_count": 8902
+  },
+  "01206": {
+    "code": "01206",
+    "name": "釧路市",
+    "display_name": "釧路市",
+    "region": "釧路総合振興局",
+    "area": 1363.26,
+    "population": 151161,
+    "furusato_amount": 1937215124,
+    "furusato_count": 98806
+  },
+  "01661": {
+    "code": "01661",
+    "name": "釧路町",
+    "display_name": "釧路町",
+    "region": "釧路総合振興局",
+    "area": 252.04,
+    "population": 17799,
+    "furusato_amount": 1115635070,
+    "furusato_count": 58839
+  },
+  "01662": {
+    "code": "01662",
+    "name": "厚岸町",
+    "display_name": "厚岸町",
+    "region": "釧路総合振興局",
+    "area": 739.12,
+    "population": 7875,
+    "furusato_amount": 1203031818,
+    "furusato_count": 62699
+  },
+  "01663": {
+    "code": "01663",
+    "name": "浜中町",
+    "display_name": "浜中町",
+    "region": "釧路総合振興局",
+    "area": 423.12,
+    "population": 5015,
+    "furusato_amount": 1446821127,
+    "furusato_count": 82543
+  },
+  "01664": {
+    "code": "01664",
+    "name": "標茶町",
+    "display_name": "標茶町",
+    "region": "釧路総合振興局",
+    "area": 1099.37,
+    "population": 6543,
+    "furusato_amount": 135975359,
+    "furusato_count": 6525
+  },
+  "01665": {
+    "code": "01665",
+    "name": "弟子屈町",
+    "display_name": "弟子屈町",
+    "region": "釧路総合振興局",
+    "area": 774.33,
+    "population": 6350,
+    "furusato_amount": 6180871793,
+    "furusato_count": 328614
+  },
+  "01667": {
+    "code": "01667",
+    "name": "鶴居村",
+    "display_name": "鶴居村",
+    "region": "釧路総合振興局",
+    "area": 571.8,
+    "population": 2408,
+    "furusato_amount": 144473100,
+    "furusato_count": 9994
+  },
+  "01668": {
+    "code": "01668",
+    "name": "白糠町",
+    "display_name": "白糠町",
+    "region": "釧路総合振興局",
+    "area": 773.13,
+    "population": 6600,
+    "furusato_amount": 21165354410,
+    "furusato_count": 1333228
+  },
+  "01223": {
+    "code": "01223",
+    "name": "根室市",
+    "display_name": "根室市",
+    "region": "根室振興局",
+    "area": 407.81,
+    "population": 21779,
+    "furusato_amount": 14690953400,
+    "furusato_count": 672865
+  },
+  "01691": {
+    "code": "01691",
+    "name": "別海町",
+    "display_name": "別海町",
+    "region": "根室振興局",
+    "area": 1317.17,
+    "population": 13344,
+    "furusato_amount": 17350452000,
+    "furusato_count": 1035913
+  },
+  "01692": {
+    "code": "01692",
+    "name": "中標津町",
+    "display_name": "中標津町",
+    "region": "根室振興局",
+    "area": 684.87,
+    "population": 21859,
+    "furusato_amount": 194848200,
+    "furusato_count": 10138
+  },
+  "01693": {
+    "code": "01693",
+    "name": "標津町",
+    "display_name": "標津町",
+    "region": "根室振興局",
+    "area": 624.69,
+    "population": 4605,
+    "furusato_amount": 186920500,
+    "furusato_count": 10370
+  },
+  "01694": {
+    "code": "01694",
+    "name": "羅臼町",
+    "display_name": "羅臼町",
+    "region": "根室振興局",
+    "area": 397.72,
+    "population": 4076,
+    "furusato_amount": 524792400,
+    "furusato_count": 30293
+  }
+}
