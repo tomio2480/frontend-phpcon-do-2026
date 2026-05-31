@@ -2,8 +2,8 @@
 
 ## 背景
 
-Leaflet 1.9.4 を Vite 8 + Preact 10 + TypeScript 6 の構成に組み込み，
-北海道全市区町村の GeoJSON ポリゴンをブラウザ上で描画した．
+Leaflet 1.9.4 を Vite 8 + Preact 10 + TypeScript 6 の構成に組み込んだ．
+北海道の各市区町村について，GeoJSON ポリゴンをブラウザ上で描画している．
 Phase 6 の地図↔チェックボックス連動に備え，`onHover`/`onClick` ハンドラを仕込んでいる．
 
 ---
@@ -12,36 +12,37 @@ Phase 6 の地図↔チェックボックス連動に備え，`onHover`/`onClick
 
 ### `zimmerframe` パッチは Phase 3 と共通
 
-`@preact/preset-vite` が CJS で `zimmerframe` を `require` しようとするが，
-`zimmerframe@1.1.4` は ESM-only であるため失敗する．
-Vite dev サーバーを起動する Playwright E2E テストでもこのエラーが出るため，
-Phase 3 と同じパッチ（`patches/zimmerframe@1.1.4.patch`）が必要だった．
+`@preact/preset-vite` は CJS 形式で `zimmerframe` を `require` しようとする．
+`zimmerframe@1.1.4` は ESM-only であるため，この呼び出しは失敗する．
+Playwright の E2E テストも Vite dev サーバーを起動するため同じエラーが出る．
+Phase 3 と同じパッチ（`patches/zimmerframe@1.1.4.patch`）の適用が必要だった．
 
-Phase 3 より先に Phase 5 がマージされる場合は，Phase 3 のパッチコメントと内容を
-先に合わせておくことで，Phase 3 リベース時の競合を回避できる．
+Phase 5 が Phase 3 より先にマージされる場合は，パッチの内容とコメントを事前に合わせておく．
+Phase 3 のリベース時の競合を回避できる．
 
 ### Vitest の `include` を `src/**` に限定する
 
-Playwright の `e2e/*.spec.ts` を `testDir` に置くと，Vitest がそのファイルも走査して
-「`test()` が設定ファイル内で呼ばれた」エラーになる．
+Playwright の `e2e/*.spec.ts` を `testDir` に置くと，Vitest の走査対象に入る．
+`test()` が設定ファイル内で呼ばれたとみなされ，エラーが発生する．
 `vite.config.ts` の `test.include` を `['src/**/*.test.{ts,tsx}']` に限定することで解決する．
 
 ### Playwright 設定ファイルを明示的に用意する
 
-`package.json` に `playwright test --pass-with-no-tests` スクリプトがあっても，
-`playwright.config.ts` がなければ `testDir` や `webServer` が設定されないため E2E は動かない．
+`playwright.config.ts` がなければ `testDir` や `webServer` を設定できない．
+`package.json` にスクリプトがあっても E2E は動かない．
 `playwright.config.ts` で `testDir: './e2e'` と `webServer` を明示的に定義する必要がある．
 
 ### `afterEach(cleanup)` は明示的に呼ぶ
 
-`@testing-library/preact` の自動クリーンアップが効かないケースがあり，
-複数の `render` 呼び出し後に `getByTestId` が「複数の要素が見つかった」エラーになった．
-各テストスイートで `afterEach(() => cleanup())` を明示的に登録することで解決した．
+`@testing-library/preact` の自動クリーンアップが機能しないケースがあった．
+複数の `render` 後に `getByTestId` で「複数の要素が見つかった」エラーが発生した．
+Vitest の `test.globals` はデフォルト `false` であり，グローバルな `afterEach` が存在しない．
+各テストスイートで `afterEach(() => cleanup())` を明示的に登録して解決した．
+`vite.config.ts` で `test.globals: true` にすれば自動クリーンアップが機能し記述を省ける．
 
 ### `response.ok` チェックはシステム境界で必ず行う
 
-`fetch('/data/hokkaido.geojson')` に `response.ok` チェックなしに `.json()` を呼ぶと，
-HTTP 4xx/5xx 時に意図しない JSON パースエラーが起きる．
+`response.ok` を確認せず `.json()` を呼ぶと，HTTP 4xx/5xx で意図しない JSON パースエラーが起きる．
 外部リソース取得はシステム境界であり，`if (!r.ok) throw new Error(...)` が必要．
 テストのモックにも `ok: true` を含めないと，実装変更後にテストが偽陰性になる．
 
@@ -56,7 +57,7 @@ HTTP 4xx/5xx 時に意図しない JSON パースエラーが起きる．
 
 ### module スコープで GeoJSON fetch をキャッシュする案
 
-`let geojsonPromise: Promise<any> | null = null` をモジュール外に置く案はレビューで提案されたが，
+モジュール外にキャッシュ変数 `let geojsonPromise: Promise<any> | null = null` を置く案がレビューで提案された．
 テスト間の状態汚染リスクと Phase 5 のスコープ（描画確認のみ）を理由に却下した．
 `public/` 配下の静的ファイルはブラウザ HTTP キャッシュが処理する．
 パフォーマンスが問題になった場合は Phase 12（最適化）で対処する．
