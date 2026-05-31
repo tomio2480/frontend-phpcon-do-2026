@@ -47,6 +47,7 @@ from __future__ import annotations
 import argparse
 import json
 import pathlib
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -72,8 +73,13 @@ def _to_5digit(code6: str | None) -> str | None:
     return code6[:5]
 
 
-def simplify_with_shapely(input_path: str, tolerance: float = 0.01) -> None:
-    """geopandas + shapely で簡略化して GeoJSON に変換する。"""
+def simplify_with_shapely(input_path: str, tolerance: float = 0.01,
+                          encoding: str | None = None) -> None:
+    """geopandas + shapely で簡略化して GeoJSON に変換する。
+
+    encoding: Shapefile の文字コード。None の場合は .cpg ファイルで自動判別。
+    国土数値情報の旧形式（.cpg なし）では "cp932" を明示的に指定すること。
+    """
     try:
         import geopandas as gpd
     except ImportError:
@@ -81,7 +87,10 @@ def simplify_with_shapely(input_path: str, tolerance: float = 0.01) -> None:
         sys.exit(1)
 
     print(f"Reading shapefile: {input_path}")
-    gdf = gpd.read_file(input_path, encoding="cp932")
+    read_kwargs: dict = {"filename": input_path}
+    if encoding:
+        read_kwargs["encoding"] = encoding
+    gdf = gpd.read_file(**read_kwargs)
 
     # 北海道のみを抽出
     gdf = gdf[gdf[ATTR_PREF] == "北海道"].copy()
@@ -104,12 +113,16 @@ def simplify_with_shapely(input_path: str, tolerance: float = 0.01) -> None:
     )
 
     # 市区町村コードでディゾルブ（小ポリゴンを統合）
-    dissolved = gdf.dissolve(by="code", as_index=False)[
+    # aggfunc="first" を明示してバージョン間の挙動変化を防止
+    dissolved = gdf.dissolve(by="code", aggfunc="first", as_index=False)[
         ["code", "name", "display_name", "geometry"]
     ]
     print(f"  Features (after dissolve) : {len(dissolved)}")
 
     # 北海道に適した投影座標系（UTM Zone 54N）に変換してから簡略化
+    # 注意: Shapely の simplify は個別ジオメトリにのみ作用するため、
+    # 隣接する市区町村の共有境界のトポロジーは保証されない（スリバー発生の可能性あり）。
+    # 共有境界を保持したい場合は --method mapshaper を使用すること。
     dissolved = dissolved.to_crs("EPSG:32654")
     dissolved["geometry"] = dissolved["geometry"].simplify(
         tolerance * 1000,   # tolerance km → m
@@ -124,8 +137,13 @@ def simplify_with_shapely(input_path: str, tolerance: float = 0.01) -> None:
     print(f"Generated: {OUTPUT_PATH}")
 
 
-def simplify_with_mapshaper(input_path: str, percentage: float = 10.0) -> None:
-    """mapshaper CLI で簡略化する（高速・高品質）。"""
+def simplify_with_mapshaper(input_path: str, percentage: float = 10.0,
+                            encoding: str | None = None) -> None:
+    """mapshaper CLI で簡略化する（高速・高品質）。
+
+    encoding: Shapefile の文字コード。None の場合は .cpg ファイルで自動判別。
+    国土数値情報の旧形式（.cpg なし）では "cp932" を明示的に指定すること。
+    """
     with tempfile.TemporaryDirectory() as tmpdir:
         tmp_geojson = pathlib.Path(tmpdir) / "hokkaido_raw.geojson"
 
@@ -136,7 +154,10 @@ def simplify_with_mapshaper(input_path: str, percentage: float = 10.0) -> None:
             print("ERROR: geopandas が見つかりません。pip install geopandas を実行してください。")
             sys.exit(1)
 
-        gdf = gpd.read_file(input_path, encoding="cp932")
+        read_kwargs: dict = {"filename": input_path}
+        if encoding:
+            read_kwargs["encoding"] = encoding
+        gdf = gpd.read_file(**read_kwargs)
         gdf = gdf[gdf[ATTR_PREF] == "北海道"].copy()
         gdf["code"] = gdf[ATTR_CODE].apply(_to_5digit)
         gdf = gdf.dropna(subset=["code"])
@@ -152,15 +173,19 @@ def simplify_with_mapshaper(input_path: str, percentage: float = 10.0) -> None:
             axis=1,
         )
 
-        dissolved = gdf.dissolve(by="code", as_index=False)[
+        # aggfunc="first" を明示してバージョン間の挙動変化を防止
+        dissolved = gdf.dissolve(by="code", aggfunc="first", as_index=False)[
             ["code", "name", "display_name", "geometry"]
         ]
         dissolved.to_crs("EPSG:4326").to_file(tmp_geojson, driver="GeoJSON")
 
         # Step 2: mapshaper で簡略化
+        # Windows では npm グローバルインストールの mapshaper が .cmd として配置されるため
+        # shutil.which でフルパスを解決してから実行する
         OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
+        mapshaper_bin = shutil.which("mapshaper") or "mapshaper"
         cmd = [
-            "mapshaper",
+            mapshaper_bin,
             str(tmp_geojson),
             "-simplify", f"{percentage}%", "keep-shapes",
             "-o", str(OUTPUT_PATH), "format=geojson",
@@ -200,6 +225,10 @@ def main() -> None:
         "--tolerance", type=float, default=0.5,
         help="shapely の簡略化許容誤差 km（デフォルト: 0.5）",
     )
+    parser.add_argument(
+        "--encoding", default=None,
+        help="Shapefile の文字コード（例: cp932, utf-8）。省略時は .cpg で自動判別",
+    )
     args = parser.parse_args()
 
     if not pathlib.Path(args.input).exists():
@@ -207,9 +236,11 @@ def main() -> None:
         sys.exit(1)
 
     if args.method == "mapshaper":
-        simplify_with_mapshaper(args.input, percentage=args.percentage)
+        simplify_with_mapshaper(args.input, percentage=args.percentage,
+                                encoding=args.encoding)
     else:
-        simplify_with_shapely(args.input, tolerance=args.tolerance)
+        simplify_with_shapely(args.input, tolerance=args.tolerance,
+                              encoding=args.encoding)
 
 
 if __name__ == "__main__":
