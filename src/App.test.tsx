@@ -6,7 +6,6 @@ describe('App', () => {
   it('renders the app heading', () => {
     render(<App />)
     const heading = screen.getByRole('heading', { level: 1 })
-    expect(heading).not.toBeNull()
     expect(heading.textContent).toContain('北海道')
   })
 })
