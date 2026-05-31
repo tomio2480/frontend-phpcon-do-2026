@@ -51,7 +51,9 @@ def download_zip(url: str, cache_path: Path) -> bytes:
     print()
     data = b"".join(chunks)
     cache_path.parent.mkdir(parents=True, exist_ok=True)
-    cache_path.write_bytes(data)
+    tmp_path = cache_path.with_suffix(".tmp")
+    tmp_path.write_bytes(data)
+    tmp_path.replace(cache_path)
     print(f"キャッシュ保存: {cache_path}")
     return data
 
@@ -66,10 +68,13 @@ def find_shp_entry(zf: zipfile.ZipFile) -> str:
 def build_name(city, ward) -> str:
     c = city.strip() if isinstance(city, str) else ""
     w = ward.strip() if isinstance(ward, str) else ""
+    if not w:
+        return c
     if c == w:
         return c
-    # 郡名（〜郡 で終わる場合）は省略し，市区町村名のみ返す
-    return w if w else c
+    # N03_004 には政令市の区も「札幌市中央区」のように完全な名称が格納される．
+    # 郡名（N03_003）は省略し，N03_004 の市区町村名をそのまま返す．
+    return w
 
 
 def main() -> None:
@@ -91,7 +96,9 @@ def main() -> None:
     gdf = gpd.read_file(shp_path, encoding="cp932")
     print(f"  {len(gdf)} フィーチャー, CRS={gdf.crs}")
 
-    if gdf.crs is None or gdf.crs.to_epsg() != 4326:
+    if gdf.crs is None:
+        gdf = gdf.set_crs(epsg=6668)  # N03 データの既知 CRS: JGD2011
+    if gdf.crs.to_epsg() != 4326:
         print("WGS84 (EPSG:4326) へ変換中...")
         gdf = gdf.to_crs(epsg=4326)
 
