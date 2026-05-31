@@ -3,6 +3,7 @@ node_modules/
 
 # ビルド成果物
 dist/
+*.tsbuildinfo
 
 # Vite キャッシュ
 .vite/
@@ -30,6 +31,13 @@ desktop.ini
 
 # 一時スクラッチ
 .scratch/
+tmp_*.txt
+
+# Claude Code ワークツリー
+.claude/worktrees/
+
+# データ整形スクリプトのキャッシュ（生データ・展開済みファイル）
+scripts/cache/
 
 # ログ
 .pnpm-debug.log
