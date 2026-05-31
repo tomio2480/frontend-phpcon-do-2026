@@ -3,6 +3,8 @@ node_modules/
 
 # ビルド成果物
 dist/
+*.tsbuildinfo
+vite.config.js
 
 # Vite キャッシュ
 .vite/
