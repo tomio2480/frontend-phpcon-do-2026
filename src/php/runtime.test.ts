@@ -42,6 +42,24 @@ describe('getPhp', () => {
     expect(mockedLoad).toHaveBeenCalledTimes(2)
   })
 
+  it('_resetForTesting 後に完了した古い非同期処理が instance を汚染しない', async () => {
+    let resolve: (v: number) => void
+    const pending = new Promise<number>(r => { resolve = r })
+    mockedLoad.mockReturnValueOnce(pending as never)
+    mockedLoad.mockResolvedValueOnce(2 as never)
+
+    getPhp()           // initPromise が pending の状態でスタート
+    _resetForTesting() // リセット（initPromise = null, instance = null）
+    resolve!(1)        // 古い promise が完了 → instance を上書きすべきでない
+    await Promise.resolve()
+    await Promise.resolve()
+
+    // リセット後の呼び出しは新規 loadWebRuntime を実行する
+    const php = await getPhp()
+    expect(php).toBeDefined()
+    expect(mockedLoad).toHaveBeenCalledTimes(2)
+  })
+
   it('並行呼び出しでも loadWebRuntime は 1 回のみ実行される', async () => {
     let resolve: (v: number) => void
     const pending = new Promise<number>(r => { resolve = r })

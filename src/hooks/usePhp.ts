@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'preact/hooks'
+import { useState, useEffect, useCallback } from 'preact/hooks'
 import type { PHP } from '@php-wasm/universal'
 import { getPhp } from '../php/runtime'
 
@@ -36,11 +36,11 @@ export function usePhp(): UsePhpResult {
     }
   }, [])
 
-  async function run(code: string): Promise<string> {
+  const run = useCallback(async (code: string): Promise<string> => {
     if (!state.php) throw new Error('PHP runtime not ready')
     const result = await state.php.run({ code })
     return result.text
-  }
+  }, [state.php])
 
   return { ...state, run }
 }

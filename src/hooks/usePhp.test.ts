@@ -52,6 +52,16 @@ describe('usePhp', () => {
     await expect(result.current.run('<?php echo 1; ?>')).rejects.toThrow('PHP runtime not ready')
   })
 
+  it('run() は再レンダリングをまたいで同一参照を維持する', async () => {
+    mockedGetPhp.mockResolvedValue(mockPhp as never)
+    const { result, rerender } = renderHook(() => usePhp())
+    await waitFor(() => expect(result.current.status).toBe('ready'))
+    const run1 = result.current.run
+    rerender()
+    const run2 = result.current.run
+    expect(run1).toBe(run2)
+  })
+
   it('run() 呼び出し後はスローではなく act 内で実行できる', async () => {
     mockRun.mockResolvedValue({ text: '2' })
     mockedGetPhp.mockResolvedValue(mockPhp as never)

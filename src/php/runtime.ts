@@ -7,15 +7,21 @@ let initPromise: Promise<PHP> | null = null
 export function getPhp(): Promise<PHP> {
   if (instance) return Promise.resolve(instance)
   if (!initPromise) {
-    initPromise = loadWebRuntime('8.5')
+    const promise = loadWebRuntime('8.5')
       .then(runtime => {
-        instance = new PHP(runtime)
-        return instance
+        const phpInstance = new PHP(runtime)
+        if (initPromise === promise) {
+          instance = phpInstance
+        }
+        return phpInstance
       })
       .catch(err => {
-        initPromise = null
+        if (initPromise === promise) {
+          initPromise = null
+        }
         throw err
       })
+    initPromise = promise
   }
   return initPromise
 }
