@@ -307,6 +307,8 @@ def distribute_sapporo_furusato(municipalities: list[tuple]) -> list[tuple]:
         m[0]: m[5] for m in municipalities if m[0] in sapporo_codes
     }
     total_pop = sum(sapporo_pops.values())
+    if total_pop == 0:
+        return municipalities
 
     distributed: list[tuple] = []
     accumulated_amount = 0
@@ -333,6 +335,11 @@ def distribute_sapporo_furusato(municipalities: list[tuple]) -> list[tuple]:
 def build() -> tuple[dict, dict]:
     """JSON 出力用の辞書を生成する。"""
     data = distribute_sapporo_furusato(MUNICIPALITIES)
+
+    codes = [m[0] for m in data]
+    duplicates = {c for c in codes if codes.count(c) > 1}
+    if duplicates:
+        raise ValueError(f"重複する市区町村コードが検出されました: {sorted(duplicates)}")
 
     municipalities_json: dict[str, dict] = {}
     total_area = 0.0

@@ -67,7 +67,7 @@ ATTR_CITY       = "N03_004"
 
 def _to_5digit(code6: str | None) -> str | None:
     """6桁コードを5桁コードに変換する（末尾チェックディジットを除去）。"""
-    if not code6 or len(code6) != 6:
+    if not isinstance(code6, str) or len(code6) != 6:
         return None
     return code6[:5]
 
@@ -91,13 +91,14 @@ def simplify_with_shapely(input_path: str, tolerance: float = 0.01) -> None:
     gdf["code"] = gdf[ATTR_CODE].apply(_to_5digit)
     gdf = gdf.dropna(subset=["code"])
 
-    # name / display_name を生成（ディゾルブ前に確定させる）
+    # NaN を空文字に置換してから name / display_name を生成（ディゾルブ前に確定させる）
     # 政令指定都市の区（N03_003 が市名）は「{市名} {区名}」に結合
+    gdf[ATTR_OFFICE] = gdf[ATTR_OFFICE].fillna("")
+    gdf[ATTR_CITY]   = gdf[ATTR_CITY].fillna("")
     gdf["name"] = gdf[ATTR_CITY]
     gdf["display_name"] = gdf.apply(
         lambda r: f"{r[ATTR_OFFICE]} {r[ATTR_CITY]}"
-        if r[ATTR_OFFICE] and r[ATTR_OFFICE].endswith("市")
-        and r[ATTR_CITY] and r[ATTR_CITY].endswith("区")
+        if r[ATTR_OFFICE].endswith("市") and r[ATTR_CITY].endswith("区")
         else r[ATTR_CITY],
         axis=1,
     )
@@ -140,12 +141,13 @@ def simplify_with_mapshaper(input_path: str, percentage: float = 10.0) -> None:
         gdf["code"] = gdf[ATTR_CODE].apply(_to_5digit)
         gdf = gdf.dropna(subset=["code"])
 
-        # name / display_name を生成
+        # NaN を空文字に置換してから name / display_name を生成
+        gdf[ATTR_OFFICE] = gdf[ATTR_OFFICE].fillna("")
+        gdf[ATTR_CITY]   = gdf[ATTR_CITY].fillna("")
         gdf["name"] = gdf[ATTR_CITY]
         gdf["display_name"] = gdf.apply(
             lambda r: f"{r[ATTR_OFFICE]} {r[ATTR_CITY]}"
-            if r[ATTR_OFFICE] and r[ATTR_OFFICE].endswith("市")
-            and r[ATTR_CITY] and r[ATTR_CITY].endswith("区")
+            if r[ATTR_OFFICE].endswith("市") and r[ATTR_CITY].endswith("区")
             else r[ATTR_CITY],
             axis=1,
         )
@@ -164,7 +166,11 @@ def simplify_with_mapshaper(input_path: str, percentage: float = 10.0) -> None:
             "-o", str(OUTPUT_PATH), "format=geojson",
         ]
         print(f"Running: {' '.join(cmd)}")
-        result = subprocess.run(cmd, capture_output=True, text=True)
+        try:
+            result = subprocess.run(cmd, capture_output=True, text=True)
+        except FileNotFoundError:
+            print("ERROR: mapshaper が見つかりません。npm install -g mapshaper を実行してください。")
+            sys.exit(1)
         if result.returncode != 0:
             print(f"mapshaper error:\n{result.stderr}")
             sys.exit(1)
