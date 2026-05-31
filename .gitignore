@@ -12,6 +12,10 @@ dist/
 coverage/
 test-results/
 playwright-report/
+.phpunit.result.cache
+
+# PHP 依存パッケージ
+vendor/
 
 # ローカル環境設定
 .env
