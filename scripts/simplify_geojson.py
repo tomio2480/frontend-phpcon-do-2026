@@ -92,6 +92,12 @@ def _preprocess_gdf(input_path: str, encoding: str | None = None):
         read_kwargs["encoding"] = encoding
     gdf = gpd.read_file(**read_kwargs)
 
+    # .prj ファイルが欠落している場合など CRS が未定義のケースに対応する
+    # N03 データの標準 CRS は JGD2011 地理座標系（EPSG:6668）
+    if gdf.crs is None:
+        print("  WARNING: CRS が未定義です。EPSG:6668 (JGD2011) を仮定します。")
+        gdf = gdf.set_crs("EPSG:6668")
+
     # 必要なカラムの存在チェック（誤ったフォーマットのファイルを早期検出する）
     required_cols = [ATTR_PREF, ATTR_CODE, ATTR_OFFICE, ATTR_CITY]
     missing = [c for c in required_cols if c not in gdf.columns]
@@ -150,11 +156,14 @@ def simplify_with_shapely(input_path: str, tolerance: float = 0.01,
         tolerance * 1000,   # tolerance km → m
         preserve_topology=True,
     )
+    # simplify 後の自己交差等を修正する
+    dissolved["geometry"] = dissolved["geometry"].make_valid()
     dissolved = dissolved.to_crs("EPSG:4326")
 
     OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
+    # coordinate_precision=6 で座標精度を小数点以下 6 桁（約 10 cm）に制限してファイルサイズを削減
     dissolved[["code", "name", "display_name", "geometry"]].to_file(
-        OUTPUT_PATH, driver="GeoJSON"
+        OUTPUT_PATH, driver="GeoJSON", coordinate_precision=6
     )
     print(f"Generated: {OUTPUT_PATH}")
 
