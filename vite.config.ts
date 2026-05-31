@@ -2,19 +2,23 @@
 import { defineConfig } from 'vite'
 import preact from '@preact/preset-vite'
 import tailwindcss from '@tailwindcss/vite'
-import { resolve } from 'path'
+import { createRequire } from 'module'
+import { dirname, join } from 'path'
 import type { Plugin } from 'vite'
+
+const require = createRequire(import.meta.url)
 
 /**
  * @php-wasm/web は intl 拡張モジュール用に `../intl/shared/icu.dat` を動的インポートするが，
  * intl パッケージは別途インストールが必要で，今回は未使用のため存在しない．
  * Vite の変換フェーズでこのインポートを実際の icu.dat ファイルパスへリダイレクトする．
+ *
+ * `@php-wasm/web` の exports に `shared/icu.dat` は含まれないため require.resolve で直接は解決できない．
+ * package.json でパッケージルートを特定し，そこからの相対パスで icu.dat を組み立てる．
  */
 function resolveIcuDat(): Plugin {
-  const icuDatPath = resolve(
-    __dirname,
-    'node_modules/@php-wasm/web/shared/icu.dat',
-  )
+  const webPkgRoot = dirname(require.resolve('@php-wasm/web/package.json'))
+  const icuDatPath = join(webPkgRoot, 'shared', 'icu.dat')
   return {
     name: 'resolve-icu-dat',
     resolveId(source) {

@@ -32,6 +32,16 @@ describe('getPhp', () => {
     expect(mockedLoad).toHaveBeenCalledTimes(1)
   })
 
+  it('loadWebRuntime が失敗したら次回の呼び出しで再試行できる', async () => {
+    mockedLoad.mockRejectedValueOnce(new Error('network error'))
+    mockedLoad.mockResolvedValue(1 as never)
+
+    await expect(getPhp()).rejects.toThrow('network error')
+    const php = await getPhp()
+    expect(php).toBeDefined()
+    expect(mockedLoad).toHaveBeenCalledTimes(2)
+  })
+
   it('並行呼び出しでも loadWebRuntime は 1 回のみ実行される', async () => {
     let resolve: (v: number) => void
     const pending = new Promise<number>(r => { resolve = r })
