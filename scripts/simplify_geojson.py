@@ -34,6 +34,7 @@ def download_zip(url: str, cache_path: Path) -> None:
     print(f"ダウンロード中: {url}")
     cache_path.parent.mkdir(parents=True, exist_ok=True)
     tmp_path = cache_path.with_suffix(".tmp")
+    success = False
     try:
         with requests.get(url, stream=True, timeout=120) as resp:
             resp.raise_for_status()
@@ -50,12 +51,14 @@ def download_zip(url: str, cache_path: Path) -> None:
                         mb_total = total / 1024 / 1024
                         print(f"\r  {pct:.1f}%  ({mb_done:.1f} / {mb_total:.1f} MB)", end="", flush=True)
         print()
+        if total and downloaded != total:
+            raise IOError(f"ダウンロードが不完全です: {downloaded}/{total} バイト")
         tmp_path.replace(cache_path)
         print(f"キャッシュ保存: {cache_path}")
-    except Exception:
-        if tmp_path.exists():
+        success = True
+    finally:
+        if not success and tmp_path.exists():
             tmp_path.unlink()
-        raise
 
 
 def find_shp_entry(zf: zipfile.ZipFile) -> str:
