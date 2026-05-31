@@ -1,4 +1,5 @@
 import { useState } from 'preact/hooks'
+import HokkaidoMap from './components/HokkaidoMap'
 import { usePhp } from './hooks/usePhp'
 
 export default function App() {
@@ -24,6 +25,7 @@ export default function App() {
   return (
     <main>
       <h1>あなたの北海道は何 %？</h1>
+      <HokkaidoMap />
       <section>
         <p>PHP WASM ステータス: {status}</p>
         {status === 'error' && <p>エラー: {error?.message}</p>}

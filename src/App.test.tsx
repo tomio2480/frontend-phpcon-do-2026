@@ -1,6 +1,10 @@
-import { render, screen, cleanup, fireEvent, waitFor } from '@testing-library/preact'
-import { afterEach, describe, expect, it, vi } from 'vitest'
+import { cleanup, render, screen, fireEvent, waitFor } from '@testing-library/preact'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import App from './App'
+
+vi.mock('./components/HokkaidoMap', () => ({
+  default: () => <div data-testid="hokkaido-map-mock" />,
+}))
 
 const { mockRun } = vi.hoisted(() => ({ mockRun: vi.fn() }))
 
@@ -14,10 +18,22 @@ afterEach(() => {
 })
 
 describe('App', () => {
+  beforeEach(() => {
+    global.fetch = vi.fn().mockResolvedValue({
+      ok: true,
+      json: vi.fn().mockResolvedValue({ type: 'FeatureCollection', features: [] }),
+    } as unknown as Response)
+  })
+
   it('renders the app heading', () => {
     render(<App />)
     const heading = screen.getByRole('heading', { level: 1 })
     expect(heading.textContent).toContain('北海道')
+  })
+
+  it('HokkaidoMap を含む', () => {
+    render(<App />)
+    expect(screen.getByTestId('hokkaido-map-mock')).toBeTruthy()
   })
 
   it('PHP WASM の ready 状態になるとボタンを表示する', async () => {
@@ -41,10 +57,8 @@ describe('App', () => {
     fireEvent.click(screen.getByRole('button'))
     await screen.findByText('2')
 
-    // 2 回目: 完了しない Promise を使い，実行中の状態を作る
     mockRun.mockReturnValueOnce(new Promise(() => {}))
     fireEvent.click(screen.getByRole('button'))
-    // 実行開始直後に前回の出力が消えている
     await waitFor(() => expect(screen.queryByText('2')).toBeNull())
   })
 
