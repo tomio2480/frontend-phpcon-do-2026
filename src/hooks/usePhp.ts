@@ -72,13 +72,23 @@ export function useAggregate(selectedCodes: readonly string[]): UseAggregateResu
   const [error, setError] = useState<Error | null>(null)
   const [isCalculating, setIsCalculating] = useState(false)
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const executionIdRef = useRef(0)
 
   useEffect(() => {
     if (phpStatus !== 'ready') return
 
+    if (selectedCodes.length === 0) {
+      if (debounceRef.current) clearTimeout(debounceRef.current)
+      setResult(null)
+      setError(null)
+      setIsCalculating(false)
+      return
+    }
+
     if (debounceRef.current) clearTimeout(debounceRef.current)
 
     debounceRef.current = setTimeout(async () => {
+      const executionId = ++executionIdRef.current
       setIsCalculating(true)
       try {
         const [phpContent, data] = await Promise.all([
@@ -98,12 +108,14 @@ $sum = calc_total($rows, $codes);
 $total = calc_total($rows, array_keys($rows));
 echo json_encode(calc_percentages($sum, $total));`
         const output = await run(code)
+        if (executionId !== executionIdRef.current) return
         setResult(JSON.parse(output) as AggregateResult)
         setError(null)
       } catch (e) {
+        if (executionId !== executionIdRef.current) return
         setError(e instanceof Error ? e : new Error(String(e)))
       } finally {
-        setIsCalculating(false)
+        if (executionId === executionIdRef.current) setIsCalculating(false)
       }
     }, 75)
 

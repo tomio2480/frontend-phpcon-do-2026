@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'preact/hooks'
+import { useState, useEffect, useMemo } from 'preact/hooks'
 import HokkaidoMap from './components/HokkaidoMap'
 import CheckboxList from './components/CheckboxList'
 import ResultPanel from './components/ResultPanel'
@@ -9,7 +9,8 @@ import type { Municipality } from './components/CheckboxList'
 export default function App() {
   const { selected, toggle } = useSelection()
   const [municipalities, setMunicipalities] = useState<Municipality[]>([])
-  const { result, isCalculating } = useAggregate(Array.from(selected))
+  const selectedCodes = useMemo(() => Array.from(selected), [selected])
+  const { result, isCalculating, error } = useAggregate(selectedCodes)
 
   useEffect(() => {
     fetch('/data/municipalities.json')
@@ -23,6 +24,7 @@ export default function App() {
       <h1>あなたの北海道は何 %？</h1>
       <HokkaidoMap />
       <CheckboxList municipalities={municipalities} selected={selected} onToggle={toggle} />
+      {error && <p>集計エラー: {error.message}</p>}
       <ResultPanel result={result} isCalculating={isCalculating} />
     </main>
   )

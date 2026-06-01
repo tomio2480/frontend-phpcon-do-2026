@@ -35,7 +35,7 @@ describe('useSelection', () => {
     expect(result.current.selected.size).toBe(0)
   })
 
-  it('selected の更新元は toggle 1 箇所に集約されている（単一ソース性）', () => {
+  it('toggle で複数の選択・解除操作が正しく動作する', () => {
     const { result } = renderHook(() => useSelection())
     act(() => result.current.toggle('01101'))
     act(() => result.current.toggle('01102'))
