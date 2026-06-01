@@ -1,46 +1,29 @@
-import { useState } from 'preact/hooks'
+import { useState, useEffect } from 'preact/hooks'
 import HokkaidoMap from './components/HokkaidoMap'
-import { usePhp } from './hooks/usePhp'
+import CheckboxList from './components/CheckboxList'
+import ResultPanel from './components/ResultPanel'
+import { useSelection } from './hooks/useSelection'
+import { useAggregate } from './hooks/usePhp'
+import type { Municipality } from './components/CheckboxList'
 
 export default function App() {
-  const { status, error, run } = usePhp()
-  const [output, setOutput] = useState<string | null>(null)
-  const [running, setRunning] = useState(false)
-  const [runError, setRunError] = useState<string | null>(null)
+  const { selected, toggle } = useSelection()
+  const [municipalities, setMunicipalities] = useState<Municipality[]>([])
+  const { result, isCalculating } = useAggregate(Array.from(selected))
 
-  async function handleRun() {
-    setRunning(true)
-    setRunError(null)
-    setOutput(null)
-    try {
-      const result = await run('<?php echo 1+1; ?>')
-      setOutput(result)
-    } catch (e) {
-      setRunError(e instanceof Error ? e.message : String(e))
-    } finally {
-      setRunning(false)
-    }
-  }
+  useEffect(() => {
+    fetch('/data/municipalities.json')
+      .then(r => r.json() as Promise<Record<string, Municipality>>)
+      .then(data => setMunicipalities(Object.values(data)))
+      .catch(console.error)
+  }, [])
 
   return (
     <main>
       <h1>あなたの北海道は何 %？</h1>
       <HokkaidoMap />
-      <section>
-        <p>PHP WASM ステータス: {status}</p>
-        {status === 'error' && <p>エラー: {error?.message}</p>}
-        {status === 'ready' && (
-          <button type="button" onClick={handleRun} disabled={running}>
-            {running ? '実行中…' : 'PHP を実行（1+1）'}
-          </button>
-        )}
-        {runError !== null && <p>実行エラー: {runError}</p>}
-        {output !== null && runError === null && (
-          <p>
-            <code>{'<?php echo 1+1; ?>'}</code> の出力: <strong>{output}</strong>
-          </p>
-        )}
-      </section>
+      <CheckboxList municipalities={municipalities} selected={selected} onToggle={toggle} />
+      <ResultPanel result={result} isCalculating={isCalculating} />
     </main>
   )
 }
