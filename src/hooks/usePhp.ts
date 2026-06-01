@@ -113,6 +113,7 @@ echo json_encode(calc_percentages($sum, $total));`
         setError(null)
       } catch (e) {
         if (executionId !== executionIdRef.current) return
+        setResult(null)
         setError(e instanceof Error ? e : new Error(String(e)))
       } finally {
         if (executionId === executionIdRef.current) setIsCalculating(false)
