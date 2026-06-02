@@ -16,18 +16,20 @@ export default function HokkaidoMap({ onHover, onClick, selected }: Props) {
   const onHoverRef = useRef(onHover)
   const onClickRef = useRef(onClick)
   const selectedRef = useRef(selected)
-  const layersRef = useRef<Map<string, L.Path>>(new Map())
+  const layersRef = useRef<Map<string, L.Path[]>>(new Map())
 
   useEffect(() => { onHoverRef.current = onHover }, [onHover])
   useEffect(() => { onClickRef.current = onClick }, [onClick])
 
   useEffect(() => {
     selectedRef.current = selected
-    layersRef.current.forEach((layer, code) => {
+    layersRef.current.forEach((layers, code) => {
       const targetStyle = selected?.has(code) ? STYLE_SELECTED : STYLE_DEFAULT
-      if (layer.options?.fillColor !== targetStyle.fillColor) {
-        layer.setStyle(targetStyle)
-      }
+      layers.forEach(layer => {
+        if (layer.options?.fillColor !== targetStyle.fillColor) {
+          layer.setStyle(targetStyle)
+        }
+      })
     })
   }, [selected])
 
@@ -53,7 +55,9 @@ export default function HokkaidoMap({ onHover, onClick, selected }: Props) {
             const code: string | undefined = feature.properties?.code
             if (code && 'setStyle' in layer) {
               const path = layer as L.Path
-              layersRef.current.set(code, path)
+              const existing = layersRef.current.get(code)
+              if (existing) existing.push(path)
+              else layersRef.current.set(code, [path])
               path.setStyle(selectedRef.current?.has(code) ? STYLE_SELECTED : STYLE_DEFAULT)
             }
             layer.on('mouseover', () => onHoverRef.current?.(feature.properties?.code ?? null))

@@ -7,11 +7,6 @@ vi.mock('leaflet/dist/leaflet.css', () => ({}))
 const mockSetStyle = vi.hoisted(() => vi.fn())
 
 vi.mock('leaflet', () => {
-  const mockPath = {
-    on: vi.fn().mockReturnThis(),
-    addTo: vi.fn().mockReturnThis(),
-    setStyle: mockSetStyle,
-  }
   return {
     default: {
       map: vi.fn(() => ({ remove: vi.fn() })),
@@ -20,7 +15,10 @@ vi.mock('leaflet', () => {
         options?: { onEachFeature?: (f: unknown, l: unknown) => void },
       ) => {
         const features = geojson?.features ?? []
-        features.forEach(f => options?.onEachFeature?.(f, mockPath))
+        features.forEach(f => {
+          const layer = { on: vi.fn().mockReturnThis(), setStyle: mockSetStyle }
+          options?.onEachFeature?.(f, layer)
+        })
         return { addTo: vi.fn() }
       }),
     },
@@ -70,5 +68,28 @@ describe('HokkaidoMap', () => {
     await waitFor(() => {
       expect(mockSetStyle).toHaveBeenCalledWith({ fillColor: '#3b82f6', fillOpacity: 0.6 })
     })
+  })
+
+  it('selected 変化時に同一コードの複数フィーチャすべてに新スタイルを適用する', async () => {
+    global.fetch = vi.fn().mockResolvedValue({
+      ok: true,
+      json: vi.fn().mockResolvedValue({
+        type: 'FeatureCollection',
+        features: [
+          { type: 'Feature', properties: { code: '01101' }, geometry: null },
+          { type: 'Feature', properties: { code: '01101' }, geometry: null },
+        ],
+      }),
+    } as unknown as Response)
+
+    const { rerender } = render(<HokkaidoMap selected={new Set()} />)
+
+    await waitFor(() => expect(mockSetStyle).toHaveBeenCalledTimes(2))
+    mockSetStyle.mockClear()
+
+    rerender(<HokkaidoMap selected={new Set(['01101'])} />)
+
+    expect(mockSetStyle).toHaveBeenCalledTimes(2)
+    expect(mockSetStyle).toHaveBeenCalledWith({ fillColor: '#3b82f6', fillOpacity: 0.6 })
   })
 })
