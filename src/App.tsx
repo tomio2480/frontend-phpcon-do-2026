@@ -22,7 +22,7 @@ export default function App() {
   return (
     <main>
       <h1>あなたの北海道は何 %？</h1>
-      <HokkaidoMap />
+      <HokkaidoMap onClick={toggle} selected={selected} />
       <CheckboxList municipalities={municipalities} selected={selected} onToggle={toggle} />
       {error && <p>集計エラー: {error.message}</p>}
       <ResultPanel result={result} isCalculating={isCalculating} />
