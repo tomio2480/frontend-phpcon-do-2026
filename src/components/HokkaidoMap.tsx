@@ -24,7 +24,10 @@ export default function HokkaidoMap({ onHover, onClick, selected }: Props) {
   useEffect(() => {
     selectedRef.current = selected
     layersRef.current.forEach((layer, code) => {
-      layer.setStyle(selected?.has(code) ? STYLE_SELECTED : STYLE_DEFAULT)
+      const targetStyle = selected?.has(code) ? STYLE_SELECTED : STYLE_DEFAULT
+      if (layer.options?.fillColor !== targetStyle.fillColor) {
+        layer.setStyle(targetStyle)
+      }
     })
   }, [selected])
 
