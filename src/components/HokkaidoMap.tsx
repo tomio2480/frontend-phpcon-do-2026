@@ -2,18 +2,31 @@ import 'leaflet/dist/leaflet.css'
 import L from 'leaflet'
 import { useEffect, useRef } from 'preact/hooks'
 
+const STYLE_SELECTED = { fillColor: '#3b82f6', fillOpacity: 0.6 }
+const STYLE_DEFAULT = { fillColor: '#666666', fillOpacity: 0.2 }
+
 interface Props {
   onHover?: (code: string | null) => void
   onClick?: (code: string) => void
+  selected?: Set<string>
 }
 
-export default function HokkaidoMap({ onHover, onClick }: Props) {
+export default function HokkaidoMap({ onHover, onClick, selected }: Props) {
   const containerRef = useRef<HTMLDivElement>(null)
   const onHoverRef = useRef(onHover)
   const onClickRef = useRef(onClick)
+  const selectedRef = useRef(selected)
+  const layersRef = useRef<Map<string, L.Path>>(new Map())
 
   useEffect(() => { onHoverRef.current = onHover }, [onHover])
   useEffect(() => { onClickRef.current = onClick }, [onClick])
+
+  useEffect(() => {
+    selectedRef.current = selected
+    layersRef.current.forEach((layer, code) => {
+      layer.setStyle(selected?.has(code) ? STYLE_SELECTED : STYLE_DEFAULT)
+    })
+  }, [selected])
 
   useEffect(() => {
     if (!containerRef.current) return
@@ -34,10 +47,15 @@ export default function HokkaidoMap({ onHover, onClick }: Props) {
         if (!isMounted) return
         L.geoJSON(geojson, {
           onEachFeature: (feature, layer) => {
+            const code: string | undefined = feature.properties?.code
+            if (code && 'setStyle' in layer) {
+              const path = layer as L.Path
+              layersRef.current.set(code, path)
+              path.setStyle(selectedRef.current?.has(code) ? STYLE_SELECTED : STYLE_DEFAULT)
+            }
             layer.on('mouseover', () => onHoverRef.current?.(feature.properties?.code ?? null))
             layer.on('mouseout', () => onHoverRef.current?.(null))
             layer.on('click', () => {
-              const code: string | undefined = feature.properties?.code
               if (code) onClickRef.current?.(code)
             })
           },
@@ -47,6 +65,7 @@ export default function HokkaidoMap({ onHover, onClick }: Props) {
 
     return () => {
       isMounted = false
+      layersRef.current.clear()
       map.remove()
     }
   }, [])

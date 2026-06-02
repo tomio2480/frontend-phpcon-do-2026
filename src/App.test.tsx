@@ -1,9 +1,12 @@
 import { cleanup, render, screen, waitFor } from '@testing-library/preact'
+import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import App from './App'
 
 vi.mock('./components/HokkaidoMap', () => ({
-  default: () => <div data-testid="hokkaido-map-mock" />,
+  default: ({ onClick }: { onClick?: (code: string) => void }) => (
+    <button type="button" aria-label="地図" data-testid="hokkaido-map-mock" onClick={() => onClick?.('01101')} />
+  ),
 }))
 
 vi.mock('./php/runtime', () => ({
@@ -57,5 +60,16 @@ describe('App', () => {
   it('初期状態の ResultPanel に選択を促すメッセージを表示する', () => {
     render(<App />)
     expect(screen.getByText('市区町村を選択してください')).toBeTruthy()
+  })
+
+  it('地図クリックで対応するチェックボックスが切り替わる', async () => {
+    render(<App />)
+    await waitFor(() => screen.getByLabelText('中央区'))
+
+    expect(screen.getByLabelText<HTMLInputElement>('中央区').checked).toBe(false)
+
+    await userEvent.click(screen.getByTestId('hokkaido-map-mock'))
+
+    expect(screen.getByLabelText<HTMLInputElement>('中央区').checked).toBe(true)
   })
 })
