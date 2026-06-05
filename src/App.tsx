@@ -13,7 +13,7 @@ export default function App() {
   const { selected, toggle, toggleCodes } = useSelection()
   const [municipalities, setMunicipalities] = useState<Municipality[]>([])
   const selectedCodes = useMemo(() => Array.from(selected), [selected])
-  const { result, isCalculating, error, isPhpLoading } = useAggregate(selectedCodes)
+  const { result, isCalculating, error, isPhpLoading, isPhpError } = useAggregate(selectedCodes)
 
   const toggleSapporo = useCallback(() => toggleCodes(SAPPORO_CODES), [toggleCodes])
 
@@ -41,6 +41,11 @@ export default function App() {
       <LoadingOverlay isLoading={isPhpLoading} />
       <div class="p-4 max-w-5xl mx-auto">
         <h1 class="text-2xl font-bold mb-4">あなたの北海道は何 %？</h1>
+        {isPhpError && (
+          <p role="alert" class="mt-2 p-3 rounded-lg bg-red-100 text-red-700 text-sm">
+            PHP エンジンの読み込みに失敗しました．ページを再読み込みしてください．
+          </p>
+        )}
         <HokkaidoMap onClick={toggle} selected={selected} />
         {error && <p class="mt-2 text-red-600 text-sm">集計エラー: {error.message}</p>}
         <ResultPanel result={result} isCalculating={isCalculating} />

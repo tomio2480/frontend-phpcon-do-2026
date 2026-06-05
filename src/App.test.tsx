@@ -15,7 +15,7 @@ vi.mock('./php/runtime', () => ({
 }))
 
 vi.mock('./hooks/usePhp', () => ({
-  useAggregate: vi.fn().mockReturnValue({ result: null, error: null, isCalculating: false, isPhpLoading: false }),
+  useAggregate: vi.fn().mockReturnValue({ result: null, error: null, isCalculating: false, isPhpLoading: false, isPhpError: false }),
 }))
 
 const FAKE_MUNICIPALITIES = {
@@ -37,7 +37,7 @@ const sampleResult = {
 
 describe('App', () => {
   beforeEach(() => {
-    vi.mocked(useAggregate).mockReturnValue({ result: null, error: null, isCalculating: false, isPhpLoading: false })
+    vi.mocked(useAggregate).mockReturnValue({ result: null, error: null, isCalculating: false, isPhpLoading: false, isPhpError: false })
     global.fetch = vi.fn().mockImplementation((url: string) => {
       if (url === '/data/municipalities.json') {
         return Promise.resolve({
@@ -86,14 +86,21 @@ describe('App', () => {
     expect(screen.queryByRole('status')).toBeNull()
   })
 
+  it('PHP 初期化エラー時はエラーメッセージを表示する', () => {
+    vi.mocked(useAggregate).mockReturnValue({ result: null, error: null, isCalculating: false, isPhpLoading: false, isPhpError: true })
+    render(<App />)
+    expect(screen.getByRole('alert')).toBeTruthy()
+    expect(screen.getByText(/PHP エンジンの読み込みに失敗/)).toBeTruthy()
+  })
+
   it('集計中は ShareButton を表示しない', () => {
-    vi.mocked(useAggregate).mockReturnValue({ result: sampleResult, error: null, isCalculating: true, isPhpLoading: false })
+    vi.mocked(useAggregate).mockReturnValue({ result: sampleResult, error: null, isCalculating: true, isPhpLoading: false, isPhpError: false })
     render(<App />)
     expect(screen.queryByRole('link', { name: 'X に投稿する' })).toBeNull()
   })
 
   it('集計完了後に ShareButton を表示する', () => {
-    vi.mocked(useAggregate).mockReturnValue({ result: sampleResult, error: null, isCalculating: false, isPhpLoading: false })
+    vi.mocked(useAggregate).mockReturnValue({ result: sampleResult, error: null, isCalculating: false, isPhpLoading: false, isPhpError: false })
     render(<App />)
     expect(screen.getByRole('link', { name: /X に投稿する/ })).toBeTruthy()
   })
