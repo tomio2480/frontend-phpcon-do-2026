@@ -64,12 +64,15 @@ self.addEventListener('fetch', event => {
     event.respondWith(
       fetch(event.request)
         .then(response => {
-          if (!response.ok) return response
-          const clone = response.clone()
-          event.waitUntil(
-            caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone))
-          )
-          return response
+          if (response.ok) {
+            const clone = response.clone()
+            event.waitUntil(
+              caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone))
+            )
+            return response
+          }
+          // 5xx 等のサーバーエラー時はキャッシュをフォールバックに使う
+          return caches.match(event.request).then(cached => cached || response)
         })
         .catch(() => caches.match(event.request))
     )
