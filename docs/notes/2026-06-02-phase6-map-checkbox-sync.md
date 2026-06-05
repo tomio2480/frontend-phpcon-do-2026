@@ -22,9 +22,9 @@ Phase 6 では地図クリックとチェックボックス操作を `useSelecti
 ### selectedRef パターン
 
 Leaflet の `geoJSON` コールバック（`onEachFeature`）は非同期の `fetch` チェーン内で呼ばれる．
-`useEffect([selected])` で更新される `selected` の最新値を，
+`useEffect(callback, [selected])` で更新される `selected` の最新値を，
 この非同期コールバック内で参照するために `selectedRef` を導入した．
-`useRef` で current を保持し，`useEffect([selected])` の先頭で同期することで，
+`useRef` で current を保持し，`useEffect(callback, [selected])` の先頭で同期することで，
 GeoJSON 読み込み完了時に初期の選択状態を即時スタイルへ反映できる．
 
 ### duck-typing ガード
@@ -34,7 +34,7 @@ GeoJSON 読み込み完了時に初期の選択状態を即時スタイルへ反
 `instanceof L.Path` を使うとモック環境でクラス参照が一致しないため，
 `'setStyle' in layer` による duck-typing で安全にガードした．
 
-### Map&lt;string, L.Path[]&gt; による複数フィーチャ対応
+### `Map<string, L.Path[]>` による複数フィーチャ対応
 
 `Map<string, L.Path>` では同一コードの 2 つ目以降のフィーチャが上書きされる．
 離島など複数ポリゴンで構成される自治体に対応するため，
