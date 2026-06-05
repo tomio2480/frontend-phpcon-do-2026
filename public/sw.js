@@ -34,7 +34,11 @@ self.addEventListener('activate', event => {
 // GET のみキャッシュ対象（caches.put は GET 以外で TypeError をスローする）
 self.addEventListener('fetch', event => {
   if (event.request.method !== 'GET') return
-  const { pathname } = new URL(event.request.url)
+
+  const url = new URL(event.request.url)
+  if (url.origin !== self.location.origin) return
+
+  const { pathname } = url
 
   // .wasm はハッシュ付きのためキャッシュファーストで処理する
   if (pathname.endsWith('.wasm')) {
@@ -55,8 +59,8 @@ self.addEventListener('fetch', event => {
   }
 
   // /php/・/data/ はハッシュなしのためネットワークファーストで処理する
-  // includes でサブディレクトリデプロイにも対応する
-  if (pathname.includes('/php/') || pathname.includes('/data/')) {
+  // base + 前方一致でサブディレクトリデプロイに対応し，誤マッチを防ぐ
+  if (pathname.startsWith(base + '/php/') || pathname.startsWith(base + '/data/')) {
     event.respondWith(
       fetch(event.request)
         .then(response => {
