@@ -2,6 +2,7 @@ import { cleanup, render, screen, waitFor } from '@testing-library/preact'
 import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import App from './App'
+import { useAggregate } from './hooks/usePhp'
 
 vi.mock('./components/HokkaidoMap', () => ({
   default: ({ onClick }: { onClick?: (code: string) => void }) => (
@@ -11,6 +12,10 @@ vi.mock('./components/HokkaidoMap', () => ({
 
 vi.mock('./php/runtime', () => ({
   getPhp: vi.fn().mockReturnValue(new Promise(() => {})),
+}))
+
+vi.mock('./hooks/usePhp', () => ({
+  useAggregate: vi.fn().mockReturnValue({ result: null, error: null, isCalculating: false }),
 }))
 
 const FAKE_MUNICIPALITIES = {
@@ -23,8 +28,16 @@ afterEach(() => {
   vi.clearAllMocks()
 })
 
+const sampleResult = {
+  area_pct: 1.0,
+  population_pct: 2.0,
+  furusato_amount_pct: 3.0,
+  furusato_count_pct: 4.0,
+}
+
 describe('App', () => {
   beforeEach(() => {
+    vi.mocked(useAggregate).mockReturnValue({ result: null, error: null, isCalculating: false })
     global.fetch = vi.fn().mockImplementation((url: string) => {
       if (url === '/data/municipalities.json') {
         return Promise.resolve({
@@ -60,6 +73,18 @@ describe('App', () => {
   it('初期状態の ResultPanel に選択を促すメッセージを表示する', () => {
     render(<App />)
     expect(screen.getByText('市区町村を選択してください')).toBeTruthy()
+  })
+
+  it('集計中は ShareButton を表示しない', () => {
+    vi.mocked(useAggregate).mockReturnValue({ result: sampleResult, error: null, isCalculating: true })
+    render(<App />)
+    expect(screen.queryByRole('link', { name: 'X に投稿する' })).toBeNull()
+  })
+
+  it('集計完了後に ShareButton を表示する', () => {
+    vi.mocked(useAggregate).mockReturnValue({ result: sampleResult, error: null, isCalculating: false })
+    render(<App />)
+    expect(screen.getByRole('link', { name: /X に投稿する/ })).toBeTruthy()
   })
 
   it('地図クリックで対応するチェックボックスが切り替わる', async () => {
