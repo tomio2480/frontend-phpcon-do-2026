@@ -4,10 +4,13 @@ import CheckboxList from './components/CheckboxList'
 import ResultPanel from './components/ResultPanel'
 import { useSelection } from './hooks/useSelection'
 import { useAggregate } from './hooks/usePhp'
+import { SAPPORO_CODES } from './constants'
+import { useCallback } from 'preact/hooks'
 import type { Municipality } from './components/CheckboxList'
 
 export default function App() {
-  const { selected, toggle, toggleSapporo } = useSelection()
+  const { selected, toggle, toggleCodes } = useSelection()
+  const toggleSapporo = useCallback(() => toggleCodes(SAPPORO_CODES), [toggleCodes])
   const [municipalities, setMunicipalities] = useState<Municipality[]>([])
   const selectedCodes = useMemo(() => Array.from(selected), [selected])
   const { result, isCalculating, error } = useAggregate(selectedCodes)

@@ -1,10 +1,5 @@
 import { useState, useCallback } from 'preact/hooks'
 
-export const SAPPORO_CODES = [
-  '01101', '01102', '01103', '01104', '01105',
-  '01106', '01107', '01108', '01109', '01110',
-]
-
 export type SelectionState = Set<string>
 
 export type UseSelectionResult = {
@@ -12,7 +7,7 @@ export type UseSelectionResult = {
   toggle: (code: string) => void
   selectAll: (codes: string[]) => void
   clearAll: () => void
-  toggleSapporo: () => void
+  toggleCodes: (codes: string[]) => void
 }
 
 export function useSelection(): UseSelectionResult {
@@ -35,18 +30,18 @@ export function useSelection(): UseSelectionResult {
     setSelected(new Set())
   }, [])
 
-  const toggleSapporo = useCallback(() => {
+  const toggleCodes = useCallback((codes: string[]) => {
     setSelected(prev => {
-      const allSelected = SAPPORO_CODES.every(code => prev.has(code))
+      const allSelected = codes.every(code => prev.has(code))
       const next = new Set(prev)
       if (allSelected) {
-        SAPPORO_CODES.forEach(code => next.delete(code))
+        codes.forEach(code => next.delete(code))
       } else {
-        SAPPORO_CODES.forEach(code => next.add(code))
+        codes.forEach(code => next.add(code))
       }
       return next
     })
   }, [])
 
-  return { selected, toggle, selectAll, clearAll, toggleSapporo }
+  return { selected, toggle, selectAll, clearAll, toggleCodes }
 }

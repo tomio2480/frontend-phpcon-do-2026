@@ -1,4 +1,4 @@
-import { SAPPORO_CODES } from '../hooks/useSelection'
+import { SAPPORO_CODES } from '../constants'
 
 export type Municipality = {
   code: string
