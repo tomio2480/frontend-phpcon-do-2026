@@ -1,7 +1,7 @@
 # Phase 9: デザイン適用・北海道カラートークン
 
-Phase 9 では Tailwind CSS v4 のデザイントークン導入，PHP WASM 初期化状態の UI 伝播，
-アクセシビリティ対応（`inert` 属性）を実施した際の知見をまとめる．
+Phase 9 の知見をまとめる．
+対象は Tailwind CSS v4 のデザイントークン，PHP WASM 状態管理，`inert` 属性によるアクセシビリティ対応である．
 
 ## 目次
 
@@ -27,14 +27,14 @@ Tailwind がユーティリティクラスとして認識する．
 ```
 
 これにより `bg-background`，`text-text`，`border-accent-lilac/40` などの
-クラスが使えるようになる．`/40` のような不透明度修飾子も機能する．
+クラスが使えるようになる．`/40` のような不透明度の修飾子も機能する．
 
 ## Leaflet の `setStyle()` と CSS カスタムプロパティの制約
 
 ### 判断
 
 Leaflet の `setStyle()` はカスタムプロパティを解決できないため，
-カラー値をハードコードする．コメントで tokens.css との対応を明記して追従漏れを防ぐ．
+カラー値をハードコードする．コメントで `tokens.css` との対応を明記して追従漏れを防ぐ．
 
 ```ts
 /* トークン対応: --color-accent-lilac / --color-accent-lavender / --color-map-default */
@@ -43,18 +43,17 @@ const STYLE_SELECTED = { fillColor: '#D8B7DD', fillOpacity: 0.6 }
 
 ### 代替案と棄却理由
 
-**`var(--color-accent-lilac)` を直接渡す**: Leaflet の `setStyle()` は
-SVG の `fill` 属性に直接書き込む（DOM プロパティ経由ではない）ため，
-ブラウザのスタイル解決が働かず `var(...)` が文字列のまま残る．
+**`var(--color-accent-lilac)` を直接渡す**:
+`setStyle()` は SVG の `fill` 属性に直接書き込む仕組みで，DOM プロパティ経由のスタイル解決は働かない．
+`var(...)` が文字列のまま残るため棄却した．
 
-**`className` + CSS で制御**: CSS 変数は使えるが，
-`mouseover` / `mouseout` / `click` ハンドラでのスタイル切り替えを
-すべてクラス付け替えに変える必要がある．今フェーズのスコープ外と判断した．
+**`className` + CSS で制御**: CSS 変数は使えるが，今フェーズのスコープ外と判断した．
+`mouseover` / `mouseout` / `click` の各ハンドラをクラス付け替えで制御する作業量が必要になる．
 
 ## PHP WASM 初期化状態の UI 伝播設計
 
-`usePhp` が返す `phpStatus: 'loading' | 'ready' | 'error'` を，
-`useAggregate` でブーリアンフラグに変換して返す．
+`usePhp` が返す `phpStatus` は `'loading' | 'ready' | 'error'` の 3 値をとる．
+`useAggregate` はこれをブーリアンフラグに変換して返す．
 
 ```ts
 export type UseAggregateResult = {
@@ -96,7 +95,7 @@ PHP 初期化中・初期化エラー時にインタラクティブ要素への
 ```
 
 `false || undefined` は `undefined` となり属性が付かない．
-Preact 10.x の JSX 型定義では `inert?: Signalish<boolean | undefined>` として定義済みで，
+Preact 10.x の JSX では `inert?: Signalish<boolean | undefined>` として定義済みである．
 型エラーは発生しない．
 
 `role="alert"` のエラーメッセージは `inert` ブロック外に置くことで
@@ -121,14 +120,13 @@ await act(async () => { await vi.runAllTimersAsync() })
 expect(result.current.isPhpError).toBe(true)
 ```
 
-`act(async () => {})` は pending Promise をフラッシュするが，
-rejected Promise チェーンには不十分な場合がある．
-その場合は `vi.runAllTimersAsync()` を組み合わせる．
+`act(async () => {})` は pending `Promise` をフラッシュする．
+rejected `Promise` チェーンには不十分な場合があり，その際は `vi.runAllTimersAsync()` を組み合わせる．
 
 ## `vi.hoisted()` で Leaflet イベントハンドラを捕捉する
 
-Leaflet の `layer.on(event, handler)` をテストで呼び出すには，
-モック内でハンドラを `vi.hoisted()` 経由のオブジェクトに保存する．
+テストで `layer.on(event, handler)` を呼び出すには，モック内でハンドラを保存する必要がある．
+保存先は `vi.hoisted()` 経由のオブジェクトである．
 
 ```ts
 const capturedHandlers = vi.hoisted<{
@@ -145,8 +143,8 @@ vi.mock('leaflet', () => ({
 }))
 ```
 
-テスト内で `capturedHandlers.current[0].mouseover?.()` のように
-呼び出すことでホバー・クリックのスタイル変化を検証できる．
+テスト内で `capturedHandlers.current[0].mouseover?.()` のように呼び出す．
+ホバー・クリックのスタイル変化を検証できる．
 
 ## 参照
 
