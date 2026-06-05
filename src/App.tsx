@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo, useCallback } from 'preact/hooks'
 import HokkaidoMap from './components/HokkaidoMap'
 import CheckboxList from './components/CheckboxList'
 import ResultPanel from './components/ResultPanel'
+import ShareButton from './components/ShareButton'
 import { useSelection } from './hooks/useSelection'
 import { useAggregate } from './hooks/usePhp'
 import { SAPPORO_CODES } from './constants'
@@ -41,6 +42,7 @@ export default function App() {
       <CheckboxList municipalities={municipalities} selected={selected} onToggle={toggle} regionActions={regionActions} />
       {error && <p>集計エラー: {error.message}</p>}
       <ResultPanel result={result} isCalculating={isCalculating} />
+      {result && <ShareButton result={result} />}
     </main>
   )
 }
