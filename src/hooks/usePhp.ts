@@ -64,6 +64,7 @@ export type UseAggregateResult = {
   result: AggregateResult | null
   error: Error | null
   isCalculating: boolean
+  isPhpLoading: boolean
 }
 
 export function useAggregate(selectedCodes: readonly string[]): UseAggregateResult {
@@ -125,5 +126,5 @@ echo json_encode(calc_percentages($sum, $total));`
     }
   }, [selectedCodes, phpStatus, run])
 
-  return { result, error, isCalculating }
+  return { result, error, isCalculating, isPhpLoading: phpStatus === 'loading' }
 }

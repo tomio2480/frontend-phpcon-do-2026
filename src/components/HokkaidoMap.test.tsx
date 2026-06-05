@@ -5,6 +5,7 @@ import HokkaidoMap from './HokkaidoMap'
 vi.mock('leaflet/dist/leaflet.css', () => ({}))
 
 const mockSetStyle = vi.hoisted(() => vi.fn())
+const capturedHandlers = vi.hoisted<{ current: Array<Record<string, () => void>> }>(() => ({ current: [] }))
 
 vi.mock('leaflet', () => {
   return {
@@ -16,7 +17,14 @@ vi.mock('leaflet', () => {
       ) => {
         const features = geojson?.features ?? []
         features.forEach(f => {
-          const layer = { on: vi.fn().mockReturnThis(), setStyle: mockSetStyle }
+          const handlers: Record<string, () => void> = {}
+          capturedHandlers.current.push(handlers)
+          const layer = {
+            on: vi.fn().mockImplementation((event: string, handler: () => void) => {
+              handlers[event] = handler
+            }),
+            setStyle: mockSetStyle,
+          }
           options?.onEachFeature?.(f, layer)
         })
         return { addTo: vi.fn() }
@@ -30,6 +38,7 @@ describe('HokkaidoMap', () => {
 
   beforeEach(() => {
     mockSetStyle.mockClear()
+    capturedHandlers.current = []
     global.fetch = vi.fn().mockResolvedValue({
       ok: true,
       json: vi.fn().mockResolvedValue({ type: 'FeatureCollection', features: [] }),
@@ -66,7 +75,7 @@ describe('HokkaidoMap', () => {
     render(<HokkaidoMap selected={new Set(['01101'])} />)
 
     await waitFor(() => {
-      expect(mockSetStyle).toHaveBeenCalledWith({ fillColor: '#3b82f6', fillOpacity: 0.6 })
+      expect(mockSetStyle).toHaveBeenCalledWith({ fillColor: '#D8B7DD', fillOpacity: 0.6 })
     })
   })
 
@@ -90,6 +99,42 @@ describe('HokkaidoMap', () => {
     rerender(<HokkaidoMap selected={new Set(['01101'])} />)
 
     expect(mockSetStyle).toHaveBeenCalledTimes(2)
-    expect(mockSetStyle).toHaveBeenCalledWith({ fillColor: '#3b82f6', fillOpacity: 0.6 })
+    expect(mockSetStyle).toHaveBeenCalledWith({ fillColor: '#D8B7DD', fillOpacity: 0.6 })
+  })
+
+  it('ホバー時に未選択ポリゴンにホバースタイルを適用する', async () => {
+    global.fetch = vi.fn().mockResolvedValue({
+      ok: true,
+      json: vi.fn().mockResolvedValue({
+        type: 'FeatureCollection',
+        features: [{ type: 'Feature', properties: { code: '01101' }, geometry: null }],
+      }),
+    } as unknown as Response)
+
+    render(<HokkaidoMap selected={new Set()} />)
+
+    await waitFor(() => expect(capturedHandlers.current.length).toBeGreaterThan(0))
+    mockSetStyle.mockClear()
+    capturedHandlers.current[0].mouseover?.()
+
+    expect(mockSetStyle).toHaveBeenCalledWith({ fillColor: '#BFB3E0', fillOpacity: 0.5 })
+  })
+
+  it('マウスアウト時に未選択ポリゴンをデフォルトスタイルに戻す', async () => {
+    global.fetch = vi.fn().mockResolvedValue({
+      ok: true,
+      json: vi.fn().mockResolvedValue({
+        type: 'FeatureCollection',
+        features: [{ type: 'Feature', properties: { code: '01101' }, geometry: null }],
+      }),
+    } as unknown as Response)
+
+    render(<HokkaidoMap selected={new Set()} />)
+
+    await waitFor(() => expect(capturedHandlers.current.length).toBeGreaterThan(0))
+    mockSetStyle.mockClear()
+    capturedHandlers.current[0].mouseout?.()
+
+    expect(mockSetStyle).toHaveBeenCalledWith({ fillColor: '#666666', fillOpacity: 0.2 })
   })
 })

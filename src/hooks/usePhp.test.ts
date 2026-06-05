@@ -125,6 +125,19 @@ describe('useAggregate', () => {
     expect(result.current.result).toBeNull()
   })
 
+  it('PHP 初期化中は isPhpLoading が true', () => {
+    mockedGetPhp.mockReturnValue(new Promise(() => {}))
+    const { result } = renderHook(() => useAggregate([]))
+    expect(result.current.isPhpLoading).toBe(true)
+  })
+
+  it('PHP 準備完了後は isPhpLoading が false', async () => {
+    mockedGetPhp.mockResolvedValue(mockPhp as never)
+    const { result } = renderHook(() => useAggregate([]))
+    await act(async () => {})
+    expect(result.current.isPhpLoading).toBe(false)
+  })
+
   it('PHP 準備完了後にデバウンスを経て result が更新される', async () => {
     mockRun.mockResolvedValue({ text: JSON.stringify(FAKE_RESULT) })
     mockedGetPhp.mockResolvedValue(mockPhp as never)

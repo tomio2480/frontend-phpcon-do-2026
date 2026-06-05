@@ -15,7 +15,7 @@ vi.mock('./php/runtime', () => ({
 }))
 
 vi.mock('./hooks/usePhp', () => ({
-  useAggregate: vi.fn().mockReturnValue({ result: null, error: null, isCalculating: false }),
+  useAggregate: vi.fn().mockReturnValue({ result: null, error: null, isCalculating: false, isPhpLoading: false }),
 }))
 
 const FAKE_MUNICIPALITIES = {
@@ -37,7 +37,7 @@ const sampleResult = {
 
 describe('App', () => {
   beforeEach(() => {
-    vi.mocked(useAggregate).mockReturnValue({ result: null, error: null, isCalculating: false })
+    vi.mocked(useAggregate).mockReturnValue({ result: null, error: null, isCalculating: false, isPhpLoading: false })
     global.fetch = vi.fn().mockImplementation((url: string) => {
       if (url === '/data/municipalities.json') {
         return Promise.resolve({
@@ -75,14 +75,25 @@ describe('App', () => {
     expect(screen.getByText('市区町村を選択してください')).toBeTruthy()
   })
 
+  it('PHP 初期化中は LoadingOverlay を表示する', () => {
+    vi.mocked(useAggregate).mockReturnValue({ result: null, error: null, isCalculating: false, isPhpLoading: true })
+    render(<App />)
+    expect(screen.getByRole('status')).toBeTruthy()
+  })
+
+  it('PHP 初期化完了後は LoadingOverlay を表示しない', () => {
+    render(<App />)
+    expect(screen.queryByRole('status')).toBeNull()
+  })
+
   it('集計中は ShareButton を表示しない', () => {
-    vi.mocked(useAggregate).mockReturnValue({ result: sampleResult, error: null, isCalculating: true })
+    vi.mocked(useAggregate).mockReturnValue({ result: sampleResult, error: null, isCalculating: true, isPhpLoading: false })
     render(<App />)
     expect(screen.queryByRole('link', { name: 'X に投稿する' })).toBeNull()
   })
 
   it('集計完了後に ShareButton を表示する', () => {
-    vi.mocked(useAggregate).mockReturnValue({ result: sampleResult, error: null, isCalculating: false })
+    vi.mocked(useAggregate).mockReturnValue({ result: sampleResult, error: null, isCalculating: false, isPhpLoading: false })
     render(<App />)
     expect(screen.getByRole('link', { name: /X に投稿する/ })).toBeTruthy()
   })

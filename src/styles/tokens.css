@@ -7,4 +7,10 @@
   --color-selected: #C7DCA0;
   --color-accent-yellow: #F4D35E;
   --color-text: #3B3645;
+  --color-map-default: #666666;
+}
+
+.map-container {
+  width: 100%;
+  height: 500px;
 }
