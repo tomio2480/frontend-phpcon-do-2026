@@ -84,7 +84,7 @@ describe('App', () => {
   it('集計完了後に ShareButton を表示する', () => {
     vi.mocked(useAggregate).mockReturnValue({ result: sampleResult, error: null, isCalculating: false })
     render(<App />)
-    expect(screen.getByRole('link', { name: 'X に投稿する' })).toBeTruthy()
+    expect(screen.getByRole('link', { name: /X に投稿する/ })).toBeTruthy()
   })
 
   it('地図クリックで対応するチェックボックスが切り替わる', async () => {

@@ -74,4 +74,10 @@ describe('ShareButton', () => {
     expect(link.rel).toContain('noopener')
     expect(link.rel).toContain('noreferrer')
   })
+
+  it('aria-label に新しいタブで開くことを示す文言がある', () => {
+    render(<ShareButton result={sampleResult} />)
+    const link = screen.getByRole('link') as HTMLAnchorElement
+    expect(link.getAttribute('aria-label')).toContain('新しいタブ')
+  })
 })
