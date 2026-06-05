@@ -24,8 +24,10 @@ self.addEventListener('activate', event => {
   self.clients.claim()
 })
 
+// GET のみキャッシュ対象（caches.put は GET 以外で TypeError をスローする）
 // .wasm・/php/・/data/ へのリクエストをキャッシュファーストで処理する
 self.addEventListener('fetch', event => {
+  if (event.request.method !== 'GET') return
   const { pathname } = new URL(event.request.url)
   if (
     pathname.endsWith('.wasm') ||
@@ -38,7 +40,9 @@ self.addEventListener('fetch', event => {
         return fetch(event.request).then(response => {
           if (!response.ok) return response
           const clone = response.clone()
-          caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone))
+          event.waitUntil(
+            caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone))
+          )
           return response
         })
       })

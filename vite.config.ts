@@ -41,28 +41,22 @@ function resolveIcuDat(): Plugin {
 }
 
 // php_8_5 の WASM アセットに <link rel="preload"> を注入する
-// ハッシュ付きファイル名は generateBundle 時に確定するため，HTML 変換を post 順で行う
+// ctx.bundle を使うことで外部変数不要・フック実行順序への依存を排除する
 function injectWasmPreload(): Plugin {
-  const wasmUrls: string[] = []
   return {
     name: 'inject-wasm-preload',
     apply: 'build',
-    generateBundle(_, bundle) {
-      wasmUrls.length = 0
-      for (const fileName of Object.keys(bundle)) {
-        if (/^assets\/php_8_5-[^/]+\.wasm$/.test(fileName)) {
-          wasmUrls.push('/' + fileName)
-        }
-      }
-    },
     transformIndexHtml: {
       order: 'post',
-      handler() {
-        return wasmUrls.map(href => ({
-          tag: 'link',
-          attrs: { rel: 'preload', href, as: 'fetch', crossorigin: '' },
-          injectTo: 'head' as const,
-        }))
+      handler(_, ctx) {
+        if (!ctx.bundle) return []
+        return Object.keys(ctx.bundle)
+          .filter(fileName => /^assets\/php_8_5-[^/]+\.wasm$/.test(fileName))
+          .map(fileName => ({
+            tag: 'link',
+            attrs: { rel: 'preload', href: '/' + fileName, as: 'fetch', crossorigin: '' },
+            injectTo: 'head' as const,
+          }))
       },
     },
   }
