@@ -93,6 +93,26 @@ describe('App', () => {
     expect(screen.getByText(/PHP エンジンの読み込みに失敗/)).toBeTruthy()
   })
 
+  it('PHP 初期化中はインタラクティブ領域に inert を付与する', () => {
+    vi.mocked(useAggregate).mockReturnValue({ result: null, error: null, isCalculating: false, isPhpLoading: true, isPhpError: false })
+    const { container } = render(<App />)
+    const inertDiv = container.querySelector('[inert]')
+    expect(inertDiv).not.toBeNull()
+  })
+
+  it('PHP 初期化エラー時はインタラクティブ領域に inert を付与する', () => {
+    vi.mocked(useAggregate).mockReturnValue({ result: null, error: null, isCalculating: false, isPhpLoading: false, isPhpError: true })
+    const { container } = render(<App />)
+    const inertDiv = container.querySelector('[inert]')
+    expect(inertDiv).not.toBeNull()
+  })
+
+  it('PHP 正常時はインタラクティブ領域に inert を付与しない', () => {
+    const { container } = render(<App />)
+    const inertDiv = container.querySelector('[inert]')
+    expect(inertDiv).toBeNull()
+  })
+
   it('集計中は ShareButton を表示しない', () => {
     vi.mocked(useAggregate).mockReturnValue({ result: sampleResult, error: null, isCalculating: true, isPhpLoading: false, isPhpError: false })
     render(<App />)

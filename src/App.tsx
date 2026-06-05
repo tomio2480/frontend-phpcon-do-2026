@@ -46,11 +46,13 @@ export default function App() {
             PHP エンジンの読み込みに失敗しました．ページを再読み込みしてください．
           </p>
         )}
-        <HokkaidoMap onClick={toggle} selected={selected} />
-        {error && <p class="mt-2 text-red-600 text-sm">集計エラー: {error.message}</p>}
-        <ResultPanel result={result} isCalculating={isCalculating} />
-        {result && !isCalculating && <ShareButton result={result} />}
-        <CheckboxList municipalities={municipalities} selected={selected} onToggle={toggle} regionActions={regionActions} />
+        <div inert={isPhpLoading || isPhpError || undefined}>
+          <HokkaidoMap onClick={toggle} selected={selected} />
+          {error && <p class="mt-2 text-red-600 text-sm">集計エラー: {error.message}</p>}
+          <ResultPanel result={result} isCalculating={isCalculating} />
+          {result && !isCalculating && <ShareButton result={result} />}
+          <CheckboxList municipalities={municipalities} selected={selected} onToggle={toggle} regionActions={regionActions} />
+        </div>
       </div>
     </main>
   )

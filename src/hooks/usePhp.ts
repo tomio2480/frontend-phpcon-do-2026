@@ -88,6 +88,7 @@ export function useAggregate(selectedCodes: readonly string[]): UseAggregateResu
     }
 
     if (debounceRef.current) clearTimeout(debounceRef.current)
+    setError(null)
 
     debounceRef.current = setTimeout(async () => {
       const executionId = ++executionIdRef.current
