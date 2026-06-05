@@ -64,6 +64,8 @@ export type UseAggregateResult = {
   result: AggregateResult | null
   error: Error | null
   isCalculating: boolean
+  isPhpLoading: boolean
+  isPhpError: boolean
 }
 
 export function useAggregate(selectedCodes: readonly string[]): UseAggregateResult {
@@ -86,6 +88,7 @@ export function useAggregate(selectedCodes: readonly string[]): UseAggregateResu
     }
 
     if (debounceRef.current) clearTimeout(debounceRef.current)
+    setError(null)
 
     debounceRef.current = setTimeout(async () => {
       const executionId = ++executionIdRef.current
@@ -125,5 +128,5 @@ echo json_encode(calc_percentages($sum, $total));`
     }
   }, [selectedCodes, phpStatus, run])
 
-  return { result, error, isCalculating }
+  return { result, error, isCalculating, isPhpLoading: phpStatus === 'loading', isPhpError: phpStatus === 'error' }
 }

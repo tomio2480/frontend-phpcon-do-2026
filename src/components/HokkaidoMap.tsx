@@ -2,8 +2,10 @@ import 'leaflet/dist/leaflet.css'
 import L from 'leaflet'
 import { useEffect, useRef } from 'preact/hooks'
 
-const STYLE_SELECTED = { fillColor: '#3b82f6', fillOpacity: 0.6 }
-const STYLE_DEFAULT = { fillColor: '#666666', fillOpacity: 0.2 }
+/* トークン対応: --color-accent-lilac / --color-accent-lavender / --color-map-default */
+const STYLE_SELECTED = { fillColor: '#D8B7DD', fillOpacity: 0.6 }
+const STYLE_HOVER    = { fillColor: '#BFB3E0', fillOpacity: 0.5 }
+const STYLE_DEFAULT  = { fillColor: '#666666',  fillOpacity: 0.2 }
 
 interface Props {
   onHover?: (code: string | null) => void
@@ -59,12 +61,18 @@ export default function HokkaidoMap({ onHover, onClick, selected }: Props) {
               if (existing) existing.push(path)
               else layersRef.current.set(code, [path])
               path.setStyle(selectedRef.current?.has(code) ? STYLE_SELECTED : STYLE_DEFAULT)
+              layer.on('mouseover', () => {
+                onHoverRef.current?.(code)
+                if (!selectedRef.current?.has(code)) path.setStyle(STYLE_HOVER)
+              })
+              layer.on('mouseout', () => {
+                onHoverRef.current?.(null)
+                if (!selectedRef.current?.has(code)) path.setStyle(STYLE_DEFAULT)
+              })
+              layer.on('click', () => {
+                onClickRef.current?.(code)
+              })
             }
-            layer.on('mouseover', () => onHoverRef.current?.(feature.properties?.code ?? null))
-            layer.on('mouseout', () => onHoverRef.current?.(null))
-            layer.on('click', () => {
-              if (code) onClickRef.current?.(code)
-            })
           },
         }).addTo(map)
       })
@@ -81,7 +89,7 @@ export default function HokkaidoMap({ onHover, onClick, selected }: Props) {
     <div
       ref={containerRef}
       data-testid="hokkaido-map"
-      style={{ width: '100%', height: '500px' }}
+      class="map-container"
     />
   )
 }

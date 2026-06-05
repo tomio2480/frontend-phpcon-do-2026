@@ -15,8 +15,16 @@ type Props = {
 export default function ShareButton({ result }: Props) {
   const url = buildXUrl(buildPostText(result))
   return (
-    <a href={url} target="_blank" rel="noopener noreferrer" aria-label="X に投稿する（新しいタブで開きます）">
-      X に投稿する
-    </a>
+    <div class="mt-4">
+      <a
+        href={url}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="X に投稿する（新しいタブで開きます）"
+        class="inline-block rounded-md bg-accent-yellow px-5 py-2 font-medium text-text hover:bg-accent-yellow/70 transition-colors"
+      >
+        X に投稿する
+      </a>
+    </div>
   )
 }
