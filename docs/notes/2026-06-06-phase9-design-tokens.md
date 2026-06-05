@@ -44,6 +44,7 @@ const STYLE_SELECTED = { fillColor: '#D8B7DD', fillOpacity: 0.6 }
 ### 代替案と棄却理由
 
 **`var(--color-accent-lilac)` を直接渡す**:
+
 `setStyle()` は SVG の `fill` 属性に直接書き込む仕組みで，DOM プロパティ経由のスタイル解決は働かない．
 `var(...)` が文字列のまま残るため棄却した．
 
