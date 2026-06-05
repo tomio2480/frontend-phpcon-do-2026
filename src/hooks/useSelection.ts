@@ -31,6 +31,7 @@ export function useSelection(): UseSelectionResult {
   }, [])
 
   const toggleCodes = useCallback((codes: string[]) => {
+    if (codes.length === 0) return
     setSelected(prev => {
       const allSelected = codes.every(code => prev.has(code))
       const next = new Set(prev)

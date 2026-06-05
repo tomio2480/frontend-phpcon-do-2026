@@ -95,4 +95,12 @@ describe('useSelection / toggleCodes', () => {
     rerender()
     expect(result.current.toggleCodes).toBe(fn1)
   })
+
+  it('空配列を渡したとき選択状態が変化しない', () => {
+    const { result } = renderHook(() => useSelection())
+    act(() => result.current.toggle('01101'))
+    const before = result.current.selected
+    act(() => result.current.toggleCodes([]))
+    expect(result.current.selected).toBe(before)
+  })
 })
