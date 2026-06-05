@@ -42,7 +42,7 @@ export default function App() {
       <CheckboxList municipalities={municipalities} selected={selected} onToggle={toggle} regionActions={regionActions} />
       {error && <p>集計エラー: {error.message}</p>}
       <ResultPanel result={result} isCalculating={isCalculating} />
-      {result && <ShareButton result={result} />}
+      {result && !isCalculating && <ShareButton result={result} />}
     </main>
   )
 }
