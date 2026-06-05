@@ -7,6 +7,7 @@ export type UseSelectionResult = {
   toggle: (code: string) => void
   selectAll: (codes: string[]) => void
   clearAll: () => void
+  toggleCodes: (codes: string[]) => void
 }
 
 export function useSelection(): UseSelectionResult {
@@ -29,5 +30,19 @@ export function useSelection(): UseSelectionResult {
     setSelected(new Set())
   }, [])
 
-  return { selected, toggle, selectAll, clearAll }
+  const toggleCodes = useCallback((codes: string[]) => {
+    if (codes.length === 0) return
+    setSelected(prev => {
+      const allSelected = codes.every(code => prev.has(code))
+      const next = new Set(prev)
+      if (allSelected) {
+        codes.forEach(code => next.delete(code))
+      } else {
+        codes.forEach(code => next.add(code))
+      }
+      return next
+    })
+  }, [])
+
+  return { selected, toggle, selectAll, clearAll, toggleCodes }
 }

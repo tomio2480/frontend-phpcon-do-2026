@@ -62,4 +62,65 @@ describe('CheckboxList', () => {
     await userEvent.click(screen.getByLabelText('中央区'))
     expect(onToggle).toHaveBeenCalledWith('01101')
   })
+
+  it('regionActions が渡されたグループにボタンが表示される', () => {
+    render(
+      <CheckboxList
+        municipalities={MUNICIPALITIES}
+        selected={new Set()}
+        onToggle={vi.fn()}
+        regionActions={{ '石狩振興局': { label: '札幌市を一括選択', onClick: vi.fn() } }}
+      />,
+    )
+    expect(screen.getByRole('button', { name: '札幌市を一括選択' })).toBeInTheDocument()
+  })
+
+  it('regionActions が未指定のときボタンは表示されない', () => {
+    render(
+      <CheckboxList
+        municipalities={MUNICIPALITIES}
+        selected={new Set()}
+        onToggle={vi.fn()}
+      />,
+    )
+    expect(screen.queryByRole('button')).toBeNull()
+  })
+
+  it('regionActions にないグループにはボタンが表示されない', () => {
+    render(
+      <CheckboxList
+        municipalities={MUNICIPALITIES}
+        selected={new Set()}
+        onToggle={vi.fn()}
+        regionActions={{ '石狩振興局': { label: '札幌市を一括選択', onClick: vi.fn() } }}
+      />,
+    )
+    expect(screen.queryAllByRole('button')).toHaveLength(1)
+  })
+
+  it('ボタンをクリックすると regionActions の onClick が呼ばれる', async () => {
+    const onClick = vi.fn()
+    render(
+      <CheckboxList
+        municipalities={MUNICIPALITIES}
+        selected={new Set()}
+        onToggle={vi.fn()}
+        regionActions={{ '石狩振興局': { label: '札幌市を一括選択', onClick } }}
+      />,
+    )
+    await userEvent.click(screen.getByRole('button', { name: '札幌市を一括選択' }))
+    expect(onClick).toHaveBeenCalledTimes(1)
+  })
+
+  it('regionActions のラベルがそのままボタンに表示される', () => {
+    render(
+      <CheckboxList
+        municipalities={MUNICIPALITIES}
+        selected={new Set()}
+        onToggle={vi.fn()}
+        regionActions={{ '石狩振興局': { label: '札幌市の選択を解除', onClick: vi.fn() } }}
+      />,
+    )
+    expect(screen.getByRole('button', { name: '札幌市の選択を解除' })).toBeInTheDocument()
+  })
 })

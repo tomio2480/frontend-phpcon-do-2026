@@ -53,3 +53,54 @@ describe('useSelection', () => {
     expect(result.current.toggle).toBe(toggle1)
   })
 })
+
+const SAPPORO = ['01101', '01102', '01103', '01104', '01105', '01106', '01107', '01108', '01109', '01110']
+
+describe('useSelection / toggleCodes', () => {
+  it('すべて未選択のとき渡したコードをすべて選択する', () => {
+    const { result } = renderHook(() => useSelection())
+    act(() => result.current.toggleCodes(SAPPORO))
+    expect(result.current.selected.size).toBe(10)
+    expect(result.current.selected.has('01101')).toBe(true)
+    expect(result.current.selected.has('01110')).toBe(true)
+  })
+
+  it('一部のみ選択済みのときコードをすべて選択する', () => {
+    const { result } = renderHook(() => useSelection())
+    act(() => result.current.toggle('01101'))
+    act(() => result.current.toggleCodes(SAPPORO))
+    expect(result.current.selected.size).toBe(10)
+  })
+
+  it('全コード選択済みのとき渡したコードをすべて解除する', () => {
+    const { result } = renderHook(() => useSelection())
+    act(() => result.current.toggleCodes(SAPPORO))
+    act(() => result.current.toggleCodes(SAPPORO))
+    expect(result.current.selected.size).toBe(0)
+  })
+
+  it('渡したコード以外の選択コードに影響しない', () => {
+    const { result } = renderHook(() => useSelection())
+    act(() => result.current.toggle('01202'))
+    act(() => result.current.toggleCodes(SAPPORO))
+    expect(result.current.selected.has('01202')).toBe(true)
+    act(() => result.current.toggleCodes(SAPPORO))
+    expect(result.current.selected.has('01202')).toBe(true)
+    expect(result.current.selected.has('01101')).toBe(false)
+  })
+
+  it('toggleCodes は再レンダリングをまたいで同一参照を維持する', () => {
+    const { result, rerender } = renderHook(() => useSelection())
+    const fn1 = result.current.toggleCodes
+    rerender()
+    expect(result.current.toggleCodes).toBe(fn1)
+  })
+
+  it('空配列を渡したとき選択状態が変化しない', () => {
+    const { result } = renderHook(() => useSelection())
+    act(() => result.current.toggle('01101'))
+    const before = result.current.selected
+    act(() => result.current.toggleCodes([]))
+    expect(result.current.selected).toBe(before)
+  })
+})
