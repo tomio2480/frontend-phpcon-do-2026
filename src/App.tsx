@@ -7,7 +7,7 @@ import { useAggregate } from './hooks/usePhp'
 import type { Municipality } from './components/CheckboxList'
 
 export default function App() {
-  const { selected, toggle } = useSelection()
+  const { selected, toggle, toggleSapporo } = useSelection()
   const [municipalities, setMunicipalities] = useState<Municipality[]>([])
   const selectedCodes = useMemo(() => Array.from(selected), [selected])
   const { result, isCalculating, error } = useAggregate(selectedCodes)
@@ -23,7 +23,7 @@ export default function App() {
     <main>
       <h1>あなたの北海道は何 %？</h1>
       <HokkaidoMap onClick={toggle} selected={selected} />
-      <CheckboxList municipalities={municipalities} selected={selected} onToggle={toggle} />
+      <CheckboxList municipalities={municipalities} selected={selected} onToggle={toggle} onToggleSapporo={toggleSapporo} />
       {error && <p>集計エラー: {error.message}</p>}
       <ResultPanel result={result} isCalculating={isCalculating} />
     </main>

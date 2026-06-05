@@ -53,3 +53,44 @@ describe('useSelection', () => {
     expect(result.current.toggle).toBe(toggle1)
   })
 })
+
+describe('useSelection / toggleSapporo', () => {
+  it('すべて未選択のとき 10 区をすべて選択する', () => {
+    const { result } = renderHook(() => useSelection())
+    act(() => result.current.toggleSapporo())
+    expect(result.current.selected.size).toBe(10)
+    expect(result.current.selected.has('01101')).toBe(true)
+    expect(result.current.selected.has('01110')).toBe(true)
+  })
+
+  it('一部のみ選択済みのとき 10 区をすべて選択する', () => {
+    const { result } = renderHook(() => useSelection())
+    act(() => result.current.toggle('01101'))
+    act(() => result.current.toggleSapporo())
+    expect(result.current.selected.size).toBe(10)
+  })
+
+  it('10 区すべて選択済みのとき 10 区をすべて解除する', () => {
+    const { result } = renderHook(() => useSelection())
+    act(() => result.current.toggleSapporo())
+    act(() => result.current.toggleSapporo())
+    expect(result.current.selected.size).toBe(0)
+  })
+
+  it('札幌以外の選択コードに影響しない', () => {
+    const { result } = renderHook(() => useSelection())
+    act(() => result.current.toggle('01202'))
+    act(() => result.current.toggleSapporo())
+    expect(result.current.selected.has('01202')).toBe(true)
+    act(() => result.current.toggleSapporo())
+    expect(result.current.selected.has('01202')).toBe(true)
+    expect(result.current.selected.has('01101')).toBe(false)
+  })
+
+  it('toggleSapporo は再レンダリングをまたいで同一参照を維持する', () => {
+    const { result, rerender } = renderHook(() => useSelection())
+    const fn1 = result.current.toggleSapporo
+    rerender()
+    expect(result.current.toggleSapporo).toBe(fn1)
+  })
+})

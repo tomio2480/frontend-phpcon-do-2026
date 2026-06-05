@@ -62,4 +62,58 @@ describe('CheckboxList', () => {
     await userEvent.click(screen.getByLabelText('中央区'))
     expect(onToggle).toHaveBeenCalledWith('01101')
   })
+
+  it('onToggleSapporo が渡されると石狩振興局グループに一括選択ボタンが表示される', () => {
+    render(
+      <CheckboxList
+        municipalities={MUNICIPALITIES}
+        selected={new Set()}
+        onToggle={vi.fn()}
+        onToggleSapporo={vi.fn()}
+      />,
+    )
+    expect(screen.getByRole('button', { name: '札幌市を一括選択' })).toBeInTheDocument()
+  })
+
+  it('onToggleSapporo が未指定のとき一括選択ボタンは表示されない', () => {
+    render(
+      <CheckboxList
+        municipalities={MUNICIPALITIES}
+        selected={new Set()}
+        onToggle={vi.fn()}
+      />,
+    )
+    expect(screen.queryByRole('button', { name: '札幌市を一括選択' })).toBeNull()
+    expect(screen.queryByRole('button', { name: '札幌市の選択を解除' })).toBeNull()
+  })
+
+  it('10 区すべて選択済みのときボタンラベルが「札幌市の選択を解除」になる', () => {
+    const sapporoCodes = new Set([
+      '01101', '01102', '01103', '01104', '01105',
+      '01106', '01107', '01108', '01109', '01110',
+    ])
+    render(
+      <CheckboxList
+        municipalities={MUNICIPALITIES}
+        selected={sapporoCodes}
+        onToggle={vi.fn()}
+        onToggleSapporo={vi.fn()}
+      />,
+    )
+    expect(screen.getByRole('button', { name: '札幌市の選択を解除' })).toBeInTheDocument()
+  })
+
+  it('一括選択ボタンをクリックすると onToggleSapporo が呼ばれる', async () => {
+    const onToggleSapporo = vi.fn()
+    render(
+      <CheckboxList
+        municipalities={MUNICIPALITIES}
+        selected={new Set()}
+        onToggle={vi.fn()}
+        onToggleSapporo={onToggleSapporo}
+      />,
+    )
+    await userEvent.click(screen.getByRole('button', { name: '札幌市を一括選択' }))
+    expect(onToggleSapporo).toHaveBeenCalledTimes(1)
+  })
 })
