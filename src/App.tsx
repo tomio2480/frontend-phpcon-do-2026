@@ -47,10 +47,13 @@ export default function App() {
           </p>
         )}
         <div inert={isPhpLoading || isPhpError || undefined}>
+          {/* モバイルでは結果パネルを上部に固定する */}
+          <div class="sticky top-0 z-10 bg-background pb-2 md:static md:pb-0">
+            <ResultPanel result={result} isCalculating={isCalculating} />
+            {result && !isCalculating && <ShareButton result={result} />}
+          </div>
           <HokkaidoMap onClick={toggle} selected={selected} />
           {error && <p class="mt-2 text-red-600 text-sm">集計エラー: {error.message}</p>}
-          <ResultPanel result={result} isCalculating={isCalculating} />
-          {result && !isCalculating && <ShareButton result={result} />}
           <CheckboxList municipalities={municipalities} selected={selected} onToggle={toggle} regionActions={regionActions} />
         </div>
       </div>

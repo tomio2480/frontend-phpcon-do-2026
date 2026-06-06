@@ -13,6 +13,10 @@ interface Props {
   selected?: Set<string>
 }
 
+function applyAriaPressed(el: Element, isSelected: boolean) {
+  el.setAttribute('aria-pressed', String(isSelected))
+}
+
 export default function HokkaidoMap({ onHover, onClick, selected }: Props) {
   const containerRef = useRef<HTMLDivElement>(null)
   const onHoverRef = useRef(onHover)
@@ -27,10 +31,13 @@ export default function HokkaidoMap({ onHover, onClick, selected }: Props) {
     selectedRef.current = selected
     layersRef.current.forEach((layers, code) => {
       const targetStyle = selected?.has(code) ? STYLE_SELECTED : STYLE_DEFAULT
+      const isSelected = selected?.has(code) ?? false
       layers.forEach(layer => {
         if (layer.options?.fillColor !== targetStyle.fillColor) {
           layer.setStyle(targetStyle)
         }
+        const el = layer.getElement()
+        if (el) applyAriaPressed(el, isSelected)
       })
     })
   }, [selected])
@@ -55,12 +62,38 @@ export default function HokkaidoMap({ onHover, onClick, selected }: Props) {
         L.geoJSON(geojson, {
           onEachFeature: (feature, layer) => {
             const code: string | undefined = feature.properties?.code
+            const name: string = feature.properties?.name ?? code ?? ''
             if (code && 'setStyle' in layer) {
               const path = layer as L.Path
               const existing = layersRef.current.get(code)
               if (existing) existing.push(path)
               else layersRef.current.set(code, [path])
               path.setStyle(selectedRef.current?.has(code) ? STYLE_SELECTED : STYLE_DEFAULT)
+
+              layer.on('add', () => {
+                const el = path.getElement()
+                if (!el) return
+                el.setAttribute('role', 'button')
+                el.setAttribute('tabindex', '0')
+                el.setAttribute('aria-label', name)
+                el.setAttribute('aria-pressed', String(selectedRef.current?.has(code) ?? false))
+                el.addEventListener('keydown', (e: Event) => {
+                  const ke = e as KeyboardEvent
+                  if (ke.key === 'Enter' || ke.key === ' ') {
+                    ke.preventDefault()
+                    onClickRef.current?.(code)
+                  }
+                })
+                el.addEventListener('focus', () => {
+                  onHoverRef.current?.(code)
+                  if (!selectedRef.current?.has(code)) path.setStyle(STYLE_HOVER)
+                })
+                el.addEventListener('blur', () => {
+                  onHoverRef.current?.(null)
+                  if (!selectedRef.current?.has(code)) path.setStyle(STYLE_DEFAULT)
+                })
+              })
+
               layer.on('mouseover', () => {
                 onHoverRef.current?.(code)
                 if (!selectedRef.current?.has(code)) path.setStyle(STYLE_HOVER)
@@ -90,6 +123,8 @@ export default function HokkaidoMap({ onHover, onClick, selected }: Props) {
       ref={containerRef}
       data-testid="hokkaido-map"
       class="map-container"
+      aria-label="北海道地図"
+      role="application"
     />
   )
 }

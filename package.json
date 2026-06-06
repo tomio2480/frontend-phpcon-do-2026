@@ -19,6 +19,7 @@
     "preact": "^10.29.2"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.11.3",
     "@playwright/test": "^1.60.0",
     "@preact/preset-vite": "^2.10.5",
     "@tailwindcss/vite": "^4.3.0",
