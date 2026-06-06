@@ -2,7 +2,7 @@
 
 ## 背景
 
-- PHP WASM の初期化コストと集計レイテンシを許容範囲に収めるため，Service Worker キャッシュ・WASM preload・デバウンス確認を実施した．
+- PHP WASM の初期化コストと集計レイテンシを抑えるため，Service Worker キャッシュ・WASM preload・デバウンス確認を実施した．
 - 実装 PR: #38，対応 Issue: #12
 
 ## 判断
@@ -10,7 +10,7 @@
 ### WASM preload の注入方法
 
 ビルドアーティファクト（`php_8_5-*.wasm`）はハッシュ付きファイル名のため，`index.html` に静的に書けない．
-Vite プラグインの `transformIndexHtml`（`order: 'post'`）で `ctx.bundle` を参照し，ビルド時に動的注入する方針を採用した．
+Vite プラグインの `transformIndexHtml`（`order: 'post'`）で `ctx.bundle` を参照し，ビルド時に動的注入する．
 `generateBundle` + 外部変数の構成は実行順序依存があるため，`ctx.bundle` 単体参照の方がクリーンである（Gemini 指摘で改善）．
 
 ### SW のキャッシュ戦略分離
@@ -24,7 +24,7 @@ Vite プラグインの `transformIndexHtml`（`order: 'post'`）で `ctx.bundle
 
 ### ネットワークファーストのフォールバック設計
 
-ネットワークファーストの場合，`fetch` 失敗（オフライン）だけでなくサーバーエラー（5xx）時にもキャッシュフォールバックを行う必要がある．
+ネットワークファーストの場合，`fetch` 失敗（オフライン）だけでなく HTTP 5xx エラー応答時にもキャッシュフォールバックを行う必要がある．
 
 ```javascript
 fetch(event.request)
@@ -41,7 +41,8 @@ fetch(event.request)
 ### SW のベースパス対応
 
 GitHub Pages はリポジトリ名をサブディレクトリとしてデプロイする（例: `/hokkaido-percentage/`）．
-SW ファイル内では `self.location.pathname.replace(/\/[^/]*$/, '')` でベースパスを動的取得し，プリキャッシュ URL・パス判定の両方に適用する．
+SW ファイル内では `self.location.pathname.replace(/\/[^/]*$/, '')` でベースパスを動的取得する．
+プリキャッシュ URL とパス判定の両方にこれを適用する．
 
 SW 登録側では `%BASE_URL%sw.js` を使う（Vite が `base` 設定に応じて展開する）．
 
