@@ -50,8 +50,8 @@ export default function App() {
           {/* モバイルでは結果パネルを上部に固定する */}
           <div aria-live="polite" class="sticky top-0 z-10 bg-background pb-2 md:static md:pb-0">
             <ResultPanel result={result} isCalculating={isCalculating} />
-            {result && !isCalculating && <ShareButton result={result} />}
           </div>
+          {result && !isCalculating && <ShareButton result={result} />}
           <HokkaidoMap onClick={toggle} selected={selected} />
           {error && <p class="mt-2 text-red-600 text-sm">集計エラー: {error.message}</p>}
           <CheckboxList municipalities={municipalities} selected={selected} onToggle={toggle} regionActions={regionActions} />
