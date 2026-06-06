@@ -76,7 +76,7 @@ describe('App', () => {
   })
 
   it('PHP 初期化中は LoadingOverlay を表示する', () => {
-    vi.mocked(useAggregate).mockReturnValue({ result: null, error: null, isCalculating: false, isPhpLoading: true })
+    vi.mocked(useAggregate).mockReturnValue({ result: null, error: null, isCalculating: false, isPhpLoading: true, isPhpError: false })
     render(<App />)
     expect(screen.getByRole('status')).toBeTruthy()
   })
