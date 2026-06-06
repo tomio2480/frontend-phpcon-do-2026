@@ -48,7 +48,7 @@ export default function App() {
         )}
         <div inert={isPhpLoading || isPhpError || undefined}>
           {/* モバイルでは結果パネルを上部に固定する */}
-          <div class="sticky top-0 z-10 bg-background pb-2 md:static md:pb-0">
+          <div aria-live="polite" class="sticky top-0 z-10 bg-background pb-2 md:static md:pb-0">
             <ResultPanel result={result} isCalculating={isCalculating} />
             {result && !isCalculating && <ShareButton result={result} />}
           </div>
