@@ -51,9 +51,9 @@ export default function App() {
           <div aria-live="polite" class="sticky top-0 z-10 bg-background pb-2 md:static md:pb-0">
             <ResultPanel result={result} isCalculating={isCalculating} />
           </div>
-          {result && !isCalculating && <ShareButton result={result} />}
           <HokkaidoMap onClick={toggle} selected={selected} />
           {error && <p class="mt-2 text-red-600 text-sm">集計エラー: {error.message}</p>}
+          {result && !isCalculating && <ShareButton result={result} />}
           <CheckboxList municipalities={municipalities} selected={selected} onToggle={toggle} regionActions={regionActions} />
         </div>
       </div>
