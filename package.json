@@ -12,7 +12,7 @@
     "test:e2e": "playwright test --pass-with-no-tests"
   },
   "dependencies": {
-    "@php-wasm/universal": "^3.1.35",
+    "@php-wasm/universal": "^3.1.36",
     "@php-wasm/web": "^3.1.35",
     "@php-wasm/web-8-5": "^3.1.36",
     "leaflet": "1.9.4",
