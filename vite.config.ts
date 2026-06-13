@@ -72,7 +72,7 @@ function injectWasmPreload(): Plugin {
 }
 
 export default defineConfig({
-  base: process.env.VITE_BASE || '/',
+  base: process.env.VITE_BASE ?? '/',
   plugins: [
     resolveIcuDat(),
     injectWasmPreload(),
