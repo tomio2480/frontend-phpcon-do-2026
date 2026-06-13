@@ -73,6 +73,9 @@ export default function HokkaidoMap({ onHover, onClick, selected }: Props) {
               layer.on('add', () => {
                 const el = path.getElement()
                 if (!el) return
+                // Leaflet が DOM 要素を再利用して add が再発火した場合の重複登録を防ぐ
+                if ((el as HTMLElement & { _a11yInitialized?: boolean })._a11yInitialized) return
+                ;(el as HTMLElement & { _a11yInitialized?: boolean })._a11yInitialized = true
                 el.setAttribute('role', 'button')
                 el.setAttribute('tabindex', '0')
                 el.setAttribute('aria-label', name)
