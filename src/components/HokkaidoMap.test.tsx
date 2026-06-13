@@ -7,6 +7,12 @@ vi.mock('leaflet/dist/leaflet.css', () => ({}))
 const mockSetStyle = vi.hoisted(() => vi.fn())
 const capturedHandlers = vi.hoisted<{ current: Array<Record<string, () => void>> }>(() => ({ current: [] }))
 
+const mockSetAttribute = vi.hoisted(() => vi.fn())
+const mockGetElement = vi.hoisted(() => vi.fn().mockReturnValue({
+  setAttribute: mockSetAttribute,
+  addEventListener: vi.fn(),
+}))
+
 vi.mock('leaflet', () => {
   return {
     default: {
@@ -24,6 +30,7 @@ vi.mock('leaflet', () => {
               handlers[event] = handler
             }),
             setStyle: mockSetStyle,
+            getElement: mockGetElement,
           }
           options?.onEachFeature?.(f, layer)
         })
@@ -38,6 +45,7 @@ describe('HokkaidoMap', () => {
 
   beforeEach(() => {
     mockSetStyle.mockClear()
+    mockSetAttribute.mockClear()
     capturedHandlers.current = []
     global.fetch = vi.fn().mockResolvedValue({
       ok: true,
@@ -118,6 +126,24 @@ describe('HokkaidoMap', () => {
     capturedHandlers.current[0].mouseover?.()
 
     expect(mockSetStyle).toHaveBeenCalledWith({ fillColor: '#BFB3E0', fillOpacity: 0.5 })
+  })
+
+  it('selected 変化時に aria-pressed を更新する', async () => {
+    global.fetch = vi.fn().mockResolvedValue({
+      ok: true,
+      json: vi.fn().mockResolvedValue({
+        type: 'FeatureCollection',
+        features: [{ type: 'Feature', properties: { code: '01101', name: '札幌市中央区' }, geometry: null }],
+      }),
+    } as unknown as Response)
+
+    const { rerender } = render(<HokkaidoMap selected={new Set()} />)
+    await waitFor(() => expect(mockSetStyle).toHaveBeenCalled())
+    mockSetAttribute.mockClear()
+
+    rerender(<HokkaidoMap selected={new Set(['01101'])} />)
+
+    expect(mockSetAttribute).toHaveBeenCalledWith('aria-pressed', 'true')
   })
 
   it('マウスアウト時に未選択ポリゴンをデフォルトスタイルに戻す', async () => {

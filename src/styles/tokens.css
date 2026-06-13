@@ -12,5 +12,11 @@
 
 .map-container {
   width: 100%;
-  height: 500px;
+  height: 300px;
+}
+
+@media (min-width: 768px) {
+  .map-container {
+    height: 500px;
+  }
 }

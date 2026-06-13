@@ -15,19 +15,19 @@ const METRICS: { key: keyof AggregateResult; label: string }[] = [
 export default function ResultPanel({ result, isCalculating }: Props) {
   if (isCalculating) {
     return (
-      <p class="mt-4 p-4 rounded-lg bg-accent-lilac/20 text-text text-sm">集計中…</p>
+      <p data-testid="result-panel" class="mt-4 p-4 rounded-lg bg-accent-lilac/20 text-text text-sm">集計中…</p>
     )
   }
   if (!result) {
     return (
-      <p class="mt-4 p-4 rounded-lg bg-accent-lilac/20 text-text text-sm">
+      <p data-testid="result-panel" class="mt-4 p-4 rounded-lg bg-accent-lilac/20 text-text text-sm">
         市区町村を選択してください
       </p>
     )
   }
 
   return (
-    <dl class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
+    <dl data-testid="result-panel" class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
       {METRICS.map(({ key, label }) => (
         <div key={key} class="rounded-lg bg-white/60 border border-accent-lavender/40 p-3 text-center">
           <dt class="text-xs text-text/60 mb-1">{label}</dt>
