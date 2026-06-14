@@ -16,8 +16,8 @@ describe('buildPostText', () => {
     expect(buildPostText(sampleResult)).toContain('#あなたの北海道は何パーセント')
   })
 
-  it('ハッシュタグ #frontend_phpcon_do を含む', () => {
-    expect(buildPostText(sampleResult)).toContain('#frontend_phpcon_do')
+  it('ハッシュタグ #frontend_phpcon_do を含まない', () => {
+    expect(buildPostText(sampleResult)).not.toContain('#frontend_phpcon_do')
   })
 
   it('面積のパーセンテージを含む', () => {

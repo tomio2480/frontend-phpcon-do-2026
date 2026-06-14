@@ -1,7 +1,7 @@
 import type { AggregateResult } from '../hooks/usePhp'
 
 export function buildPostText(result: AggregateResult): string {
-  return `あなたの北海道は面積${result.area_pct.toFixed(2)}%、人口${result.population_pct.toFixed(2)}%でした！ #あなたの北海道は何パーセント #frontend_phpcon_do`
+  return `あなたの北海道は面積${result.area_pct.toFixed(2)}%、人口${result.population_pct.toFixed(2)}%でした！ #あなたの北海道は何パーセント`
 }
 
 export function buildXUrl(text: string, url?: string): string {
