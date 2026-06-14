@@ -31,6 +31,9 @@ vi.mock('leaflet', () => {
             }),
             setStyle: mockSetStyle,
             getElement: mockGetElement,
+            bindTooltip: vi.fn(),
+            openTooltip: vi.fn(),
+            closeTooltip: vi.fn(),
           }
           options?.onEachFeature?.(f, layer)
         })

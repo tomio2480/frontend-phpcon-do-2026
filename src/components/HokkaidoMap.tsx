@@ -102,6 +102,9 @@ export default function HokkaidoMap({ isDark = false, onHover, onClick, onReady,
               else layersRef.current.set(code, [path])
               path.setStyle(selectedRef.current?.has(code) ? stylesRef.current.SELECTED : stylesRef.current.DEFAULT)
 
+              // マウスオーバー・フォーカス時に市区町村名をツールチップ表示する
+              path.bindTooltip(name, { sticky: true, direction: 'top' })
+
               layer.on('add', () => {
                 const el = path.getElement()
                 if (!el) return
@@ -120,10 +123,12 @@ export default function HokkaidoMap({ isDark = false, onHover, onClick, onReady,
                 })
                 el.addEventListener('focus', () => {
                   onHoverRef.current?.(code)
+                  path.openTooltip()
                   if (!selectedRef.current?.has(code)) path.setStyle(stylesRef.current.HOVER)
                 })
                 el.addEventListener('blur', () => {
                   onHoverRef.current?.(null)
+                  path.closeTooltip()
                   if (!selectedRef.current?.has(code)) path.setStyle(stylesRef.current.DEFAULT)
                 })
               })

@@ -70,6 +70,17 @@ html[data-theme="dark"] .leaflet-container {
   background: #0D0916 !important;
 }
 
+/* ダークモードのツールチップ（市区町村名）を surface 色に合わせる */
+html[data-theme="dark"] .leaflet-tooltip {
+  background: #261D38;
+  color: #F0EAFF;
+  border-color: #4B4070;
+}
+html[data-theme="dark"] .leaflet-tooltip-top::before { border-top-color: #261D38; }
+html[data-theme="dark"] .leaflet-tooltip-bottom::before { border-bottom-color: #261D38; }
+html[data-theme="dark"] .leaflet-tooltip-left::before { border-left-color: #261D38; }
+html[data-theme="dark"] .leaflet-tooltip-right::before { border-right-color: #261D38; }
+
 /* フォーカスリング: 高コントラストを保証する */
 html[data-theme="dark"] :focus-visible {
   outline-color: #C4A0D8;
@@ -81,6 +92,9 @@ html[data-theme="dark"] :focus-visible {
 .map-container {
   width: 100%;
   height: 300px;
+  /* Leaflet 内部の高い z-index（最大 ~700）を閉じ込め，
+     sticky な結果パネル等が地図より前面に表示されるようにする */
+  isolation: isolate;
 }
 
 @media (min-width: 768px) {
