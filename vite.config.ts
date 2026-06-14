@@ -58,7 +58,7 @@ function injectWasmPreload(): Plugin {
       handler(_, ctx) {
         if (!ctx.bundle) return []
         const escapedDir = assetsDir.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-        const regex = new RegExp('^' + escapedDir + '/php_8_5-[^/]+\\.wasm$')
+        const regex = new RegExp('^' + escapedDir + '/php_8_4-[^/]+\\.wasm$')
         return Object.keys(ctx.bundle)
           .filter(fileName => regex.test(fileName))
           .map(fileName => ({

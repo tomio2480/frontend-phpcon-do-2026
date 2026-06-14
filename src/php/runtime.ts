@@ -7,7 +7,7 @@ let initPromise: Promise<PHP> | null = null
 export function getPhp(): Promise<PHP> {
   if (instance) return Promise.resolve(instance)
   if (!initPromise) {
-    const promise = loadWebRuntime('8.5')
+    const promise = loadWebRuntime('8.4')
       .then(runtime => {
         const phpInstance = new PHP(runtime)
         if (initPromise === promise) {
