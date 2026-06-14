@@ -4,7 +4,7 @@ import preact from '@preact/preset-vite'
 import tailwindcss from '@tailwindcss/vite'
 import { createRequire } from 'module'
 import { dirname, join } from 'path'
-import { existsSync } from 'fs'
+import { existsSync, readFileSync } from 'fs'
 import type { Plugin } from 'vite'
 
 const require = createRequire(import.meta.url)
@@ -71,15 +71,39 @@ function injectWasmPreload(): Plugin {
   }
 }
 
+// GitHub Pages は COOP/COEP ヘッダーを設定できないため
+// coi-serviceworker を build 時にルートへ出力して SharedArrayBuffer を有効化する
+function copyCoisw(): Plugin {
+  return {
+    name: 'copy-coisw',
+    apply: 'build',
+    generateBundle() {
+      const coiPath = require.resolve('coi-serviceworker/coi-serviceworker.min.js')
+      this.emitFile({
+        type: 'asset',
+        fileName: 'coi-serviceworker.js',
+        source: readFileSync(coiPath, 'utf-8'),
+      })
+    },
+  }
+}
+
 export default defineConfig({
   base: process.env.VITE_BASE ?? '/',
   plugins: [
     resolveIcuDat(),
     injectWasmPreload(),
+    copyCoisw(),
     // テスト環境では zimmerframe (CJS 非対応) を要求する devtools を無効化する
     preact({ devToolsEnabled: !process.env.VITEST }),
     tailwindcss(),
   ],
+  server: {
+    headers: {
+      'Cross-Origin-Opener-Policy': 'same-origin',
+      'Cross-Origin-Embedder-Policy': 'require-corp',
+    },
+  },
   assetsInclude: ['**/*.wasm', '**/*.php', '**/*.dat'],
   optimizeDeps: {
     // @php-wasm/web・web-8-5 は WASM バイナリや動的インポートの複雑な構造を持つため
