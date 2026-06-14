@@ -52,7 +52,7 @@ export default function HokkaidoMap({ onHover, onClick, selected }: Props) {
 
     let isMounted = true
 
-    fetch('/data/hokkaido.geojson')
+    fetch(import.meta.env.BASE_URL + 'data/hokkaido.geojson')
       .then(r => {
         if (!r.ok) throw new Error(`${r.status}`)
         return r.json()

@@ -30,7 +30,7 @@ export default function App() {
   }), [allSapporoSelected, toggleSapporo])
 
   useEffect(() => {
-    fetch('/data/municipalities.json')
+    fetch(import.meta.env.BASE_URL + 'data/municipalities.json')
       .then(r => r.json() as Promise<Record<string, Municipality>>)
       .then(data => setMunicipalities(Object.values(data)))
       .catch(console.error)

@@ -95,8 +95,8 @@ export function useAggregate(selectedCodes: readonly string[]): UseAggregateResu
       setIsCalculating(true)
       try {
         const [phpContent, data] = await Promise.all([
-          fetch('/php/aggregate.php').then(r => r.text()),
-          fetch('/data/municipalities.json').then(r => r.json() as Promise<Record<string, MunicipalityRow>>),
+          fetch(import.meta.env.BASE_URL + 'php/aggregate.php').then(r => r.text()),
+          fetch(import.meta.env.BASE_URL + 'data/municipalities.json').then(r => r.json() as Promise<Record<string, MunicipalityRow>>),
         ])
         const rows: Record<string, MunicipalityRow> = {}
         for (const [code, m] of Object.entries(data)) {
