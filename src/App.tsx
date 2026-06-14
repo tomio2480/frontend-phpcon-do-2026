@@ -13,7 +13,7 @@ export default function App() {
   const { selected, toggle, toggleCodes } = useSelection()
   const [municipalities, setMunicipalities] = useState<Municipality[]>([])
   const selectedCodes = useMemo(() => Array.from(selected), [selected])
-  const { result, isCalculating, error, isPhpLoading, isPhpError, phpError } = useAggregate(selectedCodes)
+  const { result, isCalculating, error, isPhpLoading, isPhpError } = useAggregate(selectedCodes)
 
   const toggleSapporo = useCallback(() => toggleCodes(SAPPORO_CODES), [toggleCodes])
 
