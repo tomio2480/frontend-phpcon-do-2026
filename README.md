@@ -34,6 +34,24 @@ pnpm test          # Vitest（単体テスト）
 pnpm test:e2e      # Playwright（E2E・アクセシビリティ）
 ```
 
+## データ生成スクリプト
+
+`public/data/municipalities.json` と `public/data/total.json` は Python スクリプトで生成する．
+
+前提条件：Python 3.11 以上，`public/data/hokkaido.geojson` が存在すること．
+
+```bash
+cd scripts
+python build_municipalities.py
+```
+
+テスト（pytest）は以下で実行する．
+
+```bash
+cd scripts
+python -m pytest tests/
+```
+
 ## 技術スタック
 
 | カテゴリ | 技術 |
@@ -42,7 +60,7 @@ pnpm test:e2e      # Playwright（E2E・アクセシビリティ）
 | ビルドツール | Vite 8 |
 | CSS | Tailwind CSS 4 |
 | 地図 | Leaflet 1.9.4 |
-| PHP 実行 | @php-wasm/web 3.1.35（PHP 8.5） |
+| PHP 実行 | @php-wasm/web 3.1.38（PHP 8.5） |
 | パッケージ管理 | pnpm |
 | ホスティング | GitHub Pages |
 
@@ -60,9 +78,10 @@ pnpm test:e2e      # Playwright（E2E・アクセシビリティ）
 
 ### 面積データ
 
-- **出典**：国土交通省「国土数値情報 行政区域データ」
+- **算出方法**：`public/data/hokkaido.geojson` のポリゴンから計算した近似値
+- **GeoJSON 出典**：国土交通省「国土数値情報行政区域データ」
 - **利用規約**：[国土数値情報ダウンロードサービス利用規約](https://nlftp.mlit.go.jp/ksj/other/yakkan.html)
-- **加工**：面積は各ポリゴンから算出
+- **精度**：GeoJSON 簡略化に伴い公式値と最大 ±20% 程度の差が生じる
 
 ### 人口データ
 
