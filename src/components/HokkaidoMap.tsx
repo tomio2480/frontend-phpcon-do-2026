@@ -2,17 +2,24 @@ import 'leaflet/dist/leaflet.css'
 import L from 'leaflet'
 import { useEffect, useRef } from 'preact/hooks'
 
-const STROKE = { color: '#F5C800', weight: 0.8, opacity: 1 }
+/*
+ * stroke color:
+ *   Light #8B7000 — 深いゴールド（白背景比 4.5:1 / 薄緑比 3.3:1 ≥ WCAG 3:1）
+ *   Dark  #F5C800 — 明るいゴールド（暗背景比 11:1）
+ */
+const LIGHT_STROKE = { color: '#8B7000', weight: 0.8, opacity: 1 }
+const DARK_STROKE  = { color: '#F5C800', weight: 0.8, opacity: 1 }
 
 function buildStyles(dark: boolean) {
+  const S = dark ? DARK_STROKE : LIGHT_STROKE
   return dark ? {
-    SELECTED: { ...STROKE, fillColor: '#9B7BB0', fillOpacity: 1 },
-    HOVER:    { ...STROKE, fillColor: '#7060A0', fillOpacity: 1 },
-    DEFAULT:  { ...STROKE, fillColor: '#2C4034', fillOpacity: 1 },  /* 薄い緑（ダーク） */
+    SELECTED: { ...S, fillColor: '#9B7BB0', fillOpacity: 1 },
+    HOVER:    { ...S, fillColor: '#B68CDD', fillOpacity: 1 },  /* 明化方向（Opus 指摘） */
+    DEFAULT:  { ...S, fillColor: '#33493B', fillOpacity: 1 },  /* 薄い緑（ダーク） */
   } : {
-    SELECTED: { ...STROKE, fillColor: '#D8B7DD', fillOpacity: 0.85 },
-    HOVER:    { ...STROKE, fillColor: '#BFB3E0', fillOpacity: 0.85 },
-    DEFAULT:  { ...STROKE, fillColor: '#CCDDC0', fillOpacity: 1 },  /* 薄い緑（ライト） */
+    SELECTED: { ...S, fillColor: '#D8B7DD', fillOpacity: 0.85 },
+    HOVER:    { ...S, fillColor: '#BFB3E0', fillOpacity: 0.85 },
+    DEFAULT:  { ...S, fillColor: '#CCDDC0', fillOpacity: 1 },  /* 薄い緑（ライト） */
   }
 }
 

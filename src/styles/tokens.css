@@ -55,7 +55,7 @@ html[data-theme="light"] .leaflet-container {
 html[data-theme="dark"] {
   --color-background:       #120C20;   /* 極濃バイオレット */
   --color-text:             #EDE5FF;   /* 極薄ラベンダー白, contrast 15:1 on bg */
-  --color-text-2:           #A898C8;   /* 中薄ラベンダー, contrast 7:1 on bg */
+  --color-text-2:           #B8A8D8;   /* 中薄ラベンダー, contrast ~8:1 on bg (AAA) */
   --color-accent-lilac:     #9B71C8;   /* 地図 選択fill */
   --color-accent-lavender:  #7455A8;   /* 地図 ホバーfill */
   --color-accent-yellow:    #F4D35E;   /* ボタン背景 (同色) */
