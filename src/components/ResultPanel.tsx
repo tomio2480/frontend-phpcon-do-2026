@@ -28,8 +28,8 @@ export default function ResultPanel({ result, isCalculating }: Props) {
       class={`mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4 transition-opacity duration-150 ${isCalculating ? 'opacity-50' : 'opacity-100'}`}
     >
       {METRICS.map(({ key, label }) => (
-        <div key={key} class="rounded-lg bg-white/60 border border-accent-lavender/40 p-3 text-center">
-          <dt class="text-xs text-text/60 mb-1">{label}</dt>
+        <div key={key} class="rounded-lg bg-surface border border-accent-lavender/40 p-3 text-center">
+          <dt class="text-xs text-text-2 mb-1">{label}</dt>
           <dd class="text-xl font-bold text-text">{displayResult[key].toFixed(2)}%</dd>
         </div>
       ))}

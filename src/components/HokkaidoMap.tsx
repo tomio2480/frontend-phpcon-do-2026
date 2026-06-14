@@ -13,8 +13,8 @@ const DARK_STROKE  = { color: '#F5C800', weight: 0.8, opacity: 1 }
 function buildStyles(dark: boolean) {
   const S = dark ? DARK_STROKE : LIGHT_STROKE
   return dark ? {
-    SELECTED: { ...S, fillColor: '#9B7BB0', fillOpacity: 1 },
-    HOVER:    { ...S, fillColor: '#B68CDD', fillOpacity: 1 },  /* 明化方向（Opus 指摘） */
+    SELECTED: { ...S, fillColor: '#B79AD8', fillOpacity: 1 },  /* tokens.css と統一 */
+    HOVER:    { ...S, fillColor: '#CBB0E8', fillOpacity: 1 },  /* 明化方向（Opus 指摘） */
     DEFAULT:  { ...S, fillColor: '#33493B', fillOpacity: 1 },  /* 薄い緑（ダーク） */
   } : {
     SELECTED: { ...S, fillColor: '#D8B7DD', fillOpacity: 0.85 },

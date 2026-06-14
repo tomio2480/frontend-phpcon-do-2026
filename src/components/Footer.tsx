@@ -6,8 +6,8 @@ export default function Footer() {
       <ul class="space-y-2 list-none">
         <li>
           <span class="font-medium">市区町村コード</span>：
-          総務省「全国地方公共団体コード」（2024年6月26日現在）所管．
-          一覧の参照元：地方税共同機構 eLTAX（地方税ポータルシステム）．
+          総務省所管「全国地方公共団体コード」（2024年6月26日現在）．
+          一覧の参照元は地方税共同機構 eLTAX（地方税ポータルシステム）．
           {' '}<a
             href="https://www.eltax.lta.go.jp/documents/10705"
             target="_blank"
@@ -62,7 +62,7 @@ export default function Footer() {
         </p>
       </div>
 
-      <p class="text-text/50 mt-4">
+      <p class="text-text-2 mt-4">
         本アプリは学習・発表目的で作成されたものです．
         掲載データの正確性は保証しません．
       </p>

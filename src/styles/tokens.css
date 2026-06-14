@@ -23,6 +23,7 @@
    ============================================================ */
 @theme {
   --color-background:       #F8F4FF;   /* 極薄ラベンダー白 */
+  --color-surface:          #FFFFFF;   /* カード背景, text と 17:1 */
   --color-text:             #1C1230;   /* 極濃バイオレット, contrast 16:1 on bg */
   --color-text-2:           #4B4070;   /* 中濃バイオレット, contrast 9:1 on bg */
   --color-accent-lilac:     #C4A0D8;   /* 地図 選択fill */
@@ -36,6 +37,7 @@
 :root,
 html[data-theme="light"] {
   --color-background:       #F8F4FF;
+  --color-surface:          #FFFFFF;
   --color-text:             #1C1230;
   --color-text-2:           #4B4070;
   --color-accent-lilac:     #C4A0D8;
@@ -53,18 +55,19 @@ html[data-theme="light"] .leaflet-container {
    ダークテーマ
    ============================================================ */
 html[data-theme="dark"] {
-  --color-background:       #120C20;   /* 極濃バイオレット */
-  --color-text:             #EDE5FF;   /* 極薄ラベンダー白, contrast 15:1 on bg */
-  --color-text-2:           #B8A8D8;   /* 中薄ラベンダー, contrast ~8:1 on bg (AAA) */
-  --color-accent-lilac:     #9B71C8;   /* 地図 選択fill */
-  --color-accent-lavender:  #7455A8;   /* 地図 ホバーfill */
+  --color-background:       #161020;   /* 暗バイオレット（純黒回避，やや明度up） */
+  --color-surface:          #261D38;   /* カード背景, text と ~12:1 */
+  --color-text:             #F0EAFF;   /* 極薄ラベンダー白, contrast ~15:1 on bg */
+  --color-text-2:           #C4B6E0;   /* 中薄ラベンダー, contrast ~9:1 on bg (AAA) */
+  --color-accent-lilac:     #B79AD8;   /* 地図 選択fill（明度up で識別性向上） */
+  --color-accent-lavender:  #9678BC;   /* 地図 ホバーfill */
   --color-accent-yellow:    #F4D35E;   /* ボタン背景 (同色) */
-  --color-on-yellow:        #120C20;   /* 黄ボタン上テキスト (極濃) */
-  --color-map-default:      #38304E;   /* 地図 未選択fill (暗ラベンダーグレー) */
+  --color-on-yellow:        #161020;   /* 黄ボタン上テキスト (極濃) */
+  --color-map-default:      #33493B;   /* 地図 未選択fill (暗い緑) */
 }
 
 html[data-theme="dark"] .leaflet-container {
-  background: #0A0618 !important;
+  background: #0D0916 !important;
 }
 
 /* フォーカスリング: 高コントラストを保証する */

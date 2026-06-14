@@ -29,13 +29,13 @@ export default function CheckboxList({ municipalities, selected, onToggle, regio
       {Object.entries(grouped).map(([region, items]) => {
         const action = regionActions?.[region]
         return (
-          <section key={region} class="rounded-lg border border-accent-lavender/40 bg-white/40 p-3">
+          <section key={region} class="rounded-lg border border-accent-lavender/40 bg-surface p-3">
             <h2 class="font-semibold text-text mb-2">{region}</h2>
             {action && (
               <button
                 type="button"
                 onClick={action.onClick}
-                class="mb-2 rounded px-2 py-1 text-xs font-medium bg-accent-yellow text-text hover:bg-accent-yellow/70 transition-colors"
+                class="mb-2 rounded px-2 py-1 text-xs font-medium bg-accent-yellow text-on-yellow hover:bg-accent-yellow/70 transition-colors"
               >
                 {action.label}
               </button>
