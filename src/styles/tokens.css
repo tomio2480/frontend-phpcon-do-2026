@@ -7,7 +7,27 @@
   --color-selected: #C7DCA0;
   --color-accent-yellow: #F4D35E;
   --color-text: #3B3645;
-  --color-map-default: #666666;
+  --color-map-default: #DEDEDE;
+}
+
+/* ライトモード: Leaflet コンテナ背景を白に */
+.leaflet-container {
+  background: #ffffff !important;
+}
+
+/* ダークモード: ページ全体とマップ背景を暗い配色に切り替える */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-background: #1E1A2B;
+    --color-text: #E8E0F0;
+    --color-accent-lilac: #9B7BB0;
+    --color-accent-lavender: #7A6A90;
+    --color-accent-yellow: #F4D35E;
+  }
+
+  .leaflet-container {
+    background: #0f0f1a !important;
+  }
 }
 
 .map-container {

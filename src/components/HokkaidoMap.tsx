@@ -2,11 +2,25 @@ import 'leaflet/dist/leaflet.css'
 import L from 'leaflet'
 import { useEffect, useRef } from 'preact/hooks'
 
-/* 菜の花色の境界線 + 薄いシルバーグレー（未選択）でラベンダーを引き立てる */
 const STROKE = { color: '#F5C800', weight: 0.8, opacity: 1 }
-const STYLE_SELECTED = { ...STROKE, fillColor: '#D8B7DD', fillOpacity: 0.7 }
-const STYLE_HOVER    = { ...STROKE, fillColor: '#BFB3E0', fillOpacity: 0.65 }
-const STYLE_DEFAULT  = { ...STROKE, fillColor: '#E0E0E0', fillOpacity: 0.7 }
+
+function buildStyles(dark: boolean) {
+  return dark ? {
+    SELECTED: { ...STROKE, fillColor: '#9B7BB0', fillOpacity: 1 },
+    HOVER:    { ...STROKE, fillColor: '#7060A0', fillOpacity: 1 },
+    DEFAULT:  { ...STROKE, fillColor: '#404050', fillOpacity: 1 },
+  } : {
+    SELECTED: { ...STROKE, fillColor: '#D8B7DD', fillOpacity: 0.85 },
+    HOVER:    { ...STROKE, fillColor: '#BFB3E0', fillOpacity: 0.85 },
+    DEFAULT:  { ...STROKE, fillColor: '#DEDEDE', fillOpacity: 1 },
+  }
+}
+
+function prefersDark(): boolean {
+  return typeof window !== 'undefined'
+    ? (window.matchMedia?.('(prefers-color-scheme: dark)').matches ?? false)
+    : false
+}
 
 interface Props {
   onHover?: (code: string | null) => void
@@ -24,6 +38,7 @@ export default function HokkaidoMap({ onHover, onClick, selected }: Props) {
   const onClickRef = useRef(onClick)
   const selectedRef = useRef(selected)
   const layersRef = useRef<Map<string, L.Path[]>>(new Map())
+  const stylesRef = useRef(buildStyles(prefersDark()))
 
   useEffect(() => { onHoverRef.current = onHover }, [onHover])
   useEffect(() => { onClickRef.current = onClick }, [onClick])
@@ -31,7 +46,7 @@ export default function HokkaidoMap({ onHover, onClick, selected }: Props) {
   useEffect(() => {
     selectedRef.current = selected
     layersRef.current.forEach((layers, code) => {
-      const targetStyle = selected?.has(code) ? STYLE_SELECTED : STYLE_DEFAULT
+      const targetStyle = selected?.has(code) ? stylesRef.current.SELECTED : stylesRef.current.DEFAULT
       const isSelected = selected?.has(code) ?? false
       layers.forEach(layer => {
         if (layer.options?.fillColor !== targetStyle.fillColor) {
@@ -42,6 +57,23 @@ export default function HokkaidoMap({ onHover, onClick, selected }: Props) {
       })
     })
   }, [selected])
+
+  // prefers-color-scheme の変化に追従してポリゴンスタイルを更新する
+  useEffect(() => {
+    if (typeof window === 'undefined' || !window.matchMedia) return
+    const mq = window.matchMedia('(prefers-color-scheme: dark)')
+    const handler = (e: MediaQueryListEvent) => {
+      stylesRef.current = buildStyles(e.matches)
+      layersRef.current.forEach((layers, code) => {
+        const isSelected = selectedRef.current?.has(code) ?? false
+        layers.forEach(layer => layer.setStyle(
+          isSelected ? stylesRef.current.SELECTED : stylesRef.current.DEFAULT
+        ))
+      })
+    }
+    mq.addEventListener('change', handler)
+    return () => mq.removeEventListener('change', handler)
+  }, [])
 
   useEffect(() => {
     if (!containerRef.current) return
@@ -69,12 +101,11 @@ export default function HokkaidoMap({ onHover, onClick, selected }: Props) {
               const existing = layersRef.current.get(code)
               if (existing) existing.push(path)
               else layersRef.current.set(code, [path])
-              path.setStyle(selectedRef.current?.has(code) ? STYLE_SELECTED : STYLE_DEFAULT)
+              path.setStyle(selectedRef.current?.has(code) ? stylesRef.current.SELECTED : stylesRef.current.DEFAULT)
 
               layer.on('add', () => {
                 const el = path.getElement()
                 if (!el) return
-                // Leaflet が DOM 要素を再利用して add が再発火した場合の重複登録を防ぐ
                 if ((el as HTMLElement & { _a11yInitialized?: boolean })._a11yInitialized) return
                 ;(el as HTMLElement & { _a11yInitialized?: boolean })._a11yInitialized = true
                 el.setAttribute('role', 'button')
@@ -90,21 +121,21 @@ export default function HokkaidoMap({ onHover, onClick, selected }: Props) {
                 })
                 el.addEventListener('focus', () => {
                   onHoverRef.current?.(code)
-                  if (!selectedRef.current?.has(code)) path.setStyle(STYLE_HOVER)
+                  if (!selectedRef.current?.has(code)) path.setStyle(stylesRef.current.HOVER)
                 })
                 el.addEventListener('blur', () => {
                   onHoverRef.current?.(null)
-                  if (!selectedRef.current?.has(code)) path.setStyle(STYLE_DEFAULT)
+                  if (!selectedRef.current?.has(code)) path.setStyle(stylesRef.current.DEFAULT)
                 })
               })
 
               layer.on('mouseover', () => {
                 onHoverRef.current?.(code)
-                if (!selectedRef.current?.has(code)) path.setStyle(STYLE_HOVER)
+                if (!selectedRef.current?.has(code)) path.setStyle(stylesRef.current.HOVER)
               })
               layer.on('mouseout', () => {
                 onHoverRef.current?.(null)
-                if (!selectedRef.current?.has(code)) path.setStyle(STYLE_DEFAULT)
+                if (!selectedRef.current?.has(code)) path.setStyle(stylesRef.current.DEFAULT)
               })
               layer.on('click', () => {
                 onClickRef.current?.(code)
