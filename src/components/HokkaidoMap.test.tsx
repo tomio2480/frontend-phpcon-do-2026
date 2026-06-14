@@ -161,6 +161,6 @@ describe('HokkaidoMap', () => {
     mockSetStyle.mockClear()
     capturedHandlers.current[0].mouseout?.()
 
-    expect(mockSetStyle).toHaveBeenCalledWith({ color: '#F5C800', weight: 0.8, opacity: 1, fillColor: '#DEDEDE', fillOpacity: 1 })
+    expect(mockSetStyle).toHaveBeenCalledWith({ color: '#F5C800', weight: 0.8, opacity: 1, fillColor: '#CCDDC0', fillOpacity: 1 })
   })
 })

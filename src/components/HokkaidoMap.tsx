@@ -8,11 +8,11 @@ function buildStyles(dark: boolean) {
   return dark ? {
     SELECTED: { ...STROKE, fillColor: '#9B7BB0', fillOpacity: 1 },
     HOVER:    { ...STROKE, fillColor: '#7060A0', fillOpacity: 1 },
-    DEFAULT:  { ...STROKE, fillColor: '#404050', fillOpacity: 1 },
+    DEFAULT:  { ...STROKE, fillColor: '#2C4034', fillOpacity: 1 },  /* 薄い緑（ダーク） */
   } : {
     SELECTED: { ...STROKE, fillColor: '#D8B7DD', fillOpacity: 0.85 },
     HOVER:    { ...STROKE, fillColor: '#BFB3E0', fillOpacity: 0.85 },
-    DEFAULT:  { ...STROKE, fillColor: '#DEDEDE', fillOpacity: 1 },
+    DEFAULT:  { ...STROKE, fillColor: '#CCDDC0', fillOpacity: 1 },  /* 薄い緑（ライト） */
   }
 }
 
