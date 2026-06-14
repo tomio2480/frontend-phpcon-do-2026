@@ -13,7 +13,7 @@ export default function App() {
   const { selected, toggle, toggleCodes } = useSelection()
   const [municipalities, setMunicipalities] = useState<Municipality[]>([])
   const selectedCodes = useMemo(() => Array.from(selected), [selected])
-  const { result, isCalculating, error, isPhpLoading, isPhpError } = useAggregate(selectedCodes)
+  const { result, isCalculating, error, isPhpLoading, isPhpError, phpError } = useAggregate(selectedCodes)
 
   const toggleSapporo = useCallback(() => toggleCodes(SAPPORO_CODES), [toggleCodes])
 
@@ -44,6 +44,8 @@ export default function App() {
         {isPhpError && (
           <p role="alert" class="mt-2 p-3 rounded-lg bg-red-100 text-red-700 text-sm">
             PHP エンジンの読み込みに失敗しました．ページを再読み込みしてください．
+            {phpError && <span class="block text-xs mt-1 font-mono">{phpError.message}</span>}
+            <span class="block text-xs mt-1">crossOriginIsolated: {String(window.crossOriginIsolated)}</span>
           </p>
         )}
         <div inert={isPhpLoading || isPhpError || undefined}>

@@ -19,6 +19,7 @@ export function getPhp(): Promise<PHP> {
         if (initPromise === promise) {
           initPromise = null
         }
+        console.error('[PHP WASM] loadWebRuntime failed:', err, 'crossOriginIsolated:', window.crossOriginIsolated)
         throw err
       })
     initPromise = promise

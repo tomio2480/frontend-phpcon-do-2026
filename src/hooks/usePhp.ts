@@ -66,10 +66,11 @@ export type UseAggregateResult = {
   isCalculating: boolean
   isPhpLoading: boolean
   isPhpError: boolean
+  phpError: Error | null
 }
 
 export function useAggregate(selectedCodes: readonly string[]): UseAggregateResult {
-  const { status: phpStatus, run } = usePhp()
+  const { status: phpStatus, run, error: phpError } = usePhp()
   const [result, setResult] = useState<AggregateResult | null>(null)
   const [error, setError] = useState<Error | null>(null)
   const [isCalculating, setIsCalculating] = useState(false)
@@ -128,5 +129,5 @@ echo json_encode(calc_percentages($sum, $total));`
     }
   }, [selectedCodes, phpStatus, run])
 
-  return { result, error, isCalculating, isPhpLoading: phpStatus === 'loading', isPhpError: phpStatus === 'error' }
+  return { result, error, isCalculating, isPhpLoading: phpStatus === 'loading', isPhpError: phpStatus === 'error', phpError }
 }
