@@ -10,7 +10,7 @@ Phase 13 の PR レビュー時に，OpenAI の `@openai/codex` CLI（`codex rev
 Codex CLI は OpenAI API の従量課金を利用する．Claude サブスクリプションとは別課金．
 
 `codex review --base main` を実行したところ：
-- `git grep` が `dist/` 配下の PHP WASM バイナリ（ICU データ等）に当たった
+- `git grep` が `dist/` 配下の PHP WASM バイナリ（ICU データ等）に当たった．
 - 出力が 2MB・10,000 行超のノイズになった
 - 最終的な verdict は「No discrete, actionable bugs identified」で有用だった
 
@@ -28,10 +28,9 @@ dist/
 node_modules/
 ```
 
-あるいは `--base main` の代わりに差分を絞ったファイル指定でレビューする方が
-費用対効果がよい可能性がある．
+`--base main` より，差分を絞ったファイル指定でレビューする方が費用対効果はよい可能性がある．
 
-コスト感：差分 1,100 行 + バイナリ読み込みで数十〜数百円程度（モデル gpt-5.5 使用）．
+コスト感：差分 1,100 行 + バイナリ読み込みで数十〜数百円程度（モデル gpt-4o 使用）．
 通常の Python スクリプト差分のみなら 1 桁安くなると推定する．
 
 ## 参照
