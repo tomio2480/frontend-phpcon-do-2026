@@ -44,8 +44,6 @@ export default function App() {
         {isPhpError && (
           <p role="alert" class="mt-2 p-3 rounded-lg bg-red-100 text-red-700 text-sm">
             PHP エンジンの読み込みに失敗しました．ページを再読み込みしてください．
-            {phpError && <span class="block text-xs mt-1 font-mono">{phpError.message}</span>}
-            <span class="block text-xs mt-1">crossOriginIsolated: {String(window.crossOriginIsolated)}</span>
           </p>
         )}
         <div inert={isPhpLoading || isPhpError || undefined}>

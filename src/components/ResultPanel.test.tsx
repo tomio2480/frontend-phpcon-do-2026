@@ -13,14 +13,14 @@ const RESULT: AggregateResult = {
 }
 
 describe('ResultPanel', () => {
-  it('result が null のとき選択を促すメッセージを表示する', () => {
+  it('result が null のとき 0.00% を 4 指標分表示する', () => {
     render(<ResultPanel result={null} isCalculating={false} />)
-    expect(screen.getByText('市区町村を選択してください')).toBeInTheDocument()
+    expect(screen.getAllByText('0.00%').length).toBe(4)
   })
 
-  it('isCalculating のとき集計中メッセージを表示する', () => {
+  it('isCalculating のとき result-panel が opacity-50 クラスを持つ', () => {
     render(<ResultPanel result={null} isCalculating={true} />)
-    expect(screen.getByText('集計中…')).toBeInTheDocument()
+    expect(screen.getByTestId('result-panel').className).toContain('opacity-50')
   })
 
   it('4 指標を %.2f% 形式で表示する', () => {

@@ -70,9 +70,10 @@ describe('App', () => {
     expect(screen.getByLabelText('北区')).toBeTruthy()
   })
 
-  it('初期状態の ResultPanel に選択を促すメッセージを表示する', () => {
+  it('初期状態の ResultPanel に 0.00% を表示する', () => {
     render(<App />)
-    expect(screen.getByText('市区町村を選択してください')).toBeTruthy()
+    const zeros = screen.getAllByText('0.00%')
+    expect(zeros.length).toBe(4)
   })
 
   it('PHP 初期化中は LoadingOverlay を表示する', () => {

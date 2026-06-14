@@ -12,26 +12,25 @@ const METRICS: { key: keyof AggregateResult; label: string }[] = [
   { key: 'furusato_count_pct',   label: 'ふるさと納税件数' },
 ]
 
+const ZERO_RESULT: AggregateResult = {
+  area_pct: 0,
+  population_pct: 0,
+  furusato_amount_pct: 0,
+  furusato_count_pct: 0,
+}
+
 export default function ResultPanel({ result, isCalculating }: Props) {
-  if (isCalculating) {
-    return (
-      <p data-testid="result-panel" class="mt-4 p-4 rounded-lg bg-accent-lilac/20 text-text text-sm">集計中…</p>
-    )
-  }
-  if (!result) {
-    return (
-      <p data-testid="result-panel" class="mt-4 p-4 rounded-lg bg-accent-lilac/20 text-text text-sm">
-        市区町村を選択してください
-      </p>
-    )
-  }
+  const displayResult = result ?? ZERO_RESULT
 
   return (
-    <dl data-testid="result-panel" class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
+    <dl
+      data-testid="result-panel"
+      class={`mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4 transition-opacity duration-150 ${isCalculating ? 'opacity-50' : 'opacity-100'}`}
+    >
       {METRICS.map(({ key, label }) => (
         <div key={key} class="rounded-lg bg-white/60 border border-accent-lavender/40 p-3 text-center">
           <dt class="text-xs text-text/60 mb-1">{label}</dt>
-          <dd class="text-xl font-bold text-text">{result[key].toFixed(2)}%</dd>
+          <dd class="text-xl font-bold text-text">{displayResult[key].toFixed(2)}%</dd>
         </div>
       ))}
     </dl>
