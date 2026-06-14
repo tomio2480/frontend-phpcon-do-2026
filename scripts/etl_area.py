@@ -6,8 +6,8 @@ import pathlib
 
 GEOJSON_PATH = pathlib.Path(__file__).parent.parent / "public" / "data" / "hokkaido.geojson"
 
-# 北方領土の市区町村コード（集計対象外）
-_EXCLUDED_CODES = {"01695", "01696", "01697", "01698", "01699", "01700"}
+# 面積計算の対象外コード（現時点で除外対象なし）
+_EXCLUDED_CODES: set[str] = set()
 
 
 def _ring_area_km2(ring: list[list[float]]) -> float:

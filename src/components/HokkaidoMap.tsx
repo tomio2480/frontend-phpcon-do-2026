@@ -2,10 +2,11 @@ import 'leaflet/dist/leaflet.css'
 import L from 'leaflet'
 import { useEffect, useRef } from 'preact/hooks'
 
-/* トークン対応: --color-accent-lilac / --color-accent-lavender / --color-map-default */
-const STYLE_SELECTED = { fillColor: '#D8B7DD', fillOpacity: 0.6 }
-const STYLE_HOVER    = { fillColor: '#BFB3E0', fillOpacity: 0.5 }
-const STYLE_DEFAULT  = { fillColor: '#666666',  fillOpacity: 0.2 }
+/* 菜の花色の境界線 + 薄いシルバーグレー（未選択）でラベンダーを引き立てる */
+const STROKE = { color: '#F5C800', weight: 0.8, opacity: 1 }
+const STYLE_SELECTED = { ...STROKE, fillColor: '#D8B7DD', fillOpacity: 0.7 }
+const STYLE_HOVER    = { ...STROKE, fillColor: '#BFB3E0', fillOpacity: 0.65 }
+const STYLE_DEFAULT  = { ...STROKE, fillColor: '#E0E0E0', fillOpacity: 0.7 }
 
 interface Props {
   onHover?: (code: string | null) => void

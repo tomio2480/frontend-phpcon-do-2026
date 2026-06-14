@@ -2,7 +2,8 @@
 import pytest
 
 SAPPORO_WARD_CODES = {f"011{i:02d}" for i in range(1, 11)}
-TOTAL_ENTRIES = 188
+HOPPO_CODES = {"01695", "01696", "01697", "01698", "01699", "01700"}
+TOTAL_ENTRIES = 194  # 188 通常市区町村 + 北方領土 6 村
 
 
 @pytest.fixture(scope="module")
@@ -56,7 +57,10 @@ def test_area_positive(muni_dict):
 
 def test_population_positive(muni_dict):
     for code, entry in muni_dict.items():
-        assert entry["population"] > 0, f"{code} の人口が 0 以下"
+        if code in HOPPO_CODES:
+            assert entry["population"] == 0, f"北方領土 {code} の人口はゼロであるべき"
+        else:
+            assert entry["population"] > 0, f"{code} の人口が 0 以下"
 
 
 def test_total_population_matches(muni_dict, total_dict):

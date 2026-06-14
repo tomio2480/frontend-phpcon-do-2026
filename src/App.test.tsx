@@ -114,10 +114,10 @@ describe('App', () => {
     expect(inertDiv).toBeNull()
   })
 
-  it('集計中は ShareButton を表示しない', () => {
+  it('集計中も ShareButton を表示する', () => {
     vi.mocked(useAggregate).mockReturnValue({ result: sampleResult, error: null, isCalculating: true, isPhpLoading: false, isPhpError: false, phpError: null })
     render(<App />)
-    expect(screen.queryByRole('link', { name: 'X に投稿する' })).toBeNull()
+    expect(screen.getByRole('link', { name: /X に投稿する/ })).toBeTruthy()
   })
 
   it('集計完了後に ShareButton を表示する', () => {

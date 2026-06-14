@@ -9,8 +9,10 @@ import { useAggregate } from './hooks/usePhp'
 import { SAPPORO_CODES } from './constants'
 import type { Municipality } from './components/CheckboxList'
 
+const ZERO_RESULT = { area_pct: 0, population_pct: 0, furusato_amount_pct: 0, furusato_count_pct: 0 }
+
 export default function App() {
-  const { selected, toggle, toggleCodes } = useSelection()
+  const { selected, toggle, toggleCodes, selectAll } = useSelection()
   const [municipalities, setMunicipalities] = useState<Municipality[]>([])
   const selectedCodes = useMemo(() => Array.from(selected), [selected])
   const { result, isCalculating, error, isPhpLoading, isPhpError } = useAggregate(selectedCodes)
@@ -36,6 +38,14 @@ export default function App() {
       .catch(console.error)
   }, [])
 
+  // URL パラメータ ?codes=... から初期選択を復元する
+  useEffect(() => {
+    const codes = new URLSearchParams(window.location.search).get('codes')
+    if (!codes) return
+    const parsed = codes.split(',').filter(c => /^\d{5}$/.test(c))
+    if (parsed.length > 0) selectAll(parsed)
+  }, [selectAll])
+
   return (
     <main class="min-h-screen bg-background text-text">
       <LoadingOverlay isLoading={isPhpLoading} />
@@ -53,7 +63,7 @@ export default function App() {
           </div>
           <HokkaidoMap onClick={toggle} selected={selected} />
           {error && <p class="mt-2 text-red-600 text-sm">集計エラー: {error.message}</p>}
-          {result && !isCalculating && <ShareButton result={result} />}
+          <ShareButton result={result ?? ZERO_RESULT} selectedCodes={selectedCodes} />
           <CheckboxList municipalities={municipalities} selected={selected} onToggle={toggle} regionActions={regionActions} />
         </div>
       </div>

@@ -1878,5 +1878,65 @@
     "population": 4076,
     "furusato_amount": 524792400,
     "furusato_count": 30293
+  },
+  "01695": {
+    "code": "01695",
+    "name": "色丹村",
+    "display_name": "色丹村（北方領土）",
+    "region": "根室振興局",
+    "area": 250.89,
+    "population": 0,
+    "furusato_amount": 0,
+    "furusato_count": 0
+  },
+  "01696": {
+    "code": "01696",
+    "name": "泊村",
+    "display_name": "泊村（北方領土）",
+    "region": "根室振興局",
+    "area": 536.99,
+    "population": 0,
+    "furusato_amount": 0,
+    "furusato_count": 0
+  },
+  "01697": {
+    "code": "01697",
+    "name": "留夜別村",
+    "display_name": "留夜別村（北方領土）",
+    "region": "根室振興局",
+    "area": 955.68,
+    "population": 0,
+    "furusato_amount": 0,
+    "furusato_count": 0
+  },
+  "01698": {
+    "code": "01698",
+    "name": "留別村",
+    "display_name": "留別村（北方領土）",
+    "region": "根室振興局",
+    "area": 1479.39,
+    "population": 0,
+    "furusato_amount": 0,
+    "furusato_count": 0
+  },
+  "01699": {
+    "code": "01699",
+    "name": "紗那村",
+    "display_name": "紗那村（北方領土）",
+    "region": "根室振興局",
+    "area": 947.31,
+    "population": 0,
+    "furusato_amount": 0,
+    "furusato_count": 0
+  },
+  "01700": {
+    "code": "01700",
+    "name": "蘂取村",
+    "display_name": "蘂取村（北方領土）",
+    "region": "根室振興局",
+    "area": 745.98,
+    "population": 0,
+    "furusato_amount": 0,
+    "furusato_count": 0
   }
 }

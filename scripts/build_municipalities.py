@@ -23,7 +23,8 @@
 - 札幌市のふるさと納税（市全体値）は区の人口比で按分して各区に帰属させる
 - 二重計上防止のため、合計値はすべてのエントリの総和
 - 市区町村コードは全国地方公共団体コード（5桁）を使用
-- 北方領土の5村（色丹村、留夜別村、留別村、紗那村、蘂取村）は対象外
+- 北方領土の6村（色丹村・泊村・留夜別村・留別村・紗那村・蘂取村）は面積を計上し、
+  人口・ふるさと納税はゼロとして扱う
 """
 
 from __future__ import annotations
@@ -293,13 +294,25 @@ MUNICIPALITIES: list[tuple] = [
     ("01692", "中標津町", "中標津町", "根室振興局"),
     ("01693", "標津町",   "標津町",   "根室振興局"),
     ("01694", "羅臼町",   "羅臼町",   "根室振興局"),
+
+    # ========================================================
+    # 北方領土（根室振興局管轄）
+    # 面積のみ計上。人口・ふるさと納税はゼロ。
+    # ========================================================
+    ("01695", "色丹村",   "色丹村（北方領土）",   "根室振興局"),
+    ("01696", "泊村",     "泊村（北方領土）",     "根室振興局"),
+    ("01697", "留夜別村", "留夜別村（北方領土）", "根室振興局"),
+    ("01698", "留別村",   "留別村（北方領土）",   "根室振興局"),
+    ("01699", "紗那村",   "紗那村（北方領土）",   "根室振興局"),
+    ("01700", "蘂取村",   "蘂取村（北方領土）",   "根室振興局"),
 ]
 
 # 北海道の公式市区町村数（35市 + 129町 + 15村 = 179、札幌10区は1市としてカウント）
-# 本スクリプトでは札幌を10区として展開するため 188 エントリとなる
+# 本スクリプトでは札幌を10区として展開するため 188 エントリ＋北方領土6村で計194エントリ
 _OFFICIAL_MUNICIPALITY_COUNT = 179
 _SAPPORO_WARD_CODES = frozenset(f"011{i:02d}" for i in range(1, 11))
-_EXPECTED_ENTRY_COUNT = _OFFICIAL_MUNICIPALITY_COUNT - 1 + len(_SAPPORO_WARD_CODES)  # 188
+_HOPPO_CODES = frozenset({"01695", "01696", "01697", "01698", "01699", "01700"})
+_EXPECTED_ENTRY_COUNT = _OFFICIAL_MUNICIPALITY_COUNT - 1 + len(_SAPPORO_WARD_CODES) + len(_HOPPO_CODES)  # 194
 
 
 def build() -> tuple[dict, dict]:
@@ -332,16 +345,29 @@ def build() -> tuple[dict, dict]:
 
     municipalities_json: dict[str, dict] = {}
     for code, name, display_name, region in MUNICIPALITIES:
-        municipalities_json[code] = {
-            "code": code,
-            "name": name,
-            "display_name": display_name,
-            "region": region,
-            "area": area[code],
-            "population": population[code],
-            "furusato_amount": furusato[code][0],
-            "furusato_count": furusato[code][1],
-        }
+        if code in _HOPPO_CODES:
+            # 北方領土は人口・ふるさと納税データが存在しないためゼロで補完する
+            municipalities_json[code] = {
+                "code": code,
+                "name": name,
+                "display_name": display_name,
+                "region": region,
+                "area": area[code],
+                "population": 0,
+                "furusato_amount": 0,
+                "furusato_count": 0,
+            }
+        else:
+            municipalities_json[code] = {
+                "code": code,
+                "name": name,
+                "display_name": display_name,
+                "region": region,
+                "area": area[code],
+                "population": population[code],
+                "furusato_amount": furusato[code][0],
+                "furusato_count": furusato[code][1],
+            }
 
     vals = municipalities_json.values()
     total_json = {

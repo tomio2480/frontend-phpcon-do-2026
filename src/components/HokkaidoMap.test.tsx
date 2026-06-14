@@ -83,7 +83,7 @@ describe('HokkaidoMap', () => {
     render(<HokkaidoMap selected={new Set(['01101'])} />)
 
     await waitFor(() => {
-      expect(mockSetStyle).toHaveBeenCalledWith({ fillColor: '#D8B7DD', fillOpacity: 0.6 })
+      expect(mockSetStyle).toHaveBeenCalledWith({ color: '#F5C800', weight: 0.8, opacity: 1, fillColor: '#D8B7DD', fillOpacity: 0.7 })
     })
   })
 
@@ -107,7 +107,7 @@ describe('HokkaidoMap', () => {
     rerender(<HokkaidoMap selected={new Set(['01101'])} />)
 
     expect(mockSetStyle).toHaveBeenCalledTimes(2)
-    expect(mockSetStyle).toHaveBeenCalledWith({ fillColor: '#D8B7DD', fillOpacity: 0.6 })
+    expect(mockSetStyle).toHaveBeenCalledWith({ color: '#F5C800', weight: 0.8, opacity: 1, fillColor: '#D8B7DD', fillOpacity: 0.7 })
   })
 
   it('ホバー時に未選択ポリゴンにホバースタイルを適用する', async () => {
@@ -125,7 +125,7 @@ describe('HokkaidoMap', () => {
     mockSetStyle.mockClear()
     capturedHandlers.current[0].mouseover?.()
 
-    expect(mockSetStyle).toHaveBeenCalledWith({ fillColor: '#BFB3E0', fillOpacity: 0.5 })
+    expect(mockSetStyle).toHaveBeenCalledWith({ color: '#F5C800', weight: 0.8, opacity: 1, fillColor: '#BFB3E0', fillOpacity: 0.65 })
   })
 
   it('selected 変化時に aria-pressed を更新する', async () => {
@@ -161,6 +161,6 @@ describe('HokkaidoMap', () => {
     mockSetStyle.mockClear()
     capturedHandlers.current[0].mouseout?.()
 
-    expect(mockSetStyle).toHaveBeenCalledWith({ fillColor: '#666666', fillOpacity: 0.2 })
+    expect(mockSetStyle).toHaveBeenCalledWith({ color: '#F5C800', weight: 0.8, opacity: 1, fillColor: '#E0E0E0', fillOpacity: 0.7 })
   })
 })

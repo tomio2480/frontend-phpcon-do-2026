@@ -4,7 +4,8 @@ import pytest
 
 GEOJSON_PATH = pathlib.Path(__file__).parent.parent.parent / "public" / "data" / "hokkaido.geojson"
 
-_EXCLUDED_CODES = {"01695", "01696", "01697", "01698", "01699", "01700"}
+# 北方領土を含むすべてのコードを集計対象とするため除外コードなし
+_HOPPO_CODES = {"01695", "01696", "01697", "01698", "01699", "01700"}
 
 # 期待値: 国土地理院「全国都道府県市区町村別面積調」令和5年10月1日現在
 # GeoJSON 由来の面積は簡略化の影響で誤差を含むため ±20% の許容範囲とする
@@ -32,14 +33,16 @@ def test_values_are_positive_floats(area_data):
         assert area > 0, f"{code} の面積が 0 以下"
 
 
-def test_excluded_codes_not_present(area_data):
-    for code in _EXCLUDED_CODES:
-        assert code not in area_data, f"除外コード {code} が含まれている"
+def test_hoppo_codes_present(area_data):
+    """北方領土6村が面積集計に含まれている"""
+    for code in _HOPPO_CODES:
+        assert code in area_data, f"北方領土コード {code} が含まれていない"
+        assert area_data[code] > 0, f"北方領土コード {code} の面積が 0 以下"
 
 
 def test_expected_entry_count(area_data):
-    # GeoJSON の 194 フィーチャから北方領土 6 件を除いた 188 件
-    assert len(area_data) == 188
+    # GeoJSON の 194 フィーチャをすべて含む
+    assert len(area_data) == 194
 
 
 def test_known_area_within_tolerance(area_data):
