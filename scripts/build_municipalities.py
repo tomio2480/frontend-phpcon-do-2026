@@ -13,7 +13,8 @@
   原典: 総務省「住民基本台帳に基づく人口，人口動態及び世帯数」（2024年1月1日現在）
   https://www.soumu.go.jp/main_sosiki/jichi_gyousei/daityo/jinkou_jinkoudoutai-setaisuu.html
 - ふるさと納税: scripts/data/furusato.csv
-  原典: 総務省「ふるさと納税に関する現況調査結果」令和6年度実施（令和5年度実績）
+  原典: 総務省「ふるさと納税に関する現況調査結果」令和7年度実施（令和6年度実績）
+  ※公式 Excel（各団体の受入額及び受入件数）の令和6年度列と全179市町村を突合し一致を確認済み
   https://www.soumu.go.jp/main_sosiki/jichi_zeisei/czaisei/czaisei_seido/furusato/archive/
 
 ■ 基準日
@@ -44,12 +45,11 @@ import etl_population
 OUTPUT_DIR = pathlib.Path(__file__).parent.parent / "public" / "data"
 
 # 札幌市のふるさと納税合計（市全体。10区の人口比で按分する）
-# 出典: 総務省「ふるさと納税に関する現況調査結果」令和6年度実施（令和5年度実績）
-#       各市町村のふるさと納税受入額（Excel）より札幌市の値を採用
+# 出典: 総務省「ふるさと納税に関する現況調査結果」令和7年度実施（令和6年度実績）
+#       各団体の受入額及び受入件数（Excel）の令和6年度列・札幌市の値と完全一致を確認済み
 #       https://www.soumu.go.jp/main_sosiki/jichi_zeisei/czaisei/czaisei_seido/furusato/archive/
-# TODO: 上記公式 Excel の最新値と突合し、数値の一致を確認すること
-SAPPORO_FURUSATO_AMOUNT = 3_904_088_764   # 円
-SAPPORO_FURUSATO_COUNT  = 208_028         # 件
+SAPPORO_FURUSATO_AMOUNT = 3_904_088_764   # 円（令和6年度実績）
+SAPPORO_FURUSATO_COUNT  = 208_028         # 件（令和6年度実績）
 
 # ---------------------------------------------------------------------------
 # 市区町村マスター
@@ -384,9 +384,9 @@ def build() -> tuple[dict, dict]:
         "furusato_amount": sum(m["furusato_amount"] for m in vals),
         "furusato_count": sum(m["furusato_count"] for m in vals),
         "data_notes": {
-            "area_source": "hokkaido.geojson ジオメトリから計算（近似値）",
-            "population_source": "住民基本台帳に基づく人口 2024年1月1日現在",
-            "furusato_source": "総務省「ふるさと納税に関する現況調査結果」令和6年度実施分",
+            "area_source": "国土数値情報 行政区域データ(N03,2024) のジオメトリから計算（近似値）",
+            "population_source": "総務省 住民基本台帳に基づく人口 2024年1月1日現在",
+            "furusato_source": "総務省「ふるさと納税に関する現況調査結果」令和7年度実施（令和6年度実績）",
             "retrieved_at": "2026-05-31",
         },
     }

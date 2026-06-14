@@ -4,9 +4,9 @@
   "furusato_amount": 178511405259,
   "furusato_count": 9624188,
   "data_notes": {
-    "area_source": "hokkaido.geojson ジオメトリから計算（近似値）",
-    "population_source": "住民基本台帳に基づく人口 2024年1月1日現在",
-    "furusato_source": "総務省「ふるさと納税に関する現況調査結果」令和6年度実施分",
+    "area_source": "国土数値情報 行政区域データ(N03,2024) のジオメトリから計算（近似値）",
+    "population_source": "総務省 住民基本台帳に基づく人口 2024年1月1日現在",
+    "furusato_source": "総務省「ふるさと納税に関する現況調査結果」令和7年度実施（令和6年度実績）",
     "retrieved_at": "2026-05-31"
   }
 }

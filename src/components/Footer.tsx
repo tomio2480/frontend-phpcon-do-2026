@@ -44,7 +44,7 @@ export default function Footer() {
         </li>
         <li>
           <span class="font-medium">ふるさと納税</span>：
-          総務省「ふるさと納税に関する現況調査結果」令和6年度実施（令和5年度実績）．
+          総務省「ふるさと納税に関する現況調査結果」令和7年度実施（令和6年度実績）．
           市町村別の受入額・受入件数の Excel を使用．
           {' '}<Ext href="https://www.soumu.go.jp/main_sosiki/jichi_zeisei/czaisei/czaisei_seido/furusato/archive/" text="総務省 ふるさと納税 関連資料" />
         </li>
