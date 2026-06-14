@@ -16,13 +16,8 @@ function buildStyles(dark: boolean) {
   }
 }
 
-function prefersDark(): boolean {
-  return typeof window !== 'undefined'
-    ? (window.matchMedia?.('(prefers-color-scheme: dark)').matches ?? false)
-    : false
-}
-
 interface Props {
+  isDark?: boolean
   onHover?: (code: string | null) => void
   onClick?: (code: string) => void
   selected?: Set<string>
@@ -32,13 +27,13 @@ function applyAriaPressed(el: Element, isSelected: boolean) {
   el.setAttribute('aria-pressed', String(isSelected))
 }
 
-export default function HokkaidoMap({ onHover, onClick, selected }: Props) {
+export default function HokkaidoMap({ isDark = false, onHover, onClick, selected }: Props) {
   const containerRef = useRef<HTMLDivElement>(null)
   const onHoverRef = useRef(onHover)
   const onClickRef = useRef(onClick)
   const selectedRef = useRef(selected)
   const layersRef = useRef<Map<string, L.Path[]>>(new Map())
-  const stylesRef = useRef(buildStyles(prefersDark()))
+  const stylesRef = useRef(buildStyles(isDark))
 
   useEffect(() => { onHoverRef.current = onHover }, [onHover])
   useEffect(() => { onClickRef.current = onClick }, [onClick])
@@ -58,22 +53,16 @@ export default function HokkaidoMap({ onHover, onClick, selected }: Props) {
     })
   }, [selected])
 
-  // prefers-color-scheme の変化に追従してポリゴンスタイルを更新する
+  // isDark prop の変化に追従してポリゴンスタイルを更新する
   useEffect(() => {
-    if (typeof window === 'undefined' || !window.matchMedia) return
-    const mq = window.matchMedia('(prefers-color-scheme: dark)')
-    const handler = (e: MediaQueryListEvent) => {
-      stylesRef.current = buildStyles(e.matches)
-      layersRef.current.forEach((layers, code) => {
-        const isSelected = selectedRef.current?.has(code) ?? false
-        layers.forEach(layer => layer.setStyle(
-          isSelected ? stylesRef.current.SELECTED : stylesRef.current.DEFAULT
-        ))
-      })
-    }
-    mq.addEventListener('change', handler)
-    return () => mq.removeEventListener('change', handler)
-  }, [])
+    stylesRef.current = buildStyles(isDark)
+    layersRef.current.forEach((layers, code) => {
+      const isSelected = selectedRef.current?.has(code) ?? false
+      layers.forEach(layer => layer.setStyle(
+        isSelected ? stylesRef.current.SELECTED : stylesRef.current.DEFAULT
+      ))
+    })
+  }, [isDark])
 
   useEffect(() => {
     if (!containerRef.current) return

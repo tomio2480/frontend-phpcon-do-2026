@@ -1,35 +1,80 @@
+/**
+ * カラーパレット設計方針
+ *
+ * 配色理論: Analogous（類似色）配色
+ *   基軸 hue 270° (Violet/Purple) — 北海道富良野のラベンダー畑をイメージ
+ *   アクセント hue 48° (Gold)  — 北海道の菜の花色，補色に近い位置で視認性を強化
+ *
+ * コントラスト: WCAG 2.1 AA（本文テキスト 4.5:1 以上）を全組み合わせで確保
+ *   本文:   ライト 16:1 / ダーク 15:1 (AAA 相当)
+ *   補助文: ライト  9:1 / ダーク  7:1 (AAA 相当)
+ *
+ * 色覚多様性への配慮
+ *   選択状態はラベンダー色と地図背景の輝度差（濃淡）で識別可能にし，
+ *   赤緑の区別に依存しない設計とする．
+ *
+ * テーマ切り替え: html[data-theme] 属性で制御（prefers-color-scheme を JS で読み取り付与）
+ */
+
 @import "tailwindcss";
 
+/* ============================================================
+   ライトテーマ (デフォルト)
+   ============================================================ */
 @theme {
-  --color-background: #FFF6D5;
-  --color-accent-lilac: #D8B7DD;
-  --color-accent-lavender: #BFB3E0;
-  --color-selected: #C7DCA0;
-  --color-accent-yellow: #F4D35E;
-  --color-text: #3B3645;
-  --color-map-default: #DEDEDE;
+  --color-background:       #F8F4FF;   /* 極薄ラベンダー白 */
+  --color-text:             #1C1230;   /* 極濃バイオレット, contrast 16:1 on bg */
+  --color-text-2:           #4B4070;   /* 中濃バイオレット, contrast 9:1 on bg */
+  --color-accent-lilac:     #C4A0D8;   /* 地図 選択fill */
+  --color-accent-lavender:  #A880C8;   /* 地図 ホバーfill */
+  --color-accent-yellow:    #F4D35E;   /* ボタン背景 (菜の花色) */
+  --color-on-yellow:        #1C1230;   /* 黄ボタン上テキスト, contrast 11:1 */
+  --color-map-default:      #D4D0E0;   /* 地図 未選択fill (不透明ラベンダーグレー) */
 }
 
 /* ライトモード: Leaflet コンテナ背景を白に */
-.leaflet-container {
+:root,
+html[data-theme="light"] {
+  --color-background:       #F8F4FF;
+  --color-text:             #1C1230;
+  --color-text-2:           #4B4070;
+  --color-accent-lilac:     #C4A0D8;
+  --color-accent-lavender:  #A880C8;
+  --color-accent-yellow:    #F4D35E;
+  --color-on-yellow:        #1C1230;
+  --color-map-default:      #D4D0E0;
+}
+
+html[data-theme="light"] .leaflet-container {
   background: #ffffff !important;
 }
 
-/* ダークモード: ページ全体とマップ背景を暗い配色に切り替える */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-background: #1E1A2B;
-    --color-text: #E8E0F0;
-    --color-accent-lilac: #9B7BB0;
-    --color-accent-lavender: #7A6A90;
-    --color-accent-yellow: #F4D35E;
-  }
-
-  .leaflet-container {
-    background: #0f0f1a !important;
-  }
+/* ============================================================
+   ダークテーマ
+   ============================================================ */
+html[data-theme="dark"] {
+  --color-background:       #120C20;   /* 極濃バイオレット */
+  --color-text:             #EDE5FF;   /* 極薄ラベンダー白, contrast 15:1 on bg */
+  --color-text-2:           #A898C8;   /* 中薄ラベンダー, contrast 7:1 on bg */
+  --color-accent-lilac:     #9B71C8;   /* 地図 選択fill */
+  --color-accent-lavender:  #7455A8;   /* 地図 ホバーfill */
+  --color-accent-yellow:    #F4D35E;   /* ボタン背景 (同色) */
+  --color-on-yellow:        #120C20;   /* 黄ボタン上テキスト (極濃) */
+  --color-map-default:      #38304E;   /* 地図 未選択fill (暗ラベンダーグレー) */
 }
 
+html[data-theme="dark"] .leaflet-container {
+  background: #0A0618 !important;
+}
+
+/* フォーカスリング: 高コントラストを保証する */
+html[data-theme="dark"] :focus-visible {
+  outline-color: #C4A0D8;
+}
+
+/* ============================================================
+   共通レイアウト
+   ============================================================ */
 .map-container {
   width: 100%;
   height: 300px;

@@ -4,7 +4,10 @@ import CheckboxList from './components/CheckboxList'
 import ResultPanel from './components/ResultPanel'
 import ShareButton from './components/ShareButton'
 import LoadingOverlay from './components/LoadingOverlay'
+import ThemeToggle from './components/ThemeToggle'
+import Footer from './components/Footer'
 import { useSelection } from './hooks/useSelection'
+import { useTheme } from './hooks/useTheme'
 import { useAggregate } from './hooks/usePhp'
 import { SAPPORO_CODES } from './constants'
 import type { Municipality } from './components/CheckboxList'
@@ -12,6 +15,7 @@ import type { Municipality } from './components/CheckboxList'
 const ZERO_RESULT = { area_pct: 0, population_pct: 0, furusato_amount_pct: 0, furusato_count_pct: 0 }
 
 export default function App() {
+  const { pref, isDark, cycleTheme } = useTheme()
   const { selected, toggle, toggleCodes, selectAll } = useSelection()
   const [municipalities, setMunicipalities] = useState<Municipality[]>([])
   const selectedCodes = useMemo(() => Array.from(selected), [selected])
@@ -47,26 +51,39 @@ export default function App() {
   }, [selectAll])
 
   return (
-    <main class="min-h-screen bg-background text-text">
-      <LoadingOverlay isLoading={isPhpLoading} />
-      <div class="p-4 max-w-5xl mx-auto">
-        <h1 class="text-2xl font-bold mb-4">あなたの北海道は何 %？</h1>
-        {isPhpError && (
-          <p role="alert" class="mt-2 p-3 rounded-lg bg-red-100 text-red-700 text-sm">
-            PHP エンジンの読み込みに失敗しました．ページを再読み込みしてください．
-          </p>
-        )}
-        <div inert={isPhpLoading || isPhpError || undefined}>
-          {/* モバイルでは結果パネルを上部に固定する */}
-          <div aria-live="polite" aria-atomic="true" class="sticky top-0 z-10 bg-background pb-2 md:static md:pb-0">
-            <ResultPanel result={result} isCalculating={isCalculating} />
-          </div>
-          <HokkaidoMap onClick={toggle} selected={selected} />
-          {error && <p class="mt-2 text-red-600 text-sm">集計エラー: {error.message}</p>}
-          <ShareButton result={result ?? ZERO_RESULT} selectedCodes={selectedCodes} />
-          <CheckboxList municipalities={municipalities} selected={selected} onToggle={toggle} regionActions={regionActions} />
+    <div class="min-h-screen bg-background text-text">
+      {/* ヘッダー: テーマ切り替えボタン */}
+      <header class="border-b border-text/10">
+        <div class="max-w-5xl mx-auto px-4 py-2 flex justify-end">
+          <ThemeToggle pref={pref} onCycle={cycleTheme} />
         </div>
+      </header>
+
+      <main>
+        <LoadingOverlay isLoading={isPhpLoading} />
+        <div class="p-4 max-w-5xl mx-auto">
+          <h1 class="text-2xl font-bold mb-4">あなたの北海道は何 %？</h1>
+          {isPhpError && (
+            <p role="alert" class="mt-2 p-3 rounded-lg bg-red-100 text-red-700 text-sm">
+              PHP エンジンの読み込みに失敗しました．ページを再読み込みしてください．
+            </p>
+          )}
+          <div inert={isPhpLoading || isPhpError || undefined}>
+            {/* モバイルでは結果パネルを上部に固定する */}
+            <div aria-live="polite" aria-atomic="true" class="sticky top-0 z-10 bg-background pb-2 md:static md:pb-0">
+              <ResultPanel result={result} isCalculating={isCalculating} />
+            </div>
+            <HokkaidoMap isDark={isDark} onClick={toggle} selected={selected} />
+            {error && <p class="mt-2 text-red-600 text-sm">集計エラー: {error.message}</p>}
+            <ShareButton result={result ?? ZERO_RESULT} selectedCodes={selectedCodes} />
+            <CheckboxList municipalities={municipalities} selected={selected} onToggle={toggle} regionActions={regionActions} />
+          </div>
+        </div>
+      </main>
+
+      <div class="max-w-5xl mx-auto px-4">
+        <Footer />
       </div>
-    </main>
+    </div>
   )
 }

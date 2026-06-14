@@ -4,6 +4,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>あなたの北海道は何 %？</title>
+    <!-- FOCT 防止: React レンダリング前にテーマを確定する -->
+    <script>
+      (function () {
+        var t = localStorage.getItem('theme');
+        var dark = t === 'dark' || (t !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+      })();
+    </script>
   </head>
   <body>
     <div id="app"></div>
