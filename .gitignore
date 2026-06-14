@@ -43,6 +43,11 @@ tmp_*.txt
 # データ整形スクリプトのキャッシュ（生データ・展開済みファイル）
 scripts/cache/
 
+# Python キャッシュ
+__pycache__/
+*.pyc
+.pytest_cache/
+
 # ログ
 .pnpm-debug.log
 npm-debug.log
