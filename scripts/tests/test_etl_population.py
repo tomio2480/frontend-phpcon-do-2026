@@ -46,3 +46,19 @@ def test_loads_from_custom_path(tmp_path):
     import etl_population
     data = etl_population.load(csv_file)
     assert data == {"01101": 12345, "01202": 67890}
+
+
+def test_raises_on_zero_population(tmp_path):
+    csv_file = tmp_path / "pop.csv"
+    csv_file.write_text("code,population\n01101,0\n", encoding="utf-8")
+    import etl_population
+    with pytest.raises(ValueError, match="01101"):
+        etl_population.load(csv_file)
+
+
+def test_raises_on_negative_population(tmp_path):
+    csv_file = tmp_path / "pop.csv"
+    csv_file.write_text("code,population\n01202,-100\n", encoding="utf-8")
+    import etl_population
+    with pytest.raises(ValueError, match="01202"):
+        etl_population.load(csv_file)

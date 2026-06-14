@@ -45,7 +45,7 @@ cd scripts
 python build_municipalities.py
 ```
 
-テスト（pytest）：
+テスト（pytest）は以下で実行する．
 
 ```bash
 cd scripts
@@ -79,7 +79,7 @@ python -m pytest tests/
 ### 面積データ
 
 - **算出方法**：`public/data/hokkaido.geojson` のポリゴンから計算した近似値
-- **GeoJSON 出典**：国土交通省「国土数値情報 行政区域データ」
+- **GeoJSON 出典**：国土交通省「国土数値情報行政区域データ」
 - **利用規約**：[国土数値情報ダウンロードサービス利用規約](https://nlftp.mlit.go.jp/ksj/other/yakkan.html)
 - **精度**：GeoJSON 簡略化に伴い公式値と最大 ±20% 程度の差が生じる
 

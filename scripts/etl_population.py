@@ -12,5 +12,11 @@ def load(path: pathlib.Path = DATA_PATH) -> dict[str, int]:
     with open(path, encoding="utf-8", newline="") as f:
         reader = csv.DictReader(f)
         for row in reader:
-            result[row["code"]] = int(row["population"])
+            code = row["code"]
+            pop = int(row["population"])
+            if pop <= 0:
+                raise ValueError(
+                    f"人口が 0 以下のデータが検出されました: code={code}, population={pop}"
+                )
+            result[code] = pop
     return result

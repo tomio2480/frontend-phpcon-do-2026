@@ -76,3 +76,41 @@ def test_load_without_sapporo_city(tmp_path):
     import etl_furusato
     data = etl_furusato.load(csv_file, population=None)
     assert data == {"01202": (1_000_000, 50), "01207": (2_000_000, 100)}
+
+
+def test_raises_on_missing_ward_population(tmp_path):
+    """population に区コードが欠けている場合は ValueError を送出する"""
+    csv_file = tmp_path / "furusato.csv"
+    csv_file.write_text(
+        f"code,amount,count\n01100,{SAPPORO_AMOUNT_TOTAL},{SAPPORO_COUNT_TOTAL}\n",
+        encoding="utf-8",
+    )
+    incomplete_pop = {"01101": 255_288}  # 残りの区コードが欠損
+    import etl_furusato
+    with pytest.raises(ValueError, match="01102"):
+        etl_furusato.load(csv_file, population=incomplete_pop)
+
+
+def test_raises_on_negative_amount(tmp_path):
+    csv_file = tmp_path / "furusato.csv"
+    csv_file.write_text("code,amount,count\n01202,-1,50\n", encoding="utf-8")
+    import etl_furusato
+    with pytest.raises(ValueError, match="01202"):
+        etl_furusato.load(csv_file, population=None)
+
+
+def test_raises_on_negative_count(tmp_path):
+    csv_file = tmp_path / "furusato.csv"
+    csv_file.write_text("code,amount,count\n01202,1000000,-1\n", encoding="utf-8")
+    import etl_furusato
+    with pytest.raises(ValueError, match="01202"):
+        etl_furusato.load(csv_file, population=None)
+
+
+def test_zero_amount_and_count_accepted(tmp_path):
+    """受入実績がない自治体は amount=0, count=0 を許容する"""
+    csv_file = tmp_path / "furusato.csv"
+    csv_file.write_text("code,amount,count\n01202,0,0\n", encoding="utf-8")
+    import etl_furusato
+    data = etl_furusato.load(csv_file, population=None)
+    assert data == {"01202": (0, 0)}

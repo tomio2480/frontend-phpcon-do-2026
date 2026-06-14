@@ -49,3 +49,50 @@ def test_known_area_within_tolerance(area_data):
         assert abs(actual - expected) / expected <= _TOLERANCE, (
             f"{code}: expected {expected:.2f} km², got {actual:.2f} km²"
         )
+
+
+def test_polygon_with_hole_subtracts_inner_ring(tmp_path):
+    """ホールを持つ Polygon はホール面積を差し引く"""
+    import json, etl_area
+    # 10km x 10km の正方形に 2km x 2km の穴
+    outer = [[0, 0], [0.0899, 0], [0.0899, 0.0899], [0, 0.0899], [0, 0]]
+    inner = [[0.01, 0.01], [0.028, 0.01], [0.028, 0.028], [0.01, 0.028], [0.01, 0.01]]
+    gj = {
+        "type": "FeatureCollection",
+        "features": [
+            {
+                "type": "Feature",
+                "properties": {"code": "99001"},
+                "geometry": {"type": "Polygon", "coordinates": [outer, inner]},
+            }
+        ],
+    }
+    path = tmp_path / "test.geojson"
+    path.write_text(json.dumps(gj), encoding="utf-8")
+    result = etl_area.load(path)
+    assert "99001" in result
+    area_without_hole = etl_area._ring_area_km2(outer)
+    area_of_hole = etl_area._ring_area_km2(inner)
+    expected = round(area_without_hole - area_of_hole, 2)
+    assert result["99001"] == expected
+
+
+def test_raises_on_zero_or_negative_area(tmp_path):
+    """面積が 0 以下のフィーチャは ValueError を送出する"""
+    import json, etl_area
+    # 縮退したポリゴン（3点が同一線上）
+    degenerate = [[0, 0], [0.001, 0], [0.002, 0], [0, 0]]
+    gj = {
+        "type": "FeatureCollection",
+        "features": [
+            {
+                "type": "Feature",
+                "properties": {"code": "99002"},
+                "geometry": {"type": "Polygon", "coordinates": [degenerate]},
+            }
+        ],
+    }
+    path = tmp_path / "degenerate.geojson"
+    path.write_text(json.dumps(gj), encoding="utf-8")
+    with pytest.raises(ValueError, match="99002"):
+        etl_area.load(path)

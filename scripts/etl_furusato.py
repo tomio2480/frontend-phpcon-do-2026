@@ -23,7 +23,15 @@ def load(
     with open(path, encoding="utf-8", newline="") as f:
         reader = csv.DictReader(f)
         for row in reader:
-            raw[row["code"]] = (int(row["amount"]), int(row["count"]))
+            code = row["code"]
+            amount = int(row["amount"])
+            count = int(row["count"])
+            if amount < 0 or count < 0:
+                raise ValueError(
+                    f"金額または件数が負のデータが検出されました: "
+                    f"code={code}, amount={amount}, count={count}"
+                )
+            raw[code] = (amount, count)
 
     if _SAPPORO_CITY_CODE not in raw:
         return raw
@@ -32,8 +40,17 @@ def load(
         return raw
 
     sapporo_amount, sapporo_count = raw.pop(_SAPPORO_CITY_CODE)
-    ward_pops = {code: population[code] for code in _SAPPORO_WARD_CODES if code in population}
+
+    missing_wards = [c for c in _SAPPORO_WARD_CODES if c not in population]
+    if missing_wards:
+        raise ValueError(
+            f"札幌市の区の人口データが不足しています: {sorted(missing_wards)}"
+        )
+
+    ward_pops = {code: population[code] for code in _SAPPORO_WARD_CODES}
     total_pop = sum(ward_pops.values())
+    if total_pop <= 0:
+        raise ValueError("札幌市の人口合計が 0 以下です。")
 
     accumulated_amount = 0
     accumulated_count = 0

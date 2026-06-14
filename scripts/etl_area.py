@@ -39,15 +39,27 @@ def _ring_area_km2(ring: list[list[float]]) -> float:
     return abs(area) / 2.0
 
 
+def _polygon_area_km2(rings: list[list[list[float]]]) -> float:
+    """GeoJSON Polygon の rings から面積を返す。
+
+    rings[0] が外側リング，rings[1:] がホール（内側リング）。
+    RFC 7946 §3.1.6 に従いホール面積を差し引く。
+    """
+    area = _ring_area_km2(rings[0])
+    for hole in rings[1:]:
+        area -= _ring_area_km2(hole)
+    return area
+
+
 def _geometry_area_km2(geometry: dict) -> float:
     """GeoJSON Geometry オブジェクトの面積を km² で返す。"""
     gtype = geometry["type"]
     coords = geometry["coordinates"]
 
     if gtype == "Polygon":
-        return _ring_area_km2(coords[0])
+        return _polygon_area_km2(coords)
     if gtype == "MultiPolygon":
-        return sum(_ring_area_km2(poly[0]) for poly in coords)
+        return sum(_polygon_area_km2(poly) for poly in coords)
     raise ValueError(f"Unsupported geometry type: {gtype}")
 
 
@@ -61,6 +73,11 @@ def load(geojson_path: pathlib.Path = GEOJSON_PATH) -> dict[str, float]:
         code = feature["properties"]["code"]
         if code in _EXCLUDED_CODES:
             continue
-        result[code] = round(_geometry_area_km2(feature["geometry"]), 2)
+        area = round(_geometry_area_km2(feature["geometry"]), 2)
+        if area <= 0:
+            raise ValueError(
+                f"面積が 0 以下のフィーチャが検出されました: code={code}, area={area}"
+            )
+        result[code] = area
 
     return result
