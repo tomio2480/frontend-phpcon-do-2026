@@ -6,6 +6,18 @@
 
 GitHub Pages でホストされており，サーバーサイドの実行環境を必要としない．
 
+## 公開 URL
+
+https://tomio2480.github.io/frontend-phpcon-do-2026/
+
+## 主な機能
+
+- 市区町村の選択は地図クリックとチェックボックスの両方に対応する．
+- 地図の市区町村にマウスを重ねると名称をツールチップで表示する．
+- ライト/ダークテーマに対応し，システム設定に追従しつつ手動切り替えもできる．
+- 選択結果は X へ投稿でき，選択状態を含む URL（`?codes=...`）で共有できる．
+- 北方領土に置かれた6村も選択対象に含む（面積のみ計上）．
+
 ## 動作環境
 
 - モダンブラウザ（Chrome / Firefox / Safari / Edge の最新版）
@@ -38,7 +50,7 @@ pnpm test:e2e      # Playwright（E2E・アクセシビリティ）
 
 `public/data/municipalities.json` と `public/data/total.json` は Python スクリプトで生成する．
 
-前提条件：Python 3.11 以上，`public/data/hokkaido.geojson` が存在すること．
+前提条件：Python 3.10 以上，`public/data/hokkaido.geojson` が存在すること．
 
 ```bash
 cd scripts
@@ -60,7 +72,7 @@ python -m pytest tests/
 | ビルドツール | Vite 8 |
 | CSS | Tailwind CSS 4 |
 | 地図 | Leaflet 1.9.4 |
-| PHP 実行 | @php-wasm/web 3.1.38（PHP 8.5） |
+| PHP 実行 | @php-wasm/web 3.1.38（PHP 8.4） |
 | パッケージ管理 | pnpm |
 | ホスティング | GitHub Pages |
 
@@ -78,10 +90,9 @@ python -m pytest tests/
 
 ### 面積データ
 
-- **算出方法**：`public/data/hokkaido.geojson` のポリゴンから計算した近似値
-- **GeoJSON 出典**：国土交通省「国土数値情報行政区域データ」
-- **利用規約**：[国土数値情報ダウンロードサービス利用規約](https://nlftp.mlit.go.jp/ksj/other/yakkan.html)
+- **算出方法**：市区町村境界 GeoJSON（後述）のポリゴンから計算した近似値
 - **精度**：GeoJSON 簡略化に伴い公式値と最大 ±20% 程度の差が生じる
+- **参考原典**：国土地理院「全国都道府県市区町村別面積調」
 
 ### 人口データ
 
@@ -90,13 +101,15 @@ python -m pytest tests/
 
 ### ふるさと納税データ
 
-- **出典**：総務省「ふるさと納税に関する現況調査結果」
+- **出典**：総務省「ふるさと納税に関する現況調査結果」令和7年度実施（令和6年度実績）
 - **利用規約**：[政府標準利用規約（第 2.0 版）](https://www.digital.go.jp/resources/open_data/government-standard-terms-of-use/)
+- 北方領土6村は行政上の集計値が存在しないため受入額・件数をゼロとして扱う
 
-### 地図データ（GeoJSON）
+### 市区町村境界（GeoJSON）
 
-- **出典**：© OpenStreetMap contributors
-- **利用規約**：[Open Database License (ODbL)](https://opendatacommons.org/licenses/odbl/)
-- 地図タイルは使用せず，市区町村境界の GeoJSON のみ使用する
+- **出典**：国土交通省「国土数値情報 行政区域データ（N03，2024年）」
+- **利用規約**：[国土数値情報ダウンロードサービス利用規約](https://nlftp.mlit.go.jp/ksj/other/yakkan.html)
+- 面積算出と地図描画の双方で同一の GeoJSON を使用する
+- 地図描画は Leaflet（BSD-2-Clause）を用い，外部の地図タイルは使用しない
 
 > 上記データ自体には GPL は適用されない．各出典の利用規約に従う．
