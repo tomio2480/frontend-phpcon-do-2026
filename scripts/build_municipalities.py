@@ -1,15 +1,20 @@
 """
 北海道市区町村データ整形スクリプト
 
-■ データソース
+■ データソース（いずれも政府公式データ）
 - 市区町村コード: 総務省「全国地方公共団体コード」（2024年6月26日現在）
-  https://www.eltax.lta.go.jp/documents/10705
-- 面積: hokkaido.geojson のジオメトリから計算（±20% 程度の近似値）
-  原典: 国土地理院「全国都道府県市区町村別面積調」令和5年(2023年)10月1日現在
+  https://www.soumu.go.jp/denshijiti/code.html
+- 行政区域・面積: 国土交通省「国土数値情報 行政区域データ（N03, 2024年）」の
+  GeoJSON ジオメトリから計算（±20% 程度の近似値）
+  https://nlftp.mlit.go.jp/ksj/gml/datalist/KsjTmplt-N03-2024.html
+  参考原典: 国土地理院「全国都道府県市区町村別面積調」令和5年(2023年)10月1日現在
+  https://www.gsi.go.jp/KOKUJYOHO/MENCHO-title.htm
 - 人口: scripts/data/population.csv
-  原典: 住民基本台帳に基づく人口（2024年1月1日現在）
+  原典: 総務省「住民基本台帳に基づく人口，人口動態及び世帯数」（2024年1月1日現在）
+  https://www.soumu.go.jp/main_sosiki/jichi_gyousei/daityo/jinkou_jinkoudoutai-setaisuu.html
 - ふるさと納税: scripts/data/furusato.csv
-  原典: 総務省「ふるさと納税に関する現況調査結果」令和6年度実施分
+  原典: 総務省「ふるさと納税に関する現況調査結果」令和6年度実施（令和5年度実績）
+  https://www.soumu.go.jp/main_sosiki/jichi_zeisei/czaisei/czaisei_seido/furusato/archive/
 
 ■ 基準日
   データ取得日: 2026年5月31日
@@ -39,7 +44,10 @@ import etl_population
 OUTPUT_DIR = pathlib.Path(__file__).parent.parent / "public" / "data"
 
 # 札幌市のふるさと納税合計（市全体。10区の人口比で按分する）
-# 出典: 令和6年度実施分現況調査 hokkaidodo.jp より
+# 出典: 総務省「ふるさと納税に関する現況調査結果」令和6年度実施（令和5年度実績）
+#       各市町村のふるさと納税受入額（Excel）より札幌市の値を採用
+#       https://www.soumu.go.jp/main_sosiki/jichi_zeisei/czaisei/czaisei_seido/furusato/archive/
+# TODO: 上記公式 Excel の最新値と突合し、数値の一致を確認すること
 SAPPORO_FURUSATO_AMOUNT = 3_904_088_764   # 円
 SAPPORO_FURUSATO_COUNT  = 208_028         # 件
 
