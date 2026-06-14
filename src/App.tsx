@@ -18,8 +18,14 @@ export default function App() {
   const { pref, isDark, cycleTheme } = useTheme()
   const { selected, toggle, toggleCodes, selectAll } = useSelection()
   const [municipalities, setMunicipalities] = useState<Municipality[]>([])
+  const [mapReady, setMapReady] = useState(false)
+  const handleMapReady = useCallback(() => setMapReady(true), [])
   const selectedCodes = useMemo(() => Array.from(selected), [selected])
   const { result, isCalculating, error, isPhpLoading, isPhpError } = useAggregate(selectedCodes)
+
+  // PHP・地図の双方が整うまでローディング画面のみを表示する（画面のちらつき防止）
+  // PHP エラー時は読み込みを終え，エラーメッセージを表示する
+  const isInitializing = !isPhpError && (isPhpLoading || !mapReady)
 
   const toggleSapporo = useCallback(() => toggleCodes(SAPPORO_CODES), [toggleCodes])
 
@@ -60,7 +66,7 @@ export default function App() {
       </header>
 
       <main>
-        <LoadingOverlay isLoading={isPhpLoading} />
+        <LoadingOverlay isLoading={isInitializing} />
         <div class="p-4 max-w-5xl mx-auto">
           <h1 class="text-2xl font-bold mb-4">あなたの北海道は何 %？</h1>
           {isPhpError && (
@@ -68,12 +74,12 @@ export default function App() {
               PHP エンジンの読み込みに失敗しました．ページを再読み込みしてください．
             </p>
           )}
-          <div inert={isPhpLoading || isPhpError || undefined}>
+          <div inert={isInitializing || isPhpError || undefined}>
             {/* モバイルでは結果パネルを上部に固定する */}
             <div aria-live="polite" aria-atomic="true" class="sticky top-0 z-10 bg-background pb-2 md:static md:pb-0">
               <ResultPanel result={result} isCalculating={isCalculating} />
             </div>
-            <HokkaidoMap isDark={isDark} onClick={toggle} selected={selected} />
+            <HokkaidoMap isDark={isDark} onClick={toggle} onReady={handleMapReady} selected={selected} />
             {error && <p class="mt-2 text-red-600 text-sm">集計エラー: {error.message}</p>}
             <ShareButton result={result ?? ZERO_RESULT} selectedCodes={selectedCodes} />
             <CheckboxList municipalities={municipalities} selected={selected} onToggle={toggle} regionActions={regionActions} />

@@ -8,7 +8,7 @@ describe('LoadingOverlay', () => {
   it('isLoading=true のとき読み込み中メッセージを表示する', () => {
     render(<LoadingOverlay isLoading />)
     expect(screen.getByRole('status')).toBeTruthy()
-    expect(screen.getByText('PHP エンジンを読み込み中…')).toBeTruthy()
+    expect(screen.getByText('読み込み中…')).toBeTruthy()
   })
 
   it('isLoading=false のとき何も描画しない', () => {

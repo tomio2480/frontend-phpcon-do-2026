@@ -27,6 +27,7 @@ interface Props {
   isDark?: boolean
   onHover?: (code: string | null) => void
   onClick?: (code: string) => void
+  onReady?: () => void
   selected?: Set<string>
 }
 
@@ -34,16 +35,18 @@ function applyAriaPressed(el: Element, isSelected: boolean) {
   el.setAttribute('aria-pressed', String(isSelected))
 }
 
-export default function HokkaidoMap({ isDark = false, onHover, onClick, selected }: Props) {
+export default function HokkaidoMap({ isDark = false, onHover, onClick, onReady, selected }: Props) {
   const containerRef = useRef<HTMLDivElement>(null)
   const onHoverRef = useRef(onHover)
   const onClickRef = useRef(onClick)
+  const onReadyRef = useRef(onReady)
   const selectedRef = useRef(selected)
   const layersRef = useRef<Map<string, L.Path[]>>(new Map())
   const stylesRef = useRef(buildStyles(isDark))
 
   useEffect(() => { onHoverRef.current = onHover }, [onHover])
   useEffect(() => { onClickRef.current = onClick }, [onClick])
+  useEffect(() => { onReadyRef.current = onReady }, [onReady])
 
   useEffect(() => {
     selectedRef.current = selected
@@ -139,8 +142,12 @@ export default function HokkaidoMap({ isDark = false, onHover, onClick, selected
             }
           },
         }).addTo(map)
+        // 描画反映後に準備完了を通知する（ローディング解除のトリガー）
+        requestAnimationFrame(() => { if (isMounted) onReadyRef.current?.() })
       })
-      .catch(() => {})
+      .catch(() => {
+        if (isMounted) onReadyRef.current?.()
+      })
 
     return () => {
       isMounted = false

@@ -4,11 +4,15 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import App from './App'
 import { useAggregate } from './hooks/usePhp'
 
-vi.mock('./components/HokkaidoMap', () => ({
-  default: ({ onClick }: { onClick?: (code: string) => void }) => (
-    <button type="button" aria-label="地図" data-testid="hokkaido-map-mock" onClick={() => onClick?.('01101')} />
-  ),
-}))
+vi.mock('./components/HokkaidoMap', async () => {
+  const { useEffect } = await import('preact/hooks')
+  return {
+    default: ({ onClick, onReady }: { onClick?: (code: string) => void; onReady?: () => void }) => {
+      useEffect(() => { onReady?.() }, [])
+      return <button type="button" aria-label="地図" data-testid="hokkaido-map-mock" onClick={() => onClick?.('01101')} />
+    },
+  }
+})
 
 vi.mock('./php/runtime', () => ({
   getPhp: vi.fn().mockReturnValue(new Promise(() => {})),
