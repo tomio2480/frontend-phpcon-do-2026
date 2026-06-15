@@ -62,6 +62,16 @@ describe('App', () => {
     expect(screen.getByRole('heading', { level: 1 }).textContent).toContain('北海道')
   })
 
+  it('タイトル下に操作方法の説明を表示する', () => {
+    render(<App />)
+    expect(screen.getByText(/クリックするか，下の一覧でチェック/)).toBeTruthy()
+  })
+
+  it('LT 動画へのリンクを表示する', () => {
+    render(<App />)
+    expect(screen.getByRole('link', { name: /上川空知駆動開発/ })).toBeTruthy()
+  })
+
   it('HokkaidoMap を表示する', () => {
     render(<App />)
     expect(screen.getByTestId('hokkaido-map-mock')).toBeTruthy()

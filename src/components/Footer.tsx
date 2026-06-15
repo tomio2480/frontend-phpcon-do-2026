@@ -1,18 +1,4 @@
-type SourceLink = {
-  href: string
-  text: string
-}
-
-function Ext({ href, text }: SourceLink) {
-  return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      class="underline hover:text-text transition-colors"
-    >{text}</a>
-  )
-}
+import ExternalLink from './ExternalLink'
 
 export default function Footer() {
   return (
@@ -28,25 +14,25 @@ export default function Footer() {
         <li>
           <span class="font-medium">市区町村コード</span>：
           総務省「全国地方公共団体コード」（2024年6月26日現在）．
-          {' '}<Ext href="https://www.soumu.go.jp/denshijiti/code.html" text="総務省 全国地方公共団体コード（Excel／PDF）" />
+          {' '}<ExternalLink href="https://www.soumu.go.jp/denshijiti/code.html" text="総務省 全国地方公共団体コード（Excel／PDF）" />
         </li>
         <li>
           <span class="font-medium">行政区域・面積</span>：
           区域形状は国土交通省「国土数値情報 行政区域データ（N03，2024年）」の
           GeoJSON を使用．面積はそのジオメトリから算出した近似値（±20% 程度の誤差を含む目安値）です．
-          {' '}<Ext href="https://nlftp.mlit.go.jp/ksj/gml/datalist/KsjTmplt-N03-2024.html" text="国土数値情報 行政区域データ" />
-          {'，参考：'}<Ext href="https://www.gsi.go.jp/KOKUJYOHO/MENCHO-title.htm" text="国土地理院 全国都道府県市区町村別面積調" />
+          {' '}<ExternalLink href="https://nlftp.mlit.go.jp/ksj/gml/datalist/KsjTmplt-N03-2024.html" text="国土数値情報 行政区域データ" />
+          {'，参考：'}<ExternalLink href="https://www.gsi.go.jp/KOKUJYOHO/MENCHO-title.htm" text="国土地理院 全国都道府県市区町村別面積調" />
         </li>
         <li>
           <span class="font-medium">人口</span>：
           総務省「住民基本台帳に基づく人口，人口動態及び世帯数」2024年1月1日現在．
-          {' '}<Ext href="https://www.soumu.go.jp/main_sosiki/jichi_gyousei/daityo/jinkou_jinkoudoutai-setaisuu.html" text="総務省 住民基本台帳人口" />
+          {' '}<ExternalLink href="https://www.soumu.go.jp/main_sosiki/jichi_gyousei/daityo/jinkou_jinkoudoutai-setaisuu.html" text="総務省 住民基本台帳人口" />
         </li>
         <li>
           <span class="font-medium">ふるさと納税</span>：
           総務省「ふるさと納税に関する現況調査結果」令和7年度実施（令和6年度実績）．
           市町村別の受入額・受入件数の Excel を使用．
-          {' '}<Ext href="https://www.soumu.go.jp/main_sosiki/jichi_zeisei/czaisei/czaisei_seido/furusato/archive/" text="総務省 ふるさと納税 関連資料" />
+          {' '}<ExternalLink href="https://www.soumu.go.jp/main_sosiki/jichi_zeisei/czaisei/czaisei_seido/furusato/archive/" text="総務省 ふるさと納税 関連資料" />
         </li>
       </ul>
 
@@ -58,7 +44,7 @@ export default function Footer() {
           歯舞群島を除く国後島・択捉島・色丹島に置かれた北方領土の自治体です．
           いずれも総務省の全国地方公共団体コードに正式なコードが割り当てられているため，
           本アプリでも選択対象に含めています．
-          {' '}<Ext href="https://www.soumu.go.jp/denshijiti/code.html" text="参照：全国地方公共団体コード" />
+          {' '}<ExternalLink href="https://www.soumu.go.jp/denshijiti/code.html" text="参照：全国地方公共団体コード" />
           ．面積は GeoJSON ジオメトリから算出した近似値です．
           人口・ふるさと納税は，本アプリが用いた公式統計
           （住民基本台帳人口・ふるさと納税現況調査）に6村が含まれないため，ゼロとしています．

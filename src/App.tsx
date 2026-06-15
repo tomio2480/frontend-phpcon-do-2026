@@ -6,6 +6,7 @@ import ShareButton from './components/ShareButton'
 import LoadingOverlay from './components/LoadingOverlay'
 import ThemeToggle from './components/ThemeToggle'
 import Footer from './components/Footer'
+import AboutTool from './components/AboutTool'
 import { useSelection } from './hooks/useSelection'
 import { useTheme } from './hooks/useTheme'
 import { useAggregate } from './hooks/usePhp'
@@ -68,7 +69,12 @@ export default function App() {
       <main>
         <LoadingOverlay isLoading={isInitializing} />
         <div class="p-4 max-w-5xl mx-auto">
-          <h1 class="text-2xl font-bold mb-4">あなたの北海道は何 %？</h1>
+          <h1 class="text-2xl font-bold mb-2">あなたの北海道は何 %？</h1>
+          <p class="text-sm text-text-2 mb-4 leading-relaxed">
+            選んだ市町村が北海道全体に占める割合を集計するツールです．
+            面積・人口・ふるさと納税（受入額・件数）の4指標を，選択した市町村の合計値で表示します．
+            地図の地域をクリックするか，下の一覧でチェックを入れると結果が自動で更新されます．
+          </p>
           {isPhpError && (
             <p role="alert" class="mt-2 p-3 rounded-lg bg-red-100 text-red-700 text-sm">
               PHP エンジンの読み込みに失敗しました．ページを再読み込みしてください．
@@ -88,6 +94,7 @@ export default function App() {
       </main>
 
       <div class="max-w-5xl mx-auto px-4">
+        <AboutTool />
         <Footer />
       </div>
     </div>
