@@ -27,9 +27,10 @@ const C = {
 }
 
 // 高精細（OGP 用）と簡略（favicon 用）の 2 種を生成する．
-const sil = buildSilhouette('public/data/hokkaido.geojson', { tol: 0.0016, decimals: 1 })
-// favicon は主島のみ（topN:1）に絞り，小サイズでの判読性を確保する．
-const silLite = buildSilhouette('public/data/hokkaido.geojson', { tol: 0.005, topN: 1, margin: 0.02, decimals: 1 })
+const sil = buildSilhouette('public/data/hokkaido.geojson', { tol: 0.0016, minDiag: 0.012, decimals: 1 })
+// favicon も主島だけに絞らず離島（北方四島・利尻・礼文・奥尻ほか）を含めた全域とする．
+// 領土の正確性を小サイズでの判読性より優先する方針のため topN は設けない．
+const silLite = buildSilhouette('public/data/hokkaido.geojson', { tol: 0.004, minDiag: 0.012, margin: 0.05, decimals: 1 })
 console.log('silhouette  :', JSON.stringify(sil.stats))
 console.log('silhouetteLt:', JSON.stringify(silLite.stats))
 
