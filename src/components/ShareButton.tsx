@@ -35,7 +35,7 @@ export default function ShareButton({ result, selectedCodes = [], allCodes = [] 
   const shareUrl = buildShareUrl(selectedCodes, allCodes)
   const url = buildXUrl(buildPostText(result), shareUrl)
   return (
-    <div class="mt-4">
+    <div>
       <a
         href={url}
         target="_blank"

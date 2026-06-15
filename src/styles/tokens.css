@@ -26,6 +26,7 @@
   --color-surface:          #FFFFFF;   /* カード背景, text と 17:1 */
   --color-text:             #1C1230;   /* 極濃バイオレット, contrast 16:1 on bg */
   --color-text-2:           #4B4070;   /* 中濃バイオレット, contrast 9:1 on bg */
+  --color-link:             #6E2A9E;   /* リンク文字, 彩度高め紫で本文と区別, contrast 7.8:1 on bg */
   --color-accent-lilac:     #C4A0D8;   /* 地図 選択fill */
   --color-accent-lavender:  #A880C8;   /* 地図 ホバーfill */
   --color-accent-yellow:    #F4D35E;   /* ボタン背景 (菜の花色) */
@@ -40,6 +41,7 @@ html[data-theme="light"] {
   --color-surface:          #FFFFFF;
   --color-text:             #1C1230;
   --color-text-2:           #4B4070;
+  --color-link:             #6E2A9E;
   --color-accent-lilac:     #C4A0D8;
   --color-accent-lavender:  #A880C8;
   --color-accent-yellow:    #F4D35E;
@@ -59,6 +61,7 @@ html[data-theme="dark"] {
   --color-surface:          #261D38;   /* カード背景, text と ~12:1 */
   --color-text:             #F0EAFF;   /* 極薄ラベンダー白, contrast ~15:1 on bg */
   --color-text-2:           #C4B6E0;   /* 中薄ラベンダー, contrast ~9:1 on bg (AAA) */
+  --color-link:             #CBA6EE;   /* リンク文字, 明るめ紫で本文と区別, contrast 9:1 on bg */
   --color-accent-lilac:     #B79AD8;   /* 地図 選択fill（明度up で識別性向上） */
   --color-accent-lavender:  #9678BC;   /* 地図 ホバーfill */
   --color-accent-yellow:    #F4D35E;   /* ボタン背景 (同色) */

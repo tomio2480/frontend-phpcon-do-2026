@@ -33,4 +33,11 @@ describe('ExternalLink', () => {
     const link = screen.getByRole('link') as HTMLAnchorElement
     expect(link.getAttribute('aria-label')).toContain('新しいタブ')
   })
+
+  it('本文と区別できる専用リンク色と下線を付与する', () => {
+    render(<ExternalLink href="https://example.com" text="サンプル" />)
+    const link = screen.getByRole('link') as HTMLAnchorElement
+    expect(link.className).toContain('text-link')
+    expect(link.className).toContain('underline')
+  })
 })

@@ -18,7 +18,7 @@ const ZERO_RESULT = { area_pct: 0, population_pct: 0, furusato_amount_pct: 0, fu
 
 export default function App() {
   const { pref, isDark, cycleTheme } = useTheme()
-  const { selected, toggle, toggleCodes, selectAll } = useSelection()
+  const { selected, toggle, toggleCodes, selectAll, clearAll } = useSelection()
   const [municipalities, setMunicipalities] = useState<Municipality[]>([])
   const [mapReady, setMapReady] = useState(false)
   const handleMapReady = useCallback(() => setMapReady(true), [])
@@ -103,7 +103,17 @@ export default function App() {
             </div>
             <HokkaidoMap isDark={isDark} onClick={toggle} onReady={handleMapReady} selected={selected} />
             {error && <p class="mt-2 text-red-600 text-sm">集計エラー: {error.message}</p>}
-            <ShareButton result={result ?? ZERO_RESULT} selectedCodes={selectedCodes} allCodes={allCodes} />
+            <div class="mt-4 flex flex-wrap items-center gap-3">
+              <ShareButton result={result ?? ZERO_RESULT} selectedCodes={selectedCodes} allCodes={allCodes} />
+              <button
+                type="button"
+                onClick={clearAll}
+                disabled={selected.size === 0}
+                class="rounded-md border border-text/30 px-4 py-2 text-sm font-medium text-text hover:bg-text/5 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                すべての選択を解除
+              </button>
+            </div>
             <CheckboxList municipalities={municipalities} selected={selected} onToggle={toggle} regionActions={regionActions} />
           </div>
         </div>

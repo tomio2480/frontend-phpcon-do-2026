@@ -150,4 +150,24 @@ describe('App', () => {
 
     expect(screen.getByLabelText<HTMLInputElement>('中央区').checked).toBe(true)
   })
+
+  it('未選択時はすべての選択を解除ボタンを無効にする', () => {
+    render(<App />)
+    const clear = screen.getByRole('button', { name: /すべての選択を解除/ }) as HTMLButtonElement
+    expect(clear.disabled).toBe(true)
+  })
+
+  it('すべての選択を解除ボタンで全選択を解除する', async () => {
+    render(<App />)
+    await waitFor(() => screen.getByLabelText('中央区'))
+
+    await userEvent.click(screen.getByTestId('hokkaido-map-mock'))
+    expect(screen.getByLabelText<HTMLInputElement>('中央区').checked).toBe(true)
+
+    const clear = screen.getByRole('button', { name: /すべての選択を解除/ }) as HTMLButtonElement
+    expect(clear.disabled).toBe(false)
+
+    await userEvent.click(clear)
+    expect(screen.getByLabelText<HTMLInputElement>('中央区').checked).toBe(false)
+  })
 })
