@@ -107,9 +107,9 @@ export default function App() {
               <ShareButton result={result ?? ZERO_RESULT} selectedCodes={selectedCodes} allCodes={allCodes} />
               <button
                 type="button"
-                onClick={clearAll}
-                disabled={selected.size === 0}
-                class="rounded-md border border-text/30 px-4 py-2 text-sm font-medium text-text hover:bg-text/5 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                onClick={() => { if (selected.size > 0) clearAll() }}
+                aria-disabled={selected.size === 0}
+                class="rounded-md border border-text/30 px-4 py-2 text-sm font-medium text-text hover:bg-text/5 transition-colors aria-disabled:opacity-40 aria-disabled:cursor-not-allowed"
               >
                 すべての選択を解除
               </button>
