@@ -18,6 +18,12 @@ describe('AboutTool', () => {
     expect(link.rel).toContain('noopener')
   })
 
+  it('LT 動画リンクの行頭に動画を示すアイコンを表示する', () => {
+    const { container } = render(<AboutTool />)
+    const icon = container.querySelector('[aria-hidden="true"]')
+    expect(icon?.textContent).toContain('▶️')
+  })
+
   it('「Claude からのおすすめポイント」の見出しを持つ', () => {
     render(<AboutTool />)
     expect(screen.getByRole('heading', { name: /Claude からのおすすめポイント/ })).toBeTruthy()
@@ -26,6 +32,12 @@ describe('AboutTool', () => {
   it('php-wasm への言及を含む', () => {
     render(<AboutTool />)
     expect(screen.getByText(/php-wasm/)).toBeTruthy()
+  })
+
+  it('合同開催である両カンファレンスに言及する', () => {
+    render(<AboutTool />)
+    expect(screen.getByText(/フロントエンドカンファレンス北海道と/)).toBeTruthy()
+    expect(screen.getByText(/PHP カンファレンス北海道の合同開催/)).toBeTruthy()
   })
 
   it('「tomio2480 のおすすめポイント」の見出しを持つ', () => {

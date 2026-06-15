@@ -14,7 +14,10 @@ export default function AboutTool() {
           本ツールは，#frontend_phpcon_do で紹介した下記の LT 動画で映している
           「草原駆動開発」の取り組みのなかで生まれたものです．
         </p>
-        <p><ExternalLink href={LT_VIDEO_URL} text={LT_VIDEO_TITLE} /></p>
+        <p>
+          <span aria-hidden="true">▶️</span>{' '}
+          <ExternalLink href={LT_VIDEO_URL} text={LT_VIDEO_TITLE} />
+        </p>
       </div>
 
       {/* Claude からのおすすめポイント */}
@@ -22,8 +25,10 @@ export default function AboutTool() {
         <h2 class="text-sm font-semibold text-text">Claude からのおすすめポイント</h2>
         <ul class="list-disc pl-5 space-y-1">
           <li>
-            フロントエンドカンファレンスで PHP を扱う #frontend_phpcon_do の主旨に合わせ，
-            集計処理を PHP で書き php-wasm（WebAssembly）でブラウザ内実行しています．
+            #frontend_phpcon_do は，フロントエンドカンファレンス北海道と
+            PHP カンファレンス北海道の合同開催です．その双方にちなみ，
+            ブラウザ（フロントエンド）上で PHP の集計処理を
+            php-wasm（WebAssembly）として実行しています．
           </li>
           <li>
             集計ロジックの本体は 1 枚の PHP ファイルです．
