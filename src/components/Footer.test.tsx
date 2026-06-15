@@ -51,4 +51,10 @@ describe('Footer', () => {
     render(<Footer />)
     expect(screen.getByText(/© 2026 tomio2480/)).toBeTruthy()
   })
+
+  it('コピーライト表記を中央揃えで描画する', () => {
+    render(<Footer />)
+    const copyright = screen.getByText(/© 2026 tomio2480/)
+    expect(copyright.className).toContain('text-center')
+  })
 })

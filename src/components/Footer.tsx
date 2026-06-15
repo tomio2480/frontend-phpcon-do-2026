@@ -87,7 +87,7 @@ export default function Footer() {
         </ul>
       </section>
 
-      <p class="mt-6 text-text-2">© 2026 tomio2480</p>
+      <p class="mt-6 text-center text-text-2">© 2026 tomio2480</p>
     </footer>
   )
 }
