@@ -37,6 +37,7 @@ function applyAriaPressed(el: Element, isSelected: boolean) {
 
 export default function HokkaidoMap({ isDark = false, onHover, onClick, onReady, selected }: Props) {
   const containerRef = useRef<HTMLDivElement>(null)
+  const hintRef = useRef<HTMLDivElement>(null)
   const onHoverRef = useRef(onHover)
   const onClickRef = useRef(onClick)
   const onReadyRef = useRef(onReady)
@@ -80,7 +81,29 @@ export default function HokkaidoMap({ isDark = false, onHover, onClick, onReady,
     const map = L.map(containerRef.current, {
       center: [43.5, 142.5],
       zoom: 7,
+      // 通常スクロールでのズームを無効化し，下の wheel ハンドラで Ctrl/Cmd 押下時のみ有効化する．
+      // ページスクロール中に地図へ操作が奪われる不便を避けるため．
+      scrollWheelZoom: false,
     })
+
+    // Ctrl（Mac は Cmd/metaKey）+ホイール時のみ地図ズームを許可する．
+    // 修飾キーなしのホイールはページスクロールに委ねる．
+    const container = containerRef.current
+    let hintTimer: ReturnType<typeof setTimeout> | undefined
+    const handleWheel = (e: WheelEvent) => {
+      if (e.ctrlKey || e.metaKey) {
+        e.preventDefault() // ブラウザのページ拡大を抑止する
+        if (!map.scrollWheelZoom.enabled()) map.scrollWheelZoom.enable()
+        hintRef.current?.classList.remove('is-visible')
+      } else {
+        if (map.scrollWheelZoom.enabled()) map.scrollWheelZoom.disable()
+        // 修飾キーが必要だと気づけるよう操作ヒントを一時表示する．
+        hintRef.current?.classList.add('is-visible')
+        clearTimeout(hintTimer)
+        hintTimer = setTimeout(() => hintRef.current?.classList.remove('is-visible'), 1200)
+      }
+    }
+    container.addEventListener('wheel', handleWheel, { passive: false })
 
     let isMounted = true
 
@@ -157,17 +180,29 @@ export default function HokkaidoMap({ isDark = false, onHover, onClick, onReady,
     return () => {
       isMounted = false
       layersRef.current.clear()
+      clearTimeout(hintTimer)
+      container.removeEventListener('wheel', handleWheel)
       map.remove()
     }
   }, [])
 
+  // 拡大縮小に使う修飾キーの表記を OS で出し分ける（Mac は Command）．
+  const isMac = typeof navigator !== 'undefined'
+    && /Mac|iPhone|iPad|iPod/.test(navigator.platform || navigator.userAgent)
+  const zoomKey = isMac ? '⌘' : 'Ctrl'
+
   return (
-    <div
-      ref={containerRef}
-      data-testid="hokkaido-map"
-      class="map-container"
-      aria-label="北海道地図"
-      role="application"
-    />
+    <div class="map-wrap">
+      <div
+        ref={containerRef}
+        data-testid="hokkaido-map"
+        class="map-container"
+        aria-label="北海道地図"
+        role="application"
+      />
+      <div ref={hintRef} data-testid="map-zoom-hint" class="map-zoom-hint" aria-hidden="true">
+        {zoomKey} + スクロールで拡大縮小
+      </div>
+    </div>
   )
 }

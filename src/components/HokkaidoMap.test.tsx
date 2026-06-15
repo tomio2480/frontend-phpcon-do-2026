@@ -6,6 +6,10 @@ vi.mock('leaflet/dist/leaflet.css', () => ({}))
 
 const mockSetStyle = vi.hoisted(() => vi.fn())
 const capturedHandlers = vi.hoisted<{ current: Array<Record<string, () => void>> }>(() => ({ current: [] }))
+const mapInstances = vi.hoisted<{ current: Array<{
+  options: Record<string, unknown>
+  scrollWheelZoom: { enable: ReturnType<typeof vi.fn>; disable: ReturnType<typeof vi.fn>; enabled: () => boolean }
+}> }>(() => ({ current: [] }))
 
 const mockSetAttribute = vi.hoisted(() => vi.fn())
 const mockGetElement = vi.hoisted(() => vi.fn().mockReturnValue({
@@ -16,7 +20,21 @@ const mockGetElement = vi.hoisted(() => vi.fn().mockReturnValue({
 vi.mock('leaflet', () => {
   return {
     default: {
-      map: vi.fn(() => ({ remove: vi.fn() })),
+      map: vi.fn((_el: unknown, options: Record<string, unknown> = {}) => {
+        // Leaflet 既定では scrollWheelZoom は true．options で false を渡せる挙動を模す．
+        let enabled = options.scrollWheelZoom !== false
+        const instance = {
+          options,
+          scrollWheelZoom: {
+            enable: vi.fn(() => { enabled = true }),
+            disable: vi.fn(() => { enabled = false }),
+            enabled: () => enabled,
+          },
+          remove: vi.fn(),
+        }
+        mapInstances.current.push(instance)
+        return instance
+      }),
       geoJSON: vi.fn((
         geojson: { features?: unknown[] },
         options?: { onEachFeature?: (f: unknown, l: unknown) => void },
@@ -50,6 +68,7 @@ describe('HokkaidoMap', () => {
     mockSetStyle.mockClear()
     mockSetAttribute.mockClear()
     capturedHandlers.current = []
+    mapInstances.current = []
     global.fetch = vi.fn().mockResolvedValue({
       ok: true,
       json: vi.fn().mockResolvedValue({ type: 'FeatureCollection', features: [] }),
@@ -147,6 +166,66 @@ describe('HokkaidoMap', () => {
     rerender(<HokkaidoMap selected={new Set(['01101'])} />)
 
     expect(mockSetAttribute).toHaveBeenCalledWith('aria-pressed', 'true')
+  })
+
+  it('地図は scrollWheelZoom 無効で生成する（通常スクロールでズームしない）', () => {
+    render(<HokkaidoMap />)
+    expect(mapInstances.current[0].options.scrollWheelZoom).toBe(false)
+  })
+
+  it('Ctrl なしの wheel ではズームを有効化せずページスクロールを妨げない', () => {
+    render(<HokkaidoMap />)
+    const container = screen.getByTestId('hokkaido-map')
+    const map = mapInstances.current[0]
+    const ev = new WheelEvent('wheel', { bubbles: true, cancelable: true, ctrlKey: false })
+    container.dispatchEvent(ev)
+    expect(map.scrollWheelZoom.enable).not.toHaveBeenCalled()
+    expect(ev.defaultPrevented).toBe(false)
+  })
+
+  it('Ctrl+wheel でズームを有効化しブラウザの既定動作を抑止する', () => {
+    render(<HokkaidoMap />)
+    const container = screen.getByTestId('hokkaido-map')
+    const map = mapInstances.current[0]
+    const ev = new WheelEvent('wheel', { bubbles: true, cancelable: true, ctrlKey: true })
+    container.dispatchEvent(ev)
+    expect(map.scrollWheelZoom.enable).toHaveBeenCalled()
+    expect(ev.defaultPrevented).toBe(true)
+  })
+
+  it('メタキー（Cmd）+wheel でもズームを有効化する', () => {
+    render(<HokkaidoMap />)
+    const container = screen.getByTestId('hokkaido-map')
+    const map = mapInstances.current[0]
+    const ev = new WheelEvent('wheel', { bubbles: true, cancelable: true, metaKey: true })
+    container.dispatchEvent(ev)
+    expect(map.scrollWheelZoom.enable).toHaveBeenCalled()
+    expect(ev.defaultPrevented).toBe(true)
+  })
+
+  it('Ctrl なしの wheel でズーム操作ヒントを表示する', () => {
+    render(<HokkaidoMap />)
+    const container = screen.getByTestId('hokkaido-map')
+    const hint = screen.getByTestId('map-zoom-hint')
+    container.dispatchEvent(new WheelEvent('wheel', { bubbles: true, cancelable: true, ctrlKey: false }))
+    expect(hint.classList.contains('is-visible')).toBe(true)
+  })
+
+  it('Ctrl+wheel ではズーム操作ヒントを表示しない', () => {
+    render(<HokkaidoMap />)
+    const container = screen.getByTestId('hokkaido-map')
+    const hint = screen.getByTestId('map-zoom-hint')
+    container.dispatchEvent(new WheelEvent('wheel', { bubbles: true, cancelable: true, ctrlKey: true }))
+    expect(hint.classList.contains('is-visible')).toBe(false)
+  })
+
+  it('Ctrl 押下後に離して通常 wheel するとズームを無効化する', () => {
+    render(<HokkaidoMap />)
+    const container = screen.getByTestId('hokkaido-map')
+    const map = mapInstances.current[0]
+    container.dispatchEvent(new WheelEvent('wheel', { bubbles: true, cancelable: true, ctrlKey: true }))
+    container.dispatchEvent(new WheelEvent('wheel', { bubbles: true, cancelable: true, ctrlKey: false }))
+    expect(map.scrollWheelZoom.disable).toHaveBeenCalled()
   })
 
   it('マウスアウト時に未選択ポリゴンをデフォルトスタイルに戻す', async () => {
