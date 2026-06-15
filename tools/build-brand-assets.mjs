@@ -156,22 +156,23 @@ async function renderSvgToPng(svg, file, size) {
   console.log('wrote', file)
 }
 
-// apple-touch-icon・PWA は全面塗り（角丸なし），タブ用 PNG は角丸タイル．
-const squareLite = iconSquareSvg(silLite, LEVEL)
-await renderSvgToPng(squareLite, 'apple-touch-icon.png', 180)
-await renderSvgToPng(squareLite, 'icon-192.png', 192)
-await renderSvgToPng(squareLite, 'icon-512.png', 512)
-await renderSvgToPng(favSvg, 'favicon-32.png', 32)
-await renderSvgToPng(favSvg, 'favicon-16.png', 16)
+// 途中で失敗してもブラウザプロセスを残さないよう try...finally で確実に閉じる．
+try {
+  // apple-touch-icon・PWA は全面塗り（角丸なし），タブ用 PNG は角丸タイル．
+  const squareLite = iconSquareSvg(silLite, LEVEL)
+  await renderSvgToPng(squareLite, 'apple-touch-icon.png', 180)
+  await renderSvgToPng(squareLite, 'icon-192.png', 192)
+  await renderSvgToPng(squareLite, 'icon-512.png', 512)
+  await renderSvgToPng(favSvg, 'favicon-32.png', 32)
+  await renderSvgToPng(favSvg, 'favicon-16.png', 16)
 
-// --- OGP 画像（1200x630）---
-{
+  // --- OGP 画像（1200x630）---
   const page = await browser.newPage({ viewport: { width: 1200, height: 630 }, deviceScaleFactor: 1 })
   await page.setContent(ogHtml(sil, LEVEL), { waitUntil: 'networkidle' })
   await page.screenshot({ path: `${OUT}/og-image.png`, clip: { x: 0, y: 0, width: 1200, height: 630 } })
   await page.close()
   console.log('wrote og-image.png')
+} finally {
+  await browser.close()
 }
-
-await browser.close()
 console.log('done')

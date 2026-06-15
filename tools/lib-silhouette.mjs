@@ -76,6 +76,8 @@ export function buildSilhouette(geojsonPath, {
   // 緯度補正付き正距円筒図法．経度を中央緯度の cos で縮め横伸びを防ぐ．
   let latSum = 0, latN = 0
   for (const ring of rings) for (const [, lat] of ring) { latSum += lat; latN++ }
+  // 座標皆無だとゼロ除算で midLat が NaN になり投影全体へ伝播するため早期に弾く．
+  if (latN === 0) throw new Error('座標が見つからず中央緯度を計算できない（GeoJSON が空の可能性）．')
   const midLat = latSum / latN
   const kx = Math.cos((midLat * Math.PI) / 180)
   const project = ([lon, lat]) => [lon * kx, -lat]
@@ -93,12 +95,17 @@ export function buildSilhouette(geojsonPath, {
     if (diag < minDiag) continue
     const s = simplify(pr, tol)
     if (s.length < 3) continue
-    candidates.push({ ring: s, area: ringArea(s) })
+    // 縮退（面積ゼロ・点が一直線）リングは塗りに寄与しないため除外する．
+    const area = ringArea(s)
+    if (area <= 0) continue
+    candidates.push({ ring: s, area })
   }
 
   // 面積上位 N リングのみ採用（favicon では主島だけに絞り判読性を上げる）．
   candidates.sort((a, b) => b.area - a.area)
   const kept = candidates.slice(0, topN)
+  // 全て除外されると境界が Infinity のまま scale が NaN/Infinity になるため弾く．
+  if (kept.length === 0) throw new Error('フィルタ後に残るリングが無い（minDiag/topN の設定を見直す）．')
 
   let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity
   const projected = []
