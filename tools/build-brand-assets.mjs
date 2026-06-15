@@ -123,7 +123,7 @@ function ogHtml(s, level) {
     .foot { position: absolute; left: 64px; bottom: 34px; font-size: 22px; font-weight: 700; color: ${C.accentText}; opacity: .85; }
     .tags { margin-top: 26px; display: flex; gap: 14px; }
     .tag { font-size: 24px; font-weight: 700; color: ${C.text}; background: rgba(168,128,200,.18); border: 2px solid rgba(110,42,158,.25); border-radius: 999px; padding: 8px 20px; }
-    .cta { display: inline-block; margin-top: 30px; font-size: 28px; font-weight: 800; color: ${C.text}; background: ${C.level}; border-radius: 14px; padding: 14px 30px; box-shadow: 0 5px 0 rgba(110,42,158,.20); letter-spacing: .02em; }
+    .cta { display: inline-block; margin-top: 30px; font-size: 28px; font-weight: 800; color: ${C.text}; background: ${C.level}; border-radius: 14px; padding: 14px 30px; box-shadow: 0 5px 0 rgba(110,42,158,.40); letter-spacing: .02em; }
   </style></head><body>
     <div class="left">
       ${gaugeSvg}
@@ -134,7 +134,7 @@ function ogHtml(s, level) {
       <div class="uline"></div>
       <div class="sub">選んだ市区町村が全道に占める割合を<br>その場で集計して可視化する</div>
       <div class="tags"><span class="tag">面積</span><span class="tag">人口</span><span class="tag">ふるさと納税</span></div>
-      <div class="cta">▶ ブラウザで今すぐ試す</div>
+      <div class="cta">▶︎ ブラウザで今すぐ試す</div>
     </div>
     <div class="foot">tomio2480.github.io/frontend-phpcon-do-2026</div>
   </body></html>`
