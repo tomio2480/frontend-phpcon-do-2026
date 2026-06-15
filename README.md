@@ -103,7 +103,7 @@ python -m pytest tests/
 
 - **出典**：総務省「ふるさと納税に関する現況調査結果」令和７年度実施（令和６年度実績）
 - **利用規約**：[政府標準利用規約（第 2.0 版）](https://www.digital.go.jp/resources/open_data/government-standard-terms-of-use/)
-- 北方領土の６村は行政上の集計値が存在しないため受入額・件数をゼロとして扱う
+- 北方領土の６村は人口・ふるさと納税の公式統計に含まれないため受入額・件数をゼロとして扱う
 
 ### 市区町村境界（GeoJSON）
 

@@ -354,7 +354,7 @@ def build() -> tuple[dict, dict]:
     municipalities_json: dict[str, dict] = {}
     for code, name, display_name, region in MUNICIPALITIES:
         if code in _HOPPO_CODES:
-            # 北方領土は人口・ふるさと納税データが存在しないためゼロで補完する
+            # 北方領土6村は人口・ふるさと納税の公式統計に含まれないためゼロで補完する
             municipalities_json[code] = {
                 "code": code,
                 "name": name,
