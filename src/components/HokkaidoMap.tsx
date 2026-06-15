@@ -81,29 +81,29 @@ export default function HokkaidoMap({ isDark = false, onHover, onClick, onReady,
     const map = L.map(containerRef.current, {
       center: [43.5, 142.5],
       zoom: 7,
-      // 通常スクロールでのズームを無効化し，下の wheel ハンドラで Ctrl/Cmd 押下時のみ有効化する．
-      // ページスクロール中に地図へ操作が奪われる不便を避けるため．
-      scrollWheelZoom: false,
+      // scrollWheelZoom は有効のまま残し，下の capture フェーズのハンドラで制御する．
+      // 動的な enable/disable では Ctrl+初回スクロールが取りこぼされる（DOM 仕様上，
+      // ディスパッチ中に追加したリスナーはその回のイベントを受け取らないため）．
+      scrollWheelZoom: true,
     })
 
     // Ctrl（Mac は Cmd/metaKey）+ホイール時のみ地図ズームを許可する．
-    // 修飾キーなしのホイールはページスクロールに委ねる．
+    // capture フェーズで横取りし，修飾キーなしのときは Leaflet へ伝播させずページスクロールに委ねる．
     const container = containerRef.current
     let hintTimer: ReturnType<typeof setTimeout> | undefined
     const handleWheel = (e: WheelEvent) => {
       if (e.ctrlKey || e.metaKey) {
-        e.preventDefault() // ブラウザのページ拡大を抑止する
-        if (!map.scrollWheelZoom.enabled()) map.scrollWheelZoom.enable()
+        e.preventDefault() // ブラウザのページ拡大を抑止し，ズーム自体は Leaflet へ委ねる
         hintRef.current?.classList.remove('is-visible')
       } else {
-        if (map.scrollWheelZoom.enabled()) map.scrollWheelZoom.disable()
+        e.stopPropagation() // Leaflet のズームハンドラへ到達させずズームを防ぐ（ページスクロールは許可）
         // 修飾キーが必要だと気づけるよう操作ヒントを一時表示する．
         hintRef.current?.classList.add('is-visible')
         clearTimeout(hintTimer)
         hintTimer = setTimeout(() => hintRef.current?.classList.remove('is-visible'), 1200)
       }
     }
-    container.addEventListener('wheel', handleWheel, { passive: false })
+    container.addEventListener('wheel', handleWheel, { capture: true, passive: false })
 
     let isMounted = true
 
@@ -181,7 +181,7 @@ export default function HokkaidoMap({ isDark = false, onHover, onClick, onReady,
       isMounted = false
       layersRef.current.clear()
       clearTimeout(hintTimer)
-      container.removeEventListener('wheel', handleWheel)
+      container.removeEventListener('wheel', handleWheel, { capture: true })
       map.remove()
     }
   }, [])
