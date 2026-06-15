@@ -6,6 +6,7 @@ vi.mock('leaflet/dist/leaflet.css', () => ({}))
 
 const mockSetStyle = vi.hoisted(() => vi.fn())
 const capturedHandlers = vi.hoisted<{ current: Array<Record<string, () => void>> }>(() => ({ current: [] }))
+const mapInstances = vi.hoisted<{ current: Array<{ options: Record<string, unknown> }> }>(() => ({ current: [] }))
 
 const mockSetAttribute = vi.hoisted(() => vi.fn())
 const mockGetElement = vi.hoisted(() => vi.fn().mockReturnValue({
@@ -16,7 +17,11 @@ const mockGetElement = vi.hoisted(() => vi.fn().mockReturnValue({
 vi.mock('leaflet', () => {
   return {
     default: {
-      map: vi.fn(() => ({ remove: vi.fn() })),
+      map: vi.fn((_el: unknown, options: Record<string, unknown> = {}) => {
+        const instance = { options, remove: vi.fn() }
+        mapInstances.current.push(instance)
+        return instance
+      }),
       geoJSON: vi.fn((
         geojson: { features?: unknown[] },
         options?: { onEachFeature?: (f: unknown, l: unknown) => void },
@@ -50,6 +55,7 @@ describe('HokkaidoMap', () => {
     mockSetStyle.mockClear()
     mockSetAttribute.mockClear()
     capturedHandlers.current = []
+    mapInstances.current = []
     global.fetch = vi.fn().mockResolvedValue({
       ok: true,
       json: vi.fn().mockResolvedValue({ type: 'FeatureCollection', features: [] }),
@@ -147,6 +153,57 @@ describe('HokkaidoMap', () => {
     rerender(<HokkaidoMap selected={new Set(['01101'])} />)
 
     expect(mockSetAttribute).toHaveBeenCalledWith('aria-pressed', 'true')
+  })
+
+  it('地図は scrollWheelZoom 有効で生成する（capture フェーズで制御するため）', () => {
+    render(<HokkaidoMap />)
+    expect(mapInstances.current[0].options.scrollWheelZoom).toBe(true)
+  })
+
+  it('Ctrl なしの wheel では伝播を止めてズームを防ぎ，ページスクロールは妨げない', () => {
+    render(<HokkaidoMap />)
+    const container = screen.getByTestId('hokkaido-map')
+    const ev = new WheelEvent('wheel', { bubbles: true, cancelable: true, ctrlKey: false })
+    const stopPropagation = vi.spyOn(ev, 'stopPropagation')
+    container.dispatchEvent(ev)
+    expect(stopPropagation).toHaveBeenCalled()
+    expect(ev.defaultPrevented).toBe(false)
+  })
+
+  it('Ctrl+wheel ではブラウザの既定動作を抑止し，伝播は止めない（Leaflet にズームを委ねる）', () => {
+    render(<HokkaidoMap />)
+    const container = screen.getByTestId('hokkaido-map')
+    const ev = new WheelEvent('wheel', { bubbles: true, cancelable: true, ctrlKey: true })
+    const stopPropagation = vi.spyOn(ev, 'stopPropagation')
+    container.dispatchEvent(ev)
+    expect(stopPropagation).not.toHaveBeenCalled()
+    expect(ev.defaultPrevented).toBe(true)
+  })
+
+  it('メタキー（Cmd）+wheel でもブラウザの既定動作を抑止し，伝播は止めない', () => {
+    render(<HokkaidoMap />)
+    const container = screen.getByTestId('hokkaido-map')
+    const ev = new WheelEvent('wheel', { bubbles: true, cancelable: true, metaKey: true })
+    const stopPropagation = vi.spyOn(ev, 'stopPropagation')
+    container.dispatchEvent(ev)
+    expect(stopPropagation).not.toHaveBeenCalled()
+    expect(ev.defaultPrevented).toBe(true)
+  })
+
+  it('Ctrl なしの wheel でズーム操作ヒントを表示する', () => {
+    render(<HokkaidoMap />)
+    const container = screen.getByTestId('hokkaido-map')
+    const hint = screen.getByTestId('map-zoom-hint')
+    container.dispatchEvent(new WheelEvent('wheel', { bubbles: true, cancelable: true, ctrlKey: false }))
+    expect(hint.classList.contains('is-visible')).toBe(true)
+  })
+
+  it('Ctrl+wheel ではズーム操作ヒントを表示しない', () => {
+    render(<HokkaidoMap />)
+    const container = screen.getByTestId('hokkaido-map')
+    const hint = screen.getByTestId('map-zoom-hint')
+    container.dispatchEvent(new WheelEvent('wheel', { bubbles: true, cancelable: true, ctrlKey: true }))
+    expect(hint.classList.contains('is-visible')).toBe(false)
   })
 
   it('マウスアウト時に未選択ポリゴンをデフォルトスタイルに戻す', async () => {

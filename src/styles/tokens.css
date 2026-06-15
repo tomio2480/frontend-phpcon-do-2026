@@ -92,6 +92,10 @@ html[data-theme="dark"] :focus-visible {
 /* ============================================================
    共通レイアウト
    ============================================================ */
+.map-wrap {
+  position: relative;
+}
+
 .map-container {
   width: 100%;
   height: 300px;
@@ -103,5 +107,35 @@ html[data-theme="dark"] :focus-visible {
 @media (min-width: 768px) {
   .map-container {
     height: 500px;
+  }
+}
+
+/* Ctrl/Cmd + スクロールが必要なことを知らせる一時オーバーレイ */
+.map-zoom-hint {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  background: rgba(28, 18, 48, 0.55);
+  color: #FFFFFF;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.18s ease, visibility 0.18s ease;
+  z-index: 5;
+}
+
+.map-zoom-hint.is-visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .map-zoom-hint {
+    transition: none;
   }
 }
