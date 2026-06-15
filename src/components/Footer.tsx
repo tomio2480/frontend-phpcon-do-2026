@@ -60,16 +60,16 @@ export default function Footer() {
         面積は近似値であり，掲載データの正確性は保証しません．
       </p>
 
-      <div class="mt-6 space-y-2">
+      <section class="mt-6 space-y-2">
         <h2 class="text-sm font-semibold text-text">ソースコード</h2>
         <p>
           本アプリのソースコードは GitHub で公開しています．
           {' '}<ExternalLink href={REPO_URL} text="GitHub リポジトリ" />
         </p>
         <p>ライセンスは GPL v2 です．詳細はリポジトリ内の LICENSE を参照してください．</p>
-      </div>
+      </section>
 
-      <div class="mt-6 space-y-2">
+      <section class="mt-6 space-y-2">
         <h2 class="text-sm font-semibold text-text">tomio2480 を支援する</h2>
         <p>
           旅費でお金を使い込んでしまって本当に貧しい tomio2480 へ，
@@ -85,7 +85,7 @@ export default function Footer() {
             {' '}のトップページ右カラム2つめに，Codoc の寄付ボタンを置いています．
           </li>
         </ul>
-      </div>
+      </section>
 
       <p class="mt-6 text-text-2">© 2026 tomio2480</p>
     </footer>
