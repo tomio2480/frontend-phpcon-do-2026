@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useCallback } from 'preact/hooks'
+import { useState, useEffect, useMemo, useCallback, useRef } from 'preact/hooks'
 import HokkaidoMap from './components/HokkaidoMap'
 import CheckboxList from './components/CheckboxList'
 import ResultPanel from './components/ResultPanel'
@@ -11,6 +11,7 @@ import { useSelection } from './hooks/useSelection'
 import { useTheme } from './hooks/useTheme'
 import { useAggregate } from './hooks/usePhp'
 import { SAPPORO_CODES } from './constants'
+import { decodeSelection } from './lib/shareCodes'
 import type { Municipality } from './components/CheckboxList'
 
 const ZERO_RESULT = { area_pct: 0, population_pct: 0, furusato_amount_pct: 0, furusato_count_pct: 0 }
@@ -22,6 +23,11 @@ export default function App() {
   const [mapReady, setMapReady] = useState(false)
   const handleMapReady = useCallback(() => setMapReady(true), [])
   const selectedCodes = useMemo(() => Array.from(selected), [selected])
+  // ビットセット共有 URL のビット位置を定める安定した並び順
+  const allCodes = useMemo(
+    () => municipalities.map(m => m.code).sort(),
+    [municipalities],
+  )
   const { result, isCalculating, error, isPhpLoading, isPhpError } = useAggregate(selectedCodes)
 
   // PHP・地図の双方が整うまでローディング画面のみを表示する（画面のちらつき防止）
@@ -49,13 +55,23 @@ export default function App() {
       .catch(console.error)
   }, [])
 
-  // URL パラメータ ?codes=... から初期選択を復元する
+  // URL パラメータから初期選択を復元する（?m= はビットセット，?codes= は旧形式）．
+  // ?m= の復元には allCodes が要るため，自治体データの読み込み後に一度だけ実行する．
+  const restoredRef = useRef(false)
   useEffect(() => {
-    const codes = new URLSearchParams(window.location.search).get('codes')
-    if (!codes) return
-    const parsed = codes.split(',').filter(c => /^\d{5}$/.test(c))
-    if (parsed.length > 0) selectAll(parsed)
-  }, [selectAll])
+    if (restoredRef.current || allCodes.length === 0) return
+    const params = new URLSearchParams(window.location.search)
+    const bits = params.get('m')
+    const legacy = params.get('codes')
+    let codes: string[] = []
+    if (bits) {
+      codes = decodeSelection(bits, allCodes)
+    } else if (legacy) {
+      codes = legacy.split(',').filter(c => /^\d{5}$/.test(c))
+    }
+    if (codes.length > 0) selectAll(codes)
+    restoredRef.current = true
+  }, [allCodes, selectAll])
 
   return (
     <div class="min-h-screen bg-background text-text">
@@ -87,7 +103,7 @@ export default function App() {
             </div>
             <HokkaidoMap isDark={isDark} onClick={toggle} onReady={handleMapReady} selected={selected} />
             {error && <p class="mt-2 text-red-600 text-sm">集計エラー: {error.message}</p>}
-            <ShareButton result={result ?? ZERO_RESULT} selectedCodes={selectedCodes} />
+            <ShareButton result={result ?? ZERO_RESULT} selectedCodes={selectedCodes} allCodes={allCodes} />
             <CheckboxList municipalities={municipalities} selected={selected} onToggle={toggle} regionActions={regionActions} />
           </div>
         </div>
