@@ -1,0 +1,16 @@
+{
+  "name": "あなたの北海道は何 %？",
+  "short_name": "北海道は何 %？",
+  "description": "北海道の市区町村を選ぶと，全道に占める面積・人口・ふるさと納税の割合をその場で集計して可視化する．",
+  "lang": "ja",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "background_color": "#F8F4FF",
+  "theme_color": "#A880C8",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "apple-touch-icon.png", "sizes": "180x180", "type": "image/png" }
+  ]
+}
