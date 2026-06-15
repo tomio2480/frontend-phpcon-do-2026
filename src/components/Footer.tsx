@@ -1,5 +1,9 @@
 import ExternalLink from './ExternalLink'
 
+export const REPO_URL = 'https://github.com/tomio2480/frontend-phpcon-do-2026'
+export const SPONSORS_URL = 'https://github.com/sponsors/tomio2480'
+export const HATENA_BLOG_URL = 'https://tomio2480.hatenablog.com/'
+
 export default function Footer() {
   return (
     <footer class="mt-12 border-t border-text/10 pt-6 pb-8 text-xs text-text-2 space-y-4">
@@ -55,6 +59,35 @@ export default function Footer() {
         本アプリは学習・発表目的で作成されたものです．
         面積は近似値であり，掲載データの正確性は保証しません．
       </p>
+
+      <section class="mt-6 space-y-2">
+        <h2 class="text-sm font-semibold text-text">ソースコード</h2>
+        <p>
+          本アプリのソースコードは GitHub で公開しています．
+          {' '}<ExternalLink href={REPO_URL} text="GitHub リポジトリ" />
+        </p>
+        <p>ライセンスは GPL v2 です．詳細はリポジトリ内の LICENSE を参照してください．</p>
+      </section>
+
+      <section class="mt-6 space-y-2">
+        <h2 class="text-sm font-semibold text-text">tomio2480 を支援する</h2>
+        <p>
+          旅費でお金を使い込んでしまって本当に貧しい tomio2480 へ，
+          恵みの支援をいただけるとうれしいです．
+        </p>
+        <ul class="space-y-2 list-disc pl-5">
+          <li>
+            <ExternalLink href={SPONSORS_URL} text="GitHub Sponsors" />
+            {' '}から継続・単発の支援ができます．
+          </li>
+          <li>
+            <ExternalLink href={HATENA_BLOG_URL} text="はてなブログ" />
+            {' '}のトップページ右カラム2つめに，Codoc の寄付ボタンを置いています．
+          </li>
+        </ul>
+      </section>
+
+      <p class="mt-6 text-text-2">© 2026 tomio2480</p>
     </footer>
   )
 }
