@@ -9,7 +9,10 @@ function bytesToBase64Url(bytes: Uint8Array): string {
 }
 
 function base64UrlToBytes(token: string): Uint8Array {
-  const b64 = token.replace(/-/g, '+').replace(/_/g, '/')
+  let b64 = token.replace(/-/g, '+').replace(/_/g, '/')
+  // 厳格な atob 実装でも復号できるよう不足分のパディングを補う
+  const pad = (4 - (b64.length % 4)) % 4
+  b64 += '='.repeat(pad)
   const bin = atob(b64)
   const bytes = new Uint8Array(bin.length)
   for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i)
@@ -46,8 +49,13 @@ export function decodeSelection(
     return []
   }
   const result: string[] = []
-  for (let i = 0; i < allCodes.length; i++) {
-    if (bytes[i >> 3] & (1 << (i & 7))) result.push(allCodes[i])
+  // トークンが切り詰められていても範囲外参照しないよう上限を絞る
+  const maxLen = Math.min(allCodes.length, bytes.length * 8)
+  for (let i = 0; i < maxLen; i++) {
+    const byte = bytes[i >> 3]
+    if (byte !== undefined && (byte & (1 << (i & 7)))) {
+      result.push(allCodes[i])
+    }
   }
   return result
 }

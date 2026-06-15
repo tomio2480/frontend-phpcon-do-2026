@@ -19,9 +19,9 @@ describe('AboutTool', () => {
   })
 
   it('LT 動画リンクの行頭に動画を示すアイコンを表示する', () => {
-    const { container } = render(<AboutTool />)
-    const icon = container.querySelector('[aria-hidden="true"]')
-    expect(icon?.textContent).toContain('▶️')
+    render(<AboutTool />)
+    const link = screen.getByRole('link', { name: `${LT_VIDEO_TITLE}（新しいタブで開きます）` })
+    expect(link.parentElement?.textContent).toContain('▶️')
   })
 
   it('「Claude からのおすすめポイント」の見出しを持つ', () => {
