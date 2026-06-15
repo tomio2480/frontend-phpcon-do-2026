@@ -10,6 +10,7 @@ export default function ExternalLink({ href, text }: Props) {
       target="_blank"
       rel="noopener noreferrer"
       class="underline hover:text-text transition-colors"
+      aria-label={`${text}（新しいタブで開きます）`}
     >{text}</a>
   )
 }

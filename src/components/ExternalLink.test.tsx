@@ -7,7 +7,7 @@ afterEach(() => cleanup())
 describe('ExternalLink', () => {
   it('text をリンクとして描画する', () => {
     render(<ExternalLink href="https://example.com" text="サンプル" />)
-    expect(screen.getByRole('link', { name: 'サンプル' })).toBeTruthy()
+    expect(screen.getByRole('link', { name: 'サンプル（新しいタブで開きます）' })).toBeTruthy()
   })
 
   it('href を設定する', () => {
@@ -26,5 +26,11 @@ describe('ExternalLink', () => {
     const link = screen.getByRole('link') as HTMLAnchorElement
     expect(link.rel).toContain('noopener')
     expect(link.rel).toContain('noreferrer')
+  })
+
+  it('aria-label に新しいタブで開く旨を含む', () => {
+    render(<ExternalLink href="https://example.com" text="サンプル" />)
+    const link = screen.getByRole('link') as HTMLAnchorElement
+    expect(link.getAttribute('aria-label')).toContain('新しいタブ')
   })
 })

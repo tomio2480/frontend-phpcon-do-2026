@@ -6,7 +6,7 @@ export const LT_VIDEO_TITLE =
 
 export default function AboutTool() {
   return (
-    <section class="mt-12 border-t border-text/10 pt-6 text-sm text-text-2 space-y-6">
+    <div class="mt-12 border-t border-text/10 pt-6 text-sm text-text-2 space-y-6">
       {/* 関連する LT 動画 */}
       <div class="space-y-2">
         <h2 class="text-sm font-semibold text-text">関連する LT 動画</h2>
@@ -41,6 +41,6 @@ export default function AboutTool() {
         <h2 class="text-sm font-semibold text-text">tomio2480 のおすすめポイント</h2>
         <p>自分と北海道がどれだけ一体となれているのかを定量的に感じてください．</p>
       </div>
-    </section>
+    </div>
   )
 }

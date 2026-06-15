@@ -7,13 +7,13 @@ afterEach(() => cleanup())
 describe('AboutTool', () => {
   it('LT 動画へのリンクを描画する', () => {
     render(<AboutTool />)
-    const link = screen.getByRole('link', { name: LT_VIDEO_TITLE }) as HTMLAnchorElement
+    const link = screen.getByRole('link', { name: `${LT_VIDEO_TITLE}（新しいタブで開きます）` }) as HTMLAnchorElement
     expect(link.href).toBe(LT_VIDEO_URL)
   })
 
   it('LT 動画リンクは新規タブで開く', () => {
     render(<AboutTool />)
-    const link = screen.getByRole('link', { name: LT_VIDEO_TITLE }) as HTMLAnchorElement
+    const link = screen.getByRole('link', { name: `${LT_VIDEO_TITLE}（新しいタブで開きます）` }) as HTMLAnchorElement
     expect(link.target).toBe('_blank')
     expect(link.rel).toContain('noopener')
   })
