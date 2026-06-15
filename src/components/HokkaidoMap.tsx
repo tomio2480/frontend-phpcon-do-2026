@@ -187,8 +187,9 @@ export default function HokkaidoMap({ isDark = false, onHover, onClick, onReady,
   }, [])
 
   // 拡大縮小に使う修飾キーの表記を OS で出し分ける（Mac は Command）．
+  // navigator.platform は非推奨かつ値が固定化される傾向のため userAgent のみを参照する．
   const isMac = typeof navigator !== 'undefined'
-    && /Mac|iPhone|iPad|iPod/.test(navigator.platform || navigator.userAgent)
+    && /Mac|iPhone|iPad|iPod/.test(navigator.userAgent)
   const zoomKey = isMac ? '⌘' : 'Ctrl'
 
   return (
