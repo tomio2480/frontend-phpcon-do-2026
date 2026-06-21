@@ -18,8 +18,8 @@ importers:
         specifier: ^3.1.38
         version: 3.1.38
       '@php-wasm/web-8-4':
-        specifier: 3.1.38
-        version: 3.1.38
+        specifier: 3.1.40
+        version: 3.1.40
       leaflet:
         specifier: 1.9.4
         version: 1.9.4
@@ -406,8 +406,16 @@ packages:
     resolution: {integrity: sha512-DSLl/gvYtJl+gDubY95PPdks/4MvDd8wJlXE3PPkCIbc7dm+g3V5wXHTSl4cZzfSNdytBmRwmZkdCpe5Fu3hKw==}
     engines: {node: '>=20.10.0', npm: '>=10.2.3'}
 
+  '@php-wasm/logger@3.1.40':
+    resolution: {integrity: sha512-6YXbBgNRpLt7wmyx5nwWixQjjzvsWNGAl7CCLc2ltiju88ORZGV68sPcaruI6SSQz0RE7A/KrL6QrIUwTLneVA==}
+    engines: {node: '>=20.10.0', npm: '>=10.2.3'}
+
   '@php-wasm/progress@3.1.38':
     resolution: {integrity: sha512-cmmbe7ZgIN0kG2Tbp7Nh0gYKVpPygFJMu8B+fOjdS/lfm5zwJqkkIAn6fdcjYL2DO9s3+IGWjhdhqGtlzY3L+g==}
+    engines: {node: '>=20.10.0', npm: '>=10.2.3'}
+
+  '@php-wasm/progress@3.1.40':
+    resolution: {integrity: sha512-XUCM4v4eKbyOsFUNk02O9Crb/ZKlkLfYi43TAc9ctw1o6pyf7K5eeVxZKXVNqxR1hb0Jo5JpCKENSbP0NRUiIg==}
     engines: {node: '>=20.10.0', npm: '>=10.2.3'}
 
   '@php-wasm/scopes@3.1.38':
@@ -417,12 +425,23 @@ packages:
   '@php-wasm/stream-compression@3.1.38':
     resolution: {integrity: sha512-8YUS+1buRqhkKBfqpPcZYI59wOYaOHiMzryZMpkdJVA4ELFkWR9NfLxJopGJbGGB/qGg7V5GFKFV6EP5RxbdPw==}
 
+  '@php-wasm/stream-compression@3.1.40':
+    resolution: {integrity: sha512-57CVWtoze3WJy4gupoahwFsTcA8Q3sWZY7/SrlTSj0dsqhC1sdOmvVe0pwkaurX1psTZeIynA9Gd/iyobVeayw==}
+
   '@php-wasm/universal@3.1.38':
     resolution: {integrity: sha512-H2op/4rZb5XYit54Z9jHULQwQIDp11Cv2ubp8Iv0pNkPBb5acW9g5/R+slB6tP6GW2Z0PyVxoVjzc3fab2v0Yw==}
     engines: {node: '>=20.10.0', npm: '>=10.2.3'}
 
+  '@php-wasm/universal@3.1.40':
+    resolution: {integrity: sha512-uDbTdhrvFCR1fz3T7dQp5KH8GmBzndf0l6selKEQNrWxM0CSaGYbnpI7Vb/wICZgDR7rz5ghdyUkeERVD6LC1A==}
+    engines: {node: '>=20.10.0', npm: '>=10.2.3'}
+
   '@php-wasm/util@3.1.38':
     resolution: {integrity: sha512-afqgA8gBzISH6FGifXWQPcZ7WDLXxvEaSTFnc7uWPtDgsmhl0fGE0vIRMmrfIgR/7EvrdR/9d4wJXs8LcpX5uA==}
+    engines: {node: '>=20.10.0', npm: '>=10.2.3'}
+
+  '@php-wasm/util@3.1.40':
+    resolution: {integrity: sha512-U2xzEEmW7JRaAEuFErF3tt8uW4WJTYWm7vQO2LURLijDoMCUUXIGRz0mNirJRxI8DMB/zCmsWuIMduZ5WYp6kw==}
     engines: {node: '>=20.10.0', npm: '>=10.2.3'}
 
   '@php-wasm/web-5-2@3.1.38':
@@ -451,6 +470,10 @@ packages:
 
   '@php-wasm/web-8-4@3.1.38':
     resolution: {integrity: sha512-0rkY5a5NOi9FfMkDZVPSgfKacCppsevFlsJkiTAX+fKF5+9ZGwmAiUApqWhILhKrSVWS9dZoM6OruQwFWDzuWg==}
+    engines: {node: '>=20.10.0', npm: '>=10.2.3'}
+
+  '@php-wasm/web-8-4@3.1.40':
+    resolution: {integrity: sha512-kZ+Kc+PbDZl8Gfx0D8hjZd56EwJxS/Dor1wMEkcPuc3UadANSad8a9IOFW9sMEYLm1OokW4MwRpjVHNpKIPgIQ==}
     engines: {node: '>=20.10.0', npm: '>=10.2.3'}
 
   '@php-wasm/web-8-5@3.1.38':
@@ -2306,15 +2329,25 @@ snapshots:
 
   '@php-wasm/logger@3.1.38': {}
 
+  '@php-wasm/logger@3.1.40': {}
+
   '@php-wasm/progress@3.1.38':
     dependencies:
       '@php-wasm/logger': 3.1.38
+
+  '@php-wasm/progress@3.1.40':
+    dependencies:
+      '@php-wasm/logger': 3.1.40
 
   '@php-wasm/scopes@3.1.38': {}
 
   '@php-wasm/stream-compression@3.1.38':
     dependencies:
       '@php-wasm/util': 3.1.38
+
+  '@php-wasm/stream-compression@3.1.40':
+    dependencies:
+      '@php-wasm/util': 3.1.40
 
   '@php-wasm/universal@3.1.38':
     dependencies:
@@ -2324,7 +2357,17 @@ snapshots:
       '@php-wasm/util': 3.1.38
       ini: 4.1.2
 
+  '@php-wasm/universal@3.1.40':
+    dependencies:
+      '@php-wasm/logger': 3.1.40
+      '@php-wasm/progress': 3.1.40
+      '@php-wasm/stream-compression': 3.1.40
+      '@php-wasm/util': 3.1.40
+      ini: 4.1.2
+
   '@php-wasm/util@3.1.38': {}
+
+  '@php-wasm/util@3.1.40': {}
 
   '@php-wasm/web-5-2@3.1.38':
     dependencies:
@@ -2359,6 +2402,11 @@ snapshots:
   '@php-wasm/web-8-4@3.1.38':
     dependencies:
       '@php-wasm/universal': 3.1.38
+      wasm-feature-detect: 1.8.0
+
+  '@php-wasm/web-8-4@3.1.40':
+    dependencies:
+      '@php-wasm/universal': 3.1.40
       wasm-feature-detect: 1.8.0
 
   '@php-wasm/web-8-5@3.1.38':
