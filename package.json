@@ -16,7 +16,7 @@
   "dependencies": {
     "@php-wasm/universal": "^3.1.38",
     "@php-wasm/web": "^3.1.38",
-    "@php-wasm/web-8-4": "3.1.38",
+    "@php-wasm/web-8-4": "3.1.40",
     "leaflet": "1.9.4",
     "preact": "^10.29.2"
   },
