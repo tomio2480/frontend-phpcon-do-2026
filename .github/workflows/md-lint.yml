@@ -19,6 +19,6 @@ jobs:
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
 
       - name: Markdown Lint via composite action
-        uses: tomio2480/github-workflows/.github/actions/markdown-lint@0ca7feedc1a9f9830a53959550889e3860701b53 # v2.5.13
+        uses: tomio2480/github-workflows/.github/actions/markdown-lint@36357977d9086611229c949aaf425718ca8c0f63 # v2.7.1
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
