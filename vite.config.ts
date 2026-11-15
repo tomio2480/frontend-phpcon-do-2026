@@ -83,5 +83,9 @@ export default defineConfig({
     environment: 'jsdom',
     include: ['src/**/*.test.{ts,tsx}'],
     setupFiles: ['src/test-setup.ts'],
+    // Node 25 以降は組み込みの localStorage が jsdom の実装を覆い隠す．
+    // Node 26 では --localstorage-file 無しで触れると例外になるため，
+    // テストのワーカーでは組み込みの Web Storage を無効にする．
+    execArgv: ['--no-experimental-webstorage'],
   },
 })
