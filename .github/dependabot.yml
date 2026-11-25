@@ -5,6 +5,19 @@ updates:
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 5
+    # groups は applies-to を省くと version updates にだけ効く．
+    # security updates（現在は無効）を有効にする際は，applies-to: security-updates のグループも足す．
+    groups:
+      # @php-wasm/web は companion パッケージ（web-8-4・universal など）を完全一致で要求する．
+      # 別 PR に分かれて版が食い違い，本番ビルドで PHP の初期化が失敗したため 1 PR にまとめる．
+      php-wasm:
+        patterns:
+          - "@php-wasm/*"
+      # @vitest/* は peerDependencies で vitest 本体と同じ版を要求するため 1 PR にまとめる．
+      vitest:
+        patterns:
+          - "vitest"
+          - "@vitest/*"
 
   - package-ecosystem: "pip"
     directory: "/scripts"
