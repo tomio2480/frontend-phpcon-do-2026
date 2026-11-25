@@ -25,7 +25,9 @@ https://tomio2480.github.io/frontend-phpcon-do-2026/
 
 ## 開発のセットアップ
 
-前提条件として Node.js（LTS）と pnpm が必要である．
+前提条件として Node.js 24.18 以上と pnpm が必要である．
+`@php-wasm` 3.1.66 の engines が Node.js 24.18 以上を求めるためである．
+CI は Node.js 26 系で動かしている．
 
 ```bash
 pnpm install
@@ -72,7 +74,7 @@ python -m pytest tests/
 | ビルドツール | Vite 8 |
 | CSS | Tailwind CSS 4 |
 | 地図 | Leaflet 1.9.4 |
-| PHP 実行 | @php-wasm/web 3.1.38（PHP 8.4） |
+| PHP 実行 | @php-wasm/web 3.1.66（PHP 8.4） |
 | パッケージ管理 | pnpm |
 | ホスティング | GitHub Pages |
 
