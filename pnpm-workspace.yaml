@@ -1,2 +1,7 @@
+# @php-wasm/web 3.1.62 以降は @php-wasm/node を依存に持ち，その optional 依存が
+# fs-ext-extra-prebuilt である．Node 上のファイルロック用のネイティブ拡張で，
+# ブラウザで動く本アプリは使わない．install スクリプトは実行させない．
+allowBuilds:
+  fs-ext-extra-prebuilt: false
 patchedDependencies:
   zimmerframe@1.1.4: patches/zimmerframe@1.1.4.patch
