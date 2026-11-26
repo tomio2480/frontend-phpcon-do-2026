@@ -223,7 +223,7 @@ def main() -> None:
     )
     parser.add_argument(
         "--percentage", type=float, default=10.0,
-        help="mapshaper の簡略化率 %（デフォルト: 10.0）",
+        help="mapshaper の簡略化率 %%（デフォルト: 10.0）",
     )
     parser.add_argument(
         "--tolerance", type=float, default=0.5,
