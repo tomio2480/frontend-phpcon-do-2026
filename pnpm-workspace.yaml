@@ -3,5 +3,3 @@
 # ブラウザで動く本アプリは使わない．install スクリプトは実行させない．
 allowBuilds:
   fs-ext-extra-prebuilt: false
-patchedDependencies:
-  zimmerframe@1.1.4: patches/zimmerframe@1.1.4.patch
