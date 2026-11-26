@@ -7,7 +7,7 @@ GeoJSON に変換し、mapshaper で座標精度を 5〜10% に簡略化して
 public/data/hokkaido.geojson を生成する。
 
 ■ 前提ツール
-- Python 3.10 以上
+- Python 3.11 以上（scripts/requirements.txt が geopandas>=1.2.0 を求めるため）
 - geopandas (pip install geopandas)
 - mapshaper (npm install -g mapshaper)
   ※ mapshaper が使用できない場合は shapely の simplify を使用する

@@ -52,7 +52,8 @@ pnpm test:e2e      # Playwright（E2E・アクセシビリティ）
 
 `public/data/municipalities.json` と `public/data/total.json` は Python スクリプトで生成する．
 
-前提条件：Python 3.10 以上，`public/data/hokkaido.geojson` が存在すること．
+前提条件：Python 3.11 以上，`public/data/hokkaido.geojson` が存在すること．
+`scripts/requirements.txt` の `geopandas` 1.2 が Python 3.11 以上を求めるためである．
 
 ```bash
 cd scripts
