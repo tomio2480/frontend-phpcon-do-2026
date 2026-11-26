@@ -62,7 +62,10 @@ export default defineConfig({
   plugins: [
     resolveIcuDat(),
     copyCoisw(),
-    // テスト環境では zimmerframe (CJS 非対応) を要求する devtools を無効化する
+    // テスト環境では devtools を無効化する．
+    // もとは ESM 専用の zimmerframe を require() する preset-vite 2.10.5 以前への回避策だった．
+    // 2.10.6 で動的 import に変わり不要になったが，単体テストは devtools を使わないため無効のままとする．
+    // テスト以外（本番ビルドを含む）では devtools を強制的に有効にする．preset-vite の既定は本番で無効である．
     preact({ devToolsEnabled: !process.env.VITEST }),
     tailwindcss(),
   ],
